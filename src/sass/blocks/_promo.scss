@@ -1,0 +1,19 @@
+.promo {
+    background: url('../../img/main_bg.png') no-repeat 50%/cover;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    padding-top: 150px;
+    mask-image:
+    linear-gradient(to top, rgba(0,0,0,0.0) 1%, black 15%);    /* Нижняя часть */
+    mask-repeat: no-repeat;
+    &__link {
+        max-width: 300px;
+        height: 45px;
+        margin-top: 35px;
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        align-items: center;
+    }
+}

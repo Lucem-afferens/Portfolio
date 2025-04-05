@@ -1,0 +1,23 @@
+.pageup {
+    display: block;
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    transition: all 500ms ease;
+    img {
+        width: 100%;
+    }
+    &:hover {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    &.visible {
+        opacity: .6;
+    }
+    &.hidden {
+        opacity: 0;
+    }
+}

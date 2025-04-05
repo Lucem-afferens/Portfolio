@@ -1,0 +1,113 @@
+.menu {
+    display: block;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    left: -100%;
+    top: 0;
+    z-index: 10;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .6s;
+    &.active {
+        left: 0;
+        visibility: visible;
+        backdrop-filter: blur(10px);   
+        opacity: 1; 
+
+    }
+    &__block {
+        position: relative;
+        width: 345px;
+        background-color: $main-color;
+        height: 100%;
+        padding-top: 140px;
+        padding-left: 40px;
+        transition: all .6s;
+        z-index: 10;
+        border-radius: 0 5px 5px 0;
+        box-shadow: 10px 10px 25px $main-color;
+    }
+    &__close {
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        cursor: pointer;
+        path {
+            transition: all 0.5s;
+        }
+        &:hover path{
+            fill: #fff;
+        }
+    }
+    &__list {
+        list-style-type: none;
+        padding-left: 35px;
+        font-size: 24px;
+    }
+    &__link {
+        position: relative;
+        font-weight: bold;
+        font-size: 24px;
+        line-height: 36px;
+        margin-bottom: 15px;
+        &:before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 10px;
+            width: 15px;
+            height: 15px;
+            border-radius: 100%;
+            border: 1px solid #000000;
+            transition: all 0.5s;
+        }
+        &:hover {
+            &:before {
+                background-color: #fff;
+            }
+        }
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+    &__social {
+        position: absolute;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        path {
+            transition: all 0.5s;
+        }
+        svg {
+            transition: all 0.5s;
+            &:hover {
+                transform: scale(1.3);
+            }
+            &:hover path {
+                fill: #fff;
+            }
+        }
+    }
+    &__overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        
+        img {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 50%;
+
+        }
+    }
+}
