@@ -104,10 +104,10 @@ gulp.task('copyHtml', function(){
     .src('./src/*.html')
     .pipe(gulp.dest('./dist/'))
 })
-gulp.task('copyPhp', function(){
+gulp.task('copyMailer', function(){
     return gulp
-    .src('./src/*.php')
-    .pipe(gulp.dest('./dist/'))
+    .src('./src/mailer/**/*.php')
+    .pipe(gulp.dest('./dist/mailer/'))
 })
 
 gulp.task('watch', function() { // таск следит за изменениями в указанным местах и выполняет указанный таск при замеченных изменениях (не работает при удалении файлов и изображений)
@@ -116,7 +116,7 @@ gulp.task('watch', function() { // таск следит за изменения
     gulp.watch("./src/icons/**/*", gulp.parallel("copyIcons"));
     gulp.watch("./src/img/**/*", gulp.parallel("copyImg"));
     gulp.watch("./src/*.html", gulp.parallel("copyHtml"));
-    gulp.watch("./src/*.php", gulp.parallel("copyPhp"));
+    gulp.watch("./src/mailer/**/*.php", gulp.parallel("copyMailer"));
     gulp.watch("./src/js/**/*.js", gulp.parallel("js"));
     gulp.watch("./src/**/*.html").on("change", browserSync.reload);
 
@@ -133,7 +133,7 @@ gulp.task('js', function(){
 })
 
 
-gulp.task('copyFiles', gulp.parallel('copyCss', 'copyIcons', 'copyImg', 'copyHtml', 'copyPhp'));
+gulp.task('copyFiles', gulp.parallel('copyCss', 'copyIcons', 'copyImg', 'copyHtml', 'copyMailer'));
 
 gulp.task('default', gulp.series( // первый аргумент галпа , являющийся именем таска, default, это значит, что имя = gulp
     'clean',
