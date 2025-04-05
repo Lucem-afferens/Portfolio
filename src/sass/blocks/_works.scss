@@ -15,7 +15,7 @@
     &__img {
         transition: all .5s ease;
         display: block;
-        filter: blur(2px);
+        filter: blur(1.5px);
         &-1 {
             grid-column: 1/3;
             grid-row: 1/2;

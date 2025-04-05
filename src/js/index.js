@@ -1,6 +1,7 @@
 const humburger = document.querySelector('.humburger'),
       menu = document.querySelector('.menu'),
       closeElem = document.querySelector('.menu__close');
+      
 
 humburger.addEventListener('click', () => {
     menu.classList.add('active');
@@ -9,6 +10,18 @@ humburger.addEventListener('click', () => {
 closeElem.addEventListener('click', () => {
     menu.classList.remove('active');
 });
+
+const humburgerLink = document.querySelectorAll('.menu__link');
+
+humburgerLink.forEach(el => {
+  el.addEventListener('click', function (e) {
+    menu.classList.remove('active');
+});
+});
+
+// humburgerLink.addEventListener('click', () => {
+//     menu.classList.remove('active');
+// });
 
 
 const counters = document.querySelectorAll('.skills__scale__header-percent');
