@@ -66,7 +66,7 @@ window.addEventListener('scroll', () => {
       return;
     }
 
-    emailjs.sendForm('service_br8ubtx', 'template_1xbzcdt', this)
+    emailjs.sendForm('service_br8ubtx', 'template_wzmfe24', this)
       .then(() => {
         alert("Сообщение отправлено!");
         this.reset(); // Очистить форму
