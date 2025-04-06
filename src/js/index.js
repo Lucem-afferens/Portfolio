@@ -48,6 +48,38 @@ window.addEventListener('scroll', () => {
     }
   });
 
+
+
+  // Инициализация EmailJS
+  (function() {
+    emailjs.init("YJ6wIebeKWvvTVwdl"); // Вставь свой public key
+  })();
+
+  // Отправка формы
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Проверка политики конфиденциальности
+    const policy = document.getElementById('policy');
+    if (!policy.checked) {
+      alert("Пожалуйста, примите политику конфиденциальности.");
+      return;
+    }
+
+    emailjs.sendForm('service_br8ubtx', 'template_1xbzcdt', this)
+      .then(() => {
+        alert("Сообщение отправлено!");
+        this.reset(); // Очистить форму
+      })
+      .catch((error) => {
+        console.error("Ошибка отправки:", error);
+        alert("Произошла ошибка при отправке.");
+      });
+  });
+
+
+
+
 //   const form = document.querySelector('form');
 //   form.submit(function(e){
 //     e.preventDefault();  // отключение дефолтной установке по перезагрузке страницы браузера при отправке формы на сервер и обработке запроса
