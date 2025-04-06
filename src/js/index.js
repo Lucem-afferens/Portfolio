@@ -48,26 +48,26 @@ window.addEventListener('scroll', () => {
     }
   });
 
+//   const form = document.querySelector('form');
+//   form.submit(function(e){
+//     e.preventDefault();  // отключение дефолтной установке по перезагрузке страницы браузера при отправке формы на сервер и обработке запроса
 
-  $('form').submit(function(e){
-    e.preventDefault();  // отключение дефолтной установке по перезагрузке страницы браузера при отправке формы на сервер и обработке запроса
+//     if (!$(this).valid()) {
+//         return;
+//     }
 
-    if (!$(this).valid()) {
-        return;
-    }
-
-    $.ajax({    // ajax как раз позволяет обрабатывать запрос без перезагрузки. Доступен в jQuery
-        type: "POST",
-        url: "mailer/smart.php",
-        data: $(this).serialize()
-    }).done(function() {
-        $(this).find("input").val("");
-        // $('#consultation, #order').fadeOut();
-        // $('.modal, #thanks').fadeIn(600);
-        $('form').trigger('reset');
-    });
-    return false;
-});
+//     $.ajax({    // ajax как раз позволяет обрабатывать запрос без перезагрузки. Доступен в jQuery
+//         type: "POST",
+//         url: "mailer/smart.php",
+//         data: $(this).serialize()
+//     }).done(function() {
+//         $(this).find("input").val("");
+//         // $('#consultation, #order').fadeOut();
+//         // $('.modal, #thanks').fadeIn(600);
+//         $('form').trigger('reset');
+//     });
+//     return false;
+// });
 
 
 
