@@ -51,31 +51,72 @@ window.addEventListener('scroll', () => {
 
 
   // Инициализация EmailJS
-  (function() {
-    emailjs.init("YJ6wIebeKWvvTVwdl"); // Вставь свой public key
+  (function () {
+    emailjs.init("YJ6wIebeKWvvTVwdl"); // вставь свой public key
   })();
 
-  // Отправка формы
-  document.getElementById('contact-form').addEventListener('submit', function(e) {
+  document.getElementById('contact-form').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    // Проверка политики конфиденциальности
     const policy = document.getElementById('policy');
     if (!policy.checked) {
       alert("Пожалуйста, примите политику конфиденциальности.");
       return;
     }
 
+    const loader = document.getElementById('form-loader');
+    const submitButton = this.querySelector('button[type="submit"]');
+
+    // Показать загрузку и заблокировать кнопку
+    loader.style.display = 'block';
+    submitButton.disabled = true;
+    submitButton.textContent = "Отправка...";
+
     emailjs.sendForm('service_br8ubtx', 'template_wzmfe24', this)
       .then(() => {
         alert("Сообщение отправлено!");
-        this.reset(); // Очистить форму
+        this.reset();
       })
       .catch((error) => {
         console.error("Ошибка отправки:", error);
         alert("Произошла ошибка при отправке.");
+      })
+      .finally(() => {
+        loader.style.display = 'none';
+        submitButton.disabled = false;
+        submitButton.textContent = "Отправить сообщение";
       });
   });
+
+
+
+
+  // // Инициализация EmailJS
+  // (function() {
+  //   emailjs.init("YJ6wIebeKWvvTVwdl"); // Вставь свой public key
+  // })();
+
+  // // Отправка формы
+  // document.getElementById('contact-form').addEventListener('submit', function(e) {
+  //   e.preventDefault();
+
+  //   // Проверка политики конфиденциальности
+  //   const policy = document.getElementById('policy');
+  //   if (!policy.checked) {
+  //     alert("Пожалуйста, примите политику конфиденциальности.");
+  //     return;
+  //   }
+
+  //   emailjs.sendForm('service_br8ubtx', 'template_wzmfe24', this)
+  //     .then(() => {
+  //       alert("Сообщение отправлено!");
+  //       this.reset(); // Очистить форму
+  //     })
+  //     .catch((error) => {
+  //       console.error("Ошибка отправки:", error);
+  //       alert("Произошла ошибка при отправке.");
+  //     });
+  // });
 
 
 

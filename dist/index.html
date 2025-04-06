@@ -496,7 +496,7 @@
                         </div>
                         <div class="subtitle subtitle__mini subtitle__mini_contacts">Или оставьте ваши данные и я сам вам напишу:</div>
                     </div>
-                    <form class="contacts__form" id="contact-form">
+                    <!-- <form class="contacts__form" id="contact-form">
                         <div class="contacts__input contacts__input-1">
                             <input name="name" type="text" id="name" autocomplete="off" required>
                             <label for="name">Ваше имя</label>
@@ -515,6 +515,33 @@
                                 <input name="policy" id="policy" type="checkbox" required>
                                 <label for="policy">Я согласен (а) с <a href="policy.html">политикой конфиденциальности</a></label>
                             </div>
+                        </div>
+                    </form> -->
+                    <form class="contacts__form" id="contact-form">
+                        <div class="contacts__input contacts__input-1">
+                          <input name="name" type="text" id="name" autocomplete="off" required>
+                          <label for="name">Ваше имя</label>
+                        </div>
+                        <div class="contacts__input contacts__input-2">
+                          <input name="email" type="email" id="email" autocomplete="off" required>
+                          <label for="email">Ваша почта</label>
+                        </div>
+                        <div class="contacts__input contacts__input-3">
+                          <textarea name="message" id="message" required></textarea>
+                          <label for="message">Ваше сообщение</label>
+                        </div>
+                        <div class="contacts__triggers">
+                          <button type="submit">Отправить сообщение</button>
+                          <div class="contacts__triggers__policy">
+                            <input name="policy" id="policy" type="checkbox" required>
+                            <label for="policy">Я согласен(а) с <a href="policy.html">политикой конфиденциальности</a></label>
+                          </div>
+                        </div>
+                      
+                        <!-- Индикатор загрузки -->
+                        <div class="form-loader" id="form-loader">
+                          <div class="spinner"></div>
+                          <p>Отправка...</p>
                         </div>
                     </form>
                 </div>
