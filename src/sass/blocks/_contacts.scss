@@ -9,6 +9,10 @@
         grid-template-rows: 600px;
         grid-auto-rows: 600px;
         column-gap: 70px;
+        button[disabled] {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     }
     &__img {
         width: 100%;
@@ -58,10 +62,6 @@
         column-gap: 25px;
         row-gap: 30px;
         max-width: 100%;
-        button[disabled] {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
 
     }
     &__input {
