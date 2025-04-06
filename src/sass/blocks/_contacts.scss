@@ -143,6 +143,12 @@
             }
             input {
                 cursor: pointer;
+                &:checked {
+                    accent-color: $main-color;
+                    & + label {
+                        color: $main-color;
+                    }
+                }
             }
         }
     }
