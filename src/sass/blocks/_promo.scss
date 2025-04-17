@@ -1,13 +1,33 @@
 .promo {
-    background: url('../../img/main_bg.png') no-repeat 50%/cover;
     height: 100vh;
     width: 100%;
     position: relative;
-    padding-top: 150px;
-    transition: all 7s linear;
-    // mask-image:
-    // linear-gradient(to top, rgba(0,0,0,0.0) 1%, black 15%);    /* Нижняя часть */
-    // mask-repeat: no-repeat;
+    padding-top: 18vh;
+    &__mask {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: url('../../img/main_bg.png') no-repeat 50%/cover;
+        mask-image: linear-gradient(to left,  #000 40vw, transparent),
+                    linear-gradient(to bottom, #000 70vh, transparent);
+        mask-composite: intersect;
+    }
+
+
+    &__wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 600px));
+        grid-template-rows: 1fr;
+        grid-auto-rows: 1fr;
+        align-items: center;
+        flex-wrap: wrap-reverse;
+    }
+    &__content {
+        grid-column: 1/2;
+        grid-row: 1/2;
+    }
     &__link {
         max-width: 300px;
         height: 45px;

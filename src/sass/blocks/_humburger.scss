@@ -8,13 +8,14 @@
     align-items: end;
     cursor: pointer;
     &:hover .humburger__line {
-        background: #fff;
+        background: #000;
+        transform: scale(1.1);
     }
     &__line {
         width: 30px;
         height: 3px;
         border: none;
-        background: #000;
+        background: $main-color;
         margin-bottom: 6px;
         transition: all 0.5s;
         &_long {

@@ -124,20 +124,23 @@
             </a> 
             </div>
         </div>
-        <div class="menu__overlay"><img src="img/logo/fav-d.png" alt="logo"></div>
+        <!-- <div class="menu__overlay"><img src="img/logo/fav-d.png" alt="logo"></div> -->
     </div>
     <section class="promo" id="up">
+        <div class="promo__mask"></div>
         <div class="container">
-            <div class="promo__content">
-                <div class="subtitle subtitle_promo">
-                    Меня зовут Николай Дудин
-                </div>
-                <h1 class="title title_promo">
-                    Я web-разработчик <br> из города Москвы
-                </h1>
-                <div class="promo__link">
-                    <a href="#works" class="promo__link__portfolio"><button class="btn btn__portfolio">Портфолио</button></a>
-                    <a href="#about" class="promo__link__about"><button class="btn btn__about">Про меня</button></a>
+            <div class="promo__wrapper">
+                <div class="promo__content">
+                    <div class="subtitle subtitle_promo">
+                        Меня зовут Николай Дудин
+                    </div>
+                    <h1 class="title title_promo">
+                        Я web-разработчик <br> из города Москвы
+                    </h1>
+                    <div class="promo__link">
+                        <a href="#works" class="promo__link__portfolio"><button class="btn btn__portfolio">Портфолио</button></a>
+                        <a href="#about" class="promo__link__about"><button class="btn btn__about">Про меня</button></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -343,10 +346,38 @@
                     </div>
                 </div> -->
                 <div class="skills__item">
-                    <div class="skills__item-icon"><img src="icons/skills/figma.svg" alt="Mongo.db"></div>
+                    <div class="skills__item-icon"><img src="icons/skills/figma.svg" alt="Figma"></div>
                     <h4 class="subtitle subtitle__mini">Figma</h4>
                     <div class="skills__item-content">
                         Это графический онлайн-редактор для совместной работы. В нём можно создать прототип сайта, интерфейс приложения и обсудить правки с коллегами в реальном времени. 
+                    </div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon"><img src="icons/skills/gulp.svg" alt="Gulp"></div>
+                    <h4 class="subtitle subtitle__mini">Gulp</h4>
+                    <div class="skills__item-content">
+                        Если кратко, то Gulp предназначен для автоматизации рутинных операций в процессе веб-разработки.
+                    </div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon"><img src="icons/skills/npm.svg" alt="NPM"></div>
+                    <h4 class="subtitle subtitle__mini">NPM</h4>
+                    <div class="skills__item-content">
+                        С помощью NPM можно устанавливать библиотеки и модули, которые расширяют возможности языка программирования. 
+                    </div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon"><img src="icons/skills/git.svg" alt="Git"></div>
+                    <h4 class="subtitle subtitle__mini">Git</h4>
+                    <div class="skills__item-content">
+                        Это специальная программа, которая позволяет отслеживать любые изменения в файлах, хранить их версии и оперативно возвращаться в любое сохранённое состояние.
+                    </div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon"><img src="icons/skills/wp.svg" alt="WordPress"></div>
+                    <h4 class="subtitle subtitle__mini">WordPress</h4>
+                    <div class="skills__item-content">
+                        WordPress – это самая популярная в мире система управления содержимым сайта (CMS) с открытым исходным кодом, которая обеспечивает работу около 38% всех веб-сайтов. 
                     </div>
                 </div>
             </div>
@@ -502,7 +533,7 @@
                         <h2 class="subtitle subtitle_contacts">Контакты</h2>
                         <div class="title title_contacts">Свяжитесь со мной</div>
                         <div class="devider devider_contacts"></div>
-                        <div class="subtitle subtitle__mini subtitle__mini_contacts">Любым удобным для вас способом:</div>
+                        <div class="subtitle subtitle__mini subtitle__mini_contacts">Любым удобным для Вас способом:</div>
                         <div class="contacts__social">
                             <a href="https://vk.com/lucem.afferens" class="contacts__social__img">
                                 <img src="icons/social/vk.svg" alt="vk">
@@ -513,20 +544,23 @@
                             <a href="https://www.instagram.com/lucem.afferens_?igsh=cHdiZXdkbDc2NXFv&utm_source=qr" class="contacts__social__img">
                                 <img src="icons/social/instagram.svg" alt="instagram">
                             </a>
+                            <a href="https://wa.me/+79226447689" class="contacts__social__img">
+                                <img src="icons/social/whatsapp.svg" alt="whatsapp">
+                            </a>
                         </div>
-                        <div class="subtitle subtitle__mini subtitle__mini_contacts">Или оставьте ваши данные и я сам вам напишу:</div>
+                        <div class="subtitle subtitle__mini subtitle__mini_contacts">Или оставьте ваши данные и я сам свяжусь с Вами:</div>
                     </div>
                     <form class="contacts__form" id="contact-form">
                         <div class="contacts__input contacts__input-1">
-                          <input name="name" type="text" id="name" autocomplete="off" required>
-                          <label for="name">Ваше имя</label>
-                        </div>
+                            <input name="email" type="email" id="email" autocomplete="off" required>
+                            <label for="email">Ваша почта*</label>
+                          </div>
                         <div class="contacts__input contacts__input-2">
-                          <input name="email" type="email" id="email" autocomplete="off" required>
-                          <label for="email">Ваша почта</label>
+                          <input name="tel" type="tel" id="tel" autocomplete="off">
+                          <label for="tel">Ваш телефон</label>
                         </div>
                         <div class="contacts__input contacts__input-3">
-                          <textarea name="message" id="message" required></textarea>
+                          <textarea name="message" id="message"></textarea>
                           <label for="message">Ваше сообщение</label>
                         </div>
                         <div class="contacts__triggers">

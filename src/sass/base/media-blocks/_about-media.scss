@@ -10,6 +10,43 @@
     .sidepanel {
         display: none;
     }
+    .menu {
+        &__link {
+            a {
+                &:hover {
+                    color: #000;
+                }
+            }
+        }
+        &__social {
+            svg {
+                &:hover path {
+                    fill: #000;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1648px) {
+    .promo {
+        &__mask {
+            background: url('../../img/bg-main.jpg') no-repeat;
+            background-position: 10% 90%;
+            background-size: cover;
+        }
+    }
+}
+@media (max-width: 768px) {
+    .promo {
+        &__mask {
+            background: url('../../img/bg-main.jpg') no-repeat;
+            background-position: 50% 90%;
+            background-size: cover;
+            mask-image: linear-gradient(to top, #000 30vh, transparent 75vh);
+            mask-composite: intersect;
+        }
+    }
 }
 
 @media (max-width: 1024px) {  
@@ -35,7 +72,7 @@
     }
     .prices {
         &__wrapper {
-            grid-template-columns: minmax(350px, 400px);
+            grid-template-columns: minmax(200px, 400px);
             justify-content: center;
             margin: 0 auto;
             margin-top: 60px;
@@ -126,7 +163,7 @@
             grid-template-columns: repeat(auto-fill, 270px);
         }
         &__scales {
-            grid-template-columns: minmax(350px, 400px);
+            grid-template-columns: minmax(200px, 400px);
         }
     }
 }
