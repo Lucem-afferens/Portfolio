@@ -104,6 +104,9 @@
 }
 
 @media (max-width: 768px) {
+    .promo {
+        padding-top: 70px;
+    }
     .about {
         &__wrapper {
             display: flex;
@@ -197,6 +200,7 @@
     //    width: clamp(350px, 80%, 1040px);
     }
     .about {
+        padding-top: 80px;
         &__photo {
             width: 100%;
         }
