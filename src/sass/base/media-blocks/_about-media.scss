@@ -26,6 +26,16 @@
             }
         }
     }
+    .skills {
+        &__item {
+            max-height: 150px;
+            overflow: hidden;
+            transition: all 0.3s linear;
+        &:hover {
+            max-height: 100%;
+        }
+        }
+    }
 }
 
 @media (max-width: 1648px) {
@@ -46,6 +56,9 @@
             mask-image: linear-gradient(to top, #000 30vh, transparent 75vh);
             mask-composite: intersect;
         }
+    }
+    .sidepanel {
+        display: none;
     }
 }
 

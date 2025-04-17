@@ -22,12 +22,6 @@
         // &:hover {
         //     clip-path: rect(auto auto auto auto round 10%);
         // }
-        max-height: 150px;
-        overflow: hidden;
-        transition: all 0.3s linear;
-        &:hover {
-            max-height: 100%;
-        }
         &-icon {
             height: 65px;
             display: block;
