@@ -4,8 +4,8 @@
     &__wrapper {
         display: grid;
         grid-template-columns: minmax(350px, 400px) minmax(400px, 570px);
-        grid-template-rows: minmax(245px auto) minmax(255px auto);
-        grid-auto-rows: minmax(245px auto);
+        grid-template-rows: minmax(245px, auto) minmax(255px, auto);
+        grid-auto-rows: minmax(245px, auto);
         column-gap: 70px;
         row-gap: 40px;
     }

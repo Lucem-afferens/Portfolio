@@ -71,7 +71,7 @@
         &__wrapper {
             grid-template-columns: minmax(250px, 400px) minmax(250px, 570px);
             grid-template-rows: minmax(450px, auto) minmax(200px, auto);
-            grid-auto-rows: minmax(245px auto);
+            grid-auto-rows: minmax(245px, auto);
         }
         &__photo {
             grid-row: 1/2;
@@ -115,8 +115,6 @@
         &__wrapper {
             display: flex;
             flex-direction: column;
-            padding-right: minmax(auto, 70px);
-            padding-left: minmax(auto, 70px);
         }
         &__photo {
             img {
