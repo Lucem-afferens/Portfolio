@@ -93,57 +93,6 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
 
 
 
-  // // Инициализация EmailJS
-  // (function() {
-  //   emailjs.init("YJ6wIebeKWvvTVwdl"); // Вставь свой public key
-  // })();
-
-  // // Отправка формы
-  // document.getElementById('contact-form').addEventListener('submit', function(e) {
-  //   e.preventDefault();
-
-  //   // Проверка политики конфиденциальности
-  //   const policy = document.getElementById('policy');
-  //   if (!policy.checked) {
-  //     alert("Пожалуйста, примите политику конфиденциальности.");
-  //     return;
-  //   }
-
-  //   emailjs.sendForm('service_br8ubtx', 'template_wzmfe24', this)
-  //     .then(() => {
-  //       alert("Сообщение отправлено!");
-  //       this.reset(); // Очистить форму
-  //     })
-  //     .catch((error) => {
-  //       console.error("Ошибка отправки:", error);
-  //       alert("Произошла ошибка при отправке.");
-  //     });
-  // });
-
-
-
-
-//   const form = document.querySelector('form');
-//   form.submit(function(e){
-//     e.preventDefault();  // отключение дефолтной установке по перезагрузке страницы браузера при отправке формы на сервер и обработке запроса
-
-//     if (!$(this).valid()) {
-//         return;
-//     }
-
-//     $.ajax({    // ajax как раз позволяет обрабатывать запрос без перезагрузки. Доступен в jQuery
-//         type: "POST",
-//         url: "mailer/smart.php",
-//         data: $(this).serialize()
-//     }).done(function() {
-//         $(this).find("input").val("");
-//         // $('#consultation, #order').fadeOut();
-//         // $('.modal, #thanks').fadeIn(600);
-//         $('form').trigger('reset');
-//     });
-//     return false;
-// });
-
 
 
 // // NPM пакеты в верстке. Пример подключения календаря datepicker. сначала команда в терминале npm i air-datepicker -s   .Затем указанные ниже коды в файл js. указываем id, который будет работать при парсе в файле html
