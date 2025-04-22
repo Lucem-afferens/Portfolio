@@ -1,4 +1,7 @@
 @media (hover: none) {
+    .promo {
+        height: 100svh;
+    }
     .works {
         &__img {
             filter: blur(0);
@@ -10,6 +13,7 @@
     .sidepanel {
         display: none;
     }
+
     .menu {
         &__link {
             a {
