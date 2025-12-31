@@ -37,8 +37,21 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         // Import variables and mixins for all SCSS files
-        // Path is relative to root (src/)
-        additionalData: `@import "styles/variables.scss"; @import "styles/mixins.scss";`,
+        // Using function to calculate correct relative paths
+        additionalData: (content, loaderContext) => {
+          const { resourcePath } = loaderContext;
+          const srcPath = resolve(__dirname, 'src');
+          const relativePath = resourcePath.replace(srcPath, '').replace(/\\/g, '/');
+
+          // Calculate depth (how many directories deep from src/)
+          const depth = (relativePath.match(/\//g) || []).length - 1;
+          const pathPrefix = depth > 0 ? '../'.repeat(depth) : './';
+
+          // For files in styles/, use current directory
+          const finalPath = relativePath.includes('/styles/') ? './' : `${pathPrefix}styles/`;
+
+          return `@import "${finalPath}variables.scss"; @import "${finalPath}mixins.scss";\n${content}`;
+        },
       },
     },
   },
