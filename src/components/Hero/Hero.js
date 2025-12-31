@@ -19,7 +19,7 @@ class Hero {
   static init() {
     // Lazy loading для изображений, если будут добавлены
     const images = document.querySelectorAll('.hero img[loading="lazy"]');
-    images.forEach((img) => {
+    images.forEach(img => {
       if (img.complete) {
         img.classList.add('loaded');
       } else {
@@ -32,4 +32,3 @@ class Hero {
 }
 
 export default Hero;
-

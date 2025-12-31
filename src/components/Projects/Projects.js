@@ -2,9 +2,8 @@ import { i18n } from '../../utils/i18n.js';
 import './Projects.scss';
 
 class Projects {
-  constructor() {
-    this.currentFilter = 'all';
-    this.projects = [
+  static render() {
+    const projects = [
       {
         id: 1,
         title: 'Project 1',
@@ -27,10 +26,7 @@ class Projects {
         description: 'Description of project 3',
       },
     ];
-  }
 
-  static render() {
-    const instance = new Projects();
     return `
       <section id="projects" class="projects">
         <div class="container">
@@ -50,17 +46,17 @@ class Projects {
             </button>
           </div>
           <div class="projects__grid" data-projects-grid>
-            ${instance.renderProjects(instance.projects)}
+            ${Projects.renderProjects(projects)}
           </div>
         </div>
       </section>
     `;
   }
 
-  renderProjects(projects) {
+  static renderProjects(projects) {
     return projects
       .map(
-        (project) => `
+        project => `
       <article class="projects__card" data-category="${project.category}">
         <img 
           src="${project.image}" 
@@ -86,23 +82,25 @@ class Projects {
   static init() {
     const filters = document.querySelectorAll('.projects__filter');
     const grid = document.querySelector('[data-projects-grid]');
-    const instance = new Projects();
 
-    filters.forEach((filter) => {
+    if (!grid) return;
+
+    filters.forEach(filter => {
       filter.addEventListener('click', () => {
         const filterValue = filter.dataset.filter;
-        
+
         // Обновляем активный фильтр
-        filters.forEach((f) => f.classList.remove('active'));
+        filters.forEach(f => f.classList.remove('active'));
         filter.classList.add('active');
-        
+
         // Фильтруем проекты
         const cards = grid.querySelectorAll('.projects__card');
-        cards.forEach((card) => {
-          if (filterValue === 'all' || card.dataset.category === filterValue) {
-            card.style.display = 'block';
+        cards.forEach(card => {
+          const cardElement = card;
+          if (filterValue === 'all' || cardElement.dataset.category === filterValue) {
+            cardElement.style.display = 'block';
           } else {
-            card.style.display = 'none';
+            cardElement.style.display = 'none';
           }
         });
       });
@@ -110,7 +108,7 @@ class Projects {
 
     // Lazy loading для изображений
     const images = document.querySelectorAll('.projects__card-image[loading="lazy"]');
-    images.forEach((img) => {
+    images.forEach(img => {
       if (img.complete) {
         img.classList.add('loaded');
       } else {
@@ -123,4 +121,3 @@ class Projects {
 }
 
 export default Projects;
-

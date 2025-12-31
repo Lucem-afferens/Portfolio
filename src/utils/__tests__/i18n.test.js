@@ -21,7 +21,7 @@ describe('i18n', () => {
   it('должен возвращать перевод по ключу', () => {
     i18n.setLanguage('ru');
     expect(i18n.t('header.logo')).toBe('Портфолио');
-    
+
     i18n.setLanguage('en');
     expect(i18n.t('header.logo')).toBe('Portfolio');
   });
@@ -49,4 +49,3 @@ describe('i18n', () => {
     expect(languages).toContain('en');
   });
 });
-

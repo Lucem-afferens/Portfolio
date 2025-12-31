@@ -6,11 +6,11 @@ describe('ThemeManager', () => {
     // Очистка перед каждым тестом
     document.body.className = '';
     localStorage.clear();
-    
+
     // Мокаем matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: vi.fn().mockImplementation((query) => ({
+      value: vi.fn().mockImplementation(query => ({
         matches: false,
         media: query,
         onchange: null,
@@ -38,10 +38,10 @@ describe('ThemeManager', () => {
   it('должен переключать тему', () => {
     ThemeManager.setTheme('light');
     expect(ThemeManager.getCurrentTheme()).toBe('light');
-    
+
     ThemeManager.toggleTheme();
     expect(ThemeManager.getCurrentTheme()).toBe('dark');
-    
+
     ThemeManager.toggleTheme();
     expect(ThemeManager.getCurrentTheme()).toBe('light');
   });
@@ -54,9 +54,8 @@ describe('ThemeManager', () => {
   it('должен возвращать текущую тему', () => {
     ThemeManager.setTheme('dark');
     expect(ThemeManager.getCurrentTheme()).toBe('dark');
-    
+
     ThemeManager.setTheme('light');
     expect(ThemeManager.getCurrentTheme()).toBe('light');
   });
 });
-

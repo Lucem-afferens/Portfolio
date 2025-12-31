@@ -50,6 +50,8 @@ module.exports = {
         js: 'always',
       },
     ],
+    'import/no-unresolved': ['error', { ignore: ['vitest/config'] }],
+    'import/prefer-default-export': 'off',
     // Разрешаем циклы for...of
     'no-restricted-syntax': [
       'error',

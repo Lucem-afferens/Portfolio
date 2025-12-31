@@ -14,17 +14,28 @@ class App {
   }
 
   init() {
-    // Инициализация темы
-    ThemeManager.init();
-    
-    // Инициализация i18n
-    i18n.init();
-    
-    // Рендер компонентов
-    this.render();
-    
-    // Обработка событий
-    this.setupEventListeners();
+    try {
+      // Инициализация темы
+      ThemeManager.init();
+
+      // Инициализация i18n
+      i18n.init();
+
+      // Рендер компонентов
+      this.render();
+
+      // Обработка событий
+      this.setupEventListeners();
+    } catch (error) {
+      console.error('Error in App.init:', error);
+      this.container.innerHTML = `
+        <div style="padding: 20px; color: red;">
+          <h1>Application Error</h1>
+          <p>${error.message}</p>
+          <pre>${error.stack}</pre>
+        </div>
+      `;
+    }
   }
 
   render() {
@@ -38,7 +49,7 @@ class App {
         ${Contact.render()}
       </main>
     `;
-    
+
     // Инициализация компонентов
     Header.init();
     Hero.init();
@@ -57,4 +68,3 @@ class App {
 }
 
 export default App;
-

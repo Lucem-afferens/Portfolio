@@ -5,12 +5,12 @@
   background-color: $bg-light;
   border-bottom: 1px solid $border-light;
   @include transition(background-color, border-color);
-  
+
   .dark-theme & {
     background-color: $bg-dark;
     border-bottom-color: $border-dark;
   }
-  
+
   &__content {
     display: flex;
     align-items: center;
@@ -18,49 +18,49 @@
     padding: map-get($spacings, 2) 0;
     gap: map-get($spacings, 3);
   }
-  
+
   &__logo {
     font-size: 1.5rem;
     font-weight: 700;
     color: $primary-color;
     text-decoration: none;
-    
+
     &:hover {
       text-decoration: none;
     }
   }
-  
+
   &__nav {
     display: none;
     gap: map-get($spacings, 3);
-    
+
     @include respond-to(md) {
       display: flex;
     }
-    
+
     &-link {
       color: $text-light;
       text-decoration: none;
       @include transition(color);
-      
+
       .dark-theme & {
         color: $text-dark;
       }
-      
+
       &:hover {
         color: $primary-color;
         text-decoration: none;
       }
     }
   }
-  
+
   &__controls {
     display: flex;
     align-items: center;
     gap: map-get($spacings, 2);
     margin-left: auto;
   }
-  
+
   &__lang-toggle,
   &__theme-toggle {
     background: none;
@@ -69,18 +69,17 @@
     border-radius: 4px;
     cursor: pointer;
     @include transition(background-color, border-color);
-    
+
     .dark-theme & {
       border-color: $border-dark;
     }
-    
+
     &:hover {
       background-color: $bg-secondary-light;
-      
+
       .dark-theme & {
         background-color: $bg-secondary-dark;
       }
     }
   }
 }
-

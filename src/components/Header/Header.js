@@ -33,7 +33,7 @@ class Header {
   static init() {
     const langToggle = document.querySelector('.header__lang-toggle');
     const themeToggle = document.querySelector('.header__theme-toggle');
-    
+
     if (langToggle) {
       langToggle.addEventListener('click', () => {
         const currentLang = i18n.getCurrentLanguage();
@@ -42,7 +42,7 @@ class Header {
         window.location.reload();
       });
     }
-    
+
     if (themeToggle) {
       themeToggle.addEventListener('click', () => {
         ThemeManager.toggleTheme();
@@ -52,4 +52,3 @@ class Header {
 }
 
 export default Header;
-

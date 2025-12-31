@@ -59,18 +59,19 @@ class Contact {
 
   static init() {
     const form = document.querySelector('[data-contact-form]');
-    
+
     if (form) {
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', e => {
         e.preventDefault();
-        
+
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
-        
+
         // Здесь будет отправка формы (например, через API)
         console.log('Form data:', data);
-        
+
         // Показываем сообщение об успехе
+        // eslint-disable-next-line no-alert
         alert('Сообщение отправлено!');
         form.reset();
       });
@@ -79,4 +80,3 @@ class Contact {
 }
 
 export default Contact;
-

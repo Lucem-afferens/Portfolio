@@ -1,62 +1,61 @@
 .about {
   padding: map-get($spacings, 6) 0;
-  
+
   &__title {
     text-align: center;
     margin-bottom: map-get($spacings, 5);
   }
-  
+
   &__content {
     display: flex;
     flex-direction: column;
     gap: map-get($spacings, 4);
-    
+
     @include respond-to(md) {
       flex-direction: row;
       align-items: center;
     }
   }
-  
+
   &__image-wrapper {
     flex-shrink: 0;
-    
+
     @include respond-to(md) {
       width: 40%;
     }
   }
-  
+
   &__image {
     width: 100%;
     height: auto;
     border-radius: 8px;
     @include box-shadow(2);
   }
-  
+
   &__text {
     flex: 1;
-    
+
     @include respond-to(md) {
       width: 60%;
     }
   }
-  
+
   &__skills {
     display: flex;
     flex-wrap: wrap;
     gap: map-get($spacings, 2);
     list-style: none;
     margin-top: map-get($spacings, 3);
-    
+
     li {
       padding: map-get($spacings, 1) map-get($spacings, 3);
       background-color: $bg-secondary-light;
       border-radius: 20px;
       @include transition(background-color);
-      
+
       .dark-theme & {
         background-color: $bg-secondary-dark;
       }
     }
   }
 }
-

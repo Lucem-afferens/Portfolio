@@ -1,16 +1,17 @@
-import ru from '../locales/ru.json';
-import en from '../locales/en.json';
+// Vite поддерживает прямой импорт JSON
+import ruData from '../locales/ru.json';
+import enData from '../locales/en.json';
 
 class I18n {
   constructor() {
     this.locales = {
-      ru,
-      en,
+      ru: ruData,
+      en: enData,
     };
-    this.currentLang = this.getStoredLanguage() || this.detectLanguage();
+    this.currentLang = I18n.getStoredLanguage() || this.detectLanguage();
   }
 
-  getStoredLanguage() {
+  static getStoredLanguage() {
     return localStorage.getItem('language');
   }
 
@@ -28,11 +29,11 @@ class I18n {
       console.warn(`Language ${lang} is not supported`);
       return;
     }
-    
+
     this.currentLang = lang;
     localStorage.setItem('language', lang);
     document.documentElement.lang = lang;
-    
+
     // Диспатч события для обновления компонентов
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
   }
@@ -40,7 +41,7 @@ class I18n {
   t(key, params = {}) {
     const keys = key.split('.');
     let value = this.locales[this.currentLang];
-    
+
     for (const k of keys) {
       if (value && typeof value === 'object') {
         value = value[k];
@@ -49,16 +50,16 @@ class I18n {
         return key;
       }
     }
-    
+
     if (typeof value !== 'string') {
       console.warn(`Translation value for "${key}" is not a string`);
       return key;
     }
-    
+
     // Замена параметров
-    return value.replace(/\{\{(\w+)\}\}/g, (match, paramKey) => {
-      return params[paramKey] !== undefined ? params[paramKey] : match;
-    });
+    return value.replace(/\{\{(\w+)\}\}/g, (match, paramKey) =>
+      params[paramKey] !== undefined ? params[paramKey] : match
+    );
   }
 
   getCurrentLanguage() {
@@ -71,4 +72,3 @@ class I18n {
 }
 
 export const i18n = new I18n();
-

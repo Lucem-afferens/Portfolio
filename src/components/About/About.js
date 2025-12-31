@@ -36,7 +36,7 @@ class About {
 
   static init() {
     const images = document.querySelectorAll('.about img[loading="lazy"]');
-    images.forEach((img) => {
+    images.forEach(img => {
       if (img.complete) {
         img.classList.add('loaded');
       } else {
@@ -49,4 +49,3 @@ class About {
 }
 
 export default About;
-

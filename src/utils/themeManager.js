@@ -3,11 +3,11 @@ class ThemeManager {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const theme = savedTheme || (prefersDark ? 'dark' : 'light');
-    
+
     this.setTheme(theme);
-    
+
     // Слушаем изменения системной темы
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
       if (!localStorage.getItem('theme')) {
         this.setTheme(e.matches ? 'dark' : 'light');
       }
@@ -22,7 +22,7 @@ class ThemeManager {
       document.body.classList.add('light-theme');
       document.body.classList.remove('dark-theme');
     }
-    
+
     localStorage.setItem('theme', theme);
     document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme } }));
   }
@@ -38,4 +38,3 @@ class ThemeManager {
 }
 
 export { ThemeManager };
-
