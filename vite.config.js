@@ -39,9 +39,9 @@ export default defineConfig({
         // Import variables and mixins for all SCSS files
         // Using function to calculate correct relative paths with safety checks
         additionalData: (content, loaderContext) => {
-          // Safety check: if loaderContext or resourcePath is undefined, use fallback
+          // Safety check: if loaderContext or resourcePath is undefined
           if (!loaderContext || !loaderContext.resourcePath) {
-            // Fallback: assume we're in a component, use relative path
+            // Fallback: use relative path from components (most common case)
             return `@import "../../styles/variables.scss"; @import "../../styles/mixins.scss";\n${content}`;
           }
 
@@ -54,19 +54,38 @@ export default defineConfig({
               return `@import "../../styles/variables.scss"; @import "../../styles/mixins.scss";\n${content}`;
             }
 
-            const relativePath = resourcePath.replace(srcPath, '').replace(/\\/g, '/');
+            // Normalize path separators
+            const normalizedPath = resourcePath.replace(/\\/g, '/');
+            const normalizedSrcPath = srcPath.replace(/\\/g, '/');
 
-            // Calculate depth (how many directories deep from src/)
-            const depth = (relativePath.match(/\//g) || []).length - 1;
-            const pathPrefix = depth > 0 ? '../'.repeat(depth) : './';
+            // Get relative path from src/
+            const relativePath = normalizedPath.replace(normalizedSrcPath, '').replace(/^\//, '');
 
-            // For files in styles/, use current directory
-            const finalPath = relativePath.includes('/styles/') ? './' : `${pathPrefix}styles/`;
+            // Determine import path based on file location
+            let importPath;
 
-            return `@import "${finalPath}variables.scss"; @import "${finalPath}mixins.scss";\n${content}`;
+            if (relativePath.includes('/styles/')) {
+              // File is in styles/ directory - use current directory
+              importPath = './';
+            } else if (relativePath.includes('/components/')) {
+              // File is in components/ - go up two levels
+              importPath = '../../styles/';
+            } else {
+              // Calculate depth for other locations
+              const depth = (relativePath.match(/\//g) || []).length;
+              importPath = depth > 0 ? `${'../'.repeat(depth)}styles/` : './styles/';
+            }
+
+            return `@import "${importPath}variables.scss"; @import "${importPath}mixins.scss";\n${content}`;
           } catch (error) {
-            // If any error occurs, use fallback path
+            // If any error occurs, try to determine path from content or use safe fallback
             console.warn('SCSS additionalData error, using fallback:', error);
+            // Try to detect if we're in styles/ by checking if content uses variables
+            if (content.includes('$font-size-base') || content.includes('$bg-light')) {
+              // Likely in styles/, use current directory
+              return `@import "./variables.scss"; @import "./mixins.scss";\n${content}`;
+            }
+            // Default fallback for components
             return `@import "../../styles/variables.scss"; @import "../../styles/mixins.scss";\n${content}`;
           }
         },
