@@ -5,24 +5,13 @@ class Hero {
   static render() {
     return `
       <section id="home" class="hero">
-        <div class="hero__background">
-          <div class="hero__gradient hero__gradient--1"></div>
-          <div class="hero__gradient hero__gradient--2"></div>
-          <div class="hero__gradient hero__gradient--3"></div>
-        </div>
         <div class="container">
           <div class="hero__content">
-            <div class="hero__badge">
-              <span class="hero__badge-text">👋 ${i18n.t('hero.greeting', { default: 'Привет' })}</span>
-            </div>
-            <h1 class="hero__name">
-              <span class="hero__name-line">${i18n.t('hero.name')}</span>
-            </h1>
+            <h1 class="hero__name">${i18n.t('hero.name')}</h1>
             <div class="hero__specialization-wrapper">
               <p class="hero__specialization">${i18n.t('hero.specialization')}</p>
               <span class="hero__cursor">|</span>
             </div>
-            <p class="hero__description">${i18n.t('hero.description', { default: 'Создаю современные веб-приложения с фокусом на пользовательский опыт' })}</p>
             <div class="hero__actions">
               <a href="#projects" class="hero__cta hero__cta--primary">
                 <span>${i18n.t('hero.cta')}</span>

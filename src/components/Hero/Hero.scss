@@ -4,90 +4,12 @@
   @include flex-center;
   padding: map-get($spacings, 4) 0;
   text-align: center;
-  overflow: hidden;
-  background: linear-gradient(135deg, $bg-light 0%, $bg-secondary-light 100%);
-  @include transition(background);
-
-  .dark-theme & {
-    background: linear-gradient(135deg, $bg-dark 0%, $bg-secondary-dark 100%);
-  }
-
-  &__background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    overflow: hidden;
-  }
-
-  &__gradient {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.5;
-    animation: float 20s ease-in-out infinite;
-
-    &--1 {
-      width: 500px;
-      height: 500px;
-      background: linear-gradient(135deg, $primary-color 0%, rgba($primary-color, 0.3) 100%);
-      top: -200px;
-      left: -200px;
-      animation-delay: 0s;
-    }
-
-    &--2 {
-      width: 400px;
-      height: 400px;
-      background: linear-gradient(135deg, $info-color 0%, rgba($info-color, 0.3) 100%);
-      bottom: -150px;
-      right: -150px;
-      animation-delay: 5s;
-    }
-
-    &--3 {
-      width: 300px;
-      height: 300px;
-      background: linear-gradient(135deg, $warning-color 0%, rgba($warning-color, 0.3) 100%);
-      top: 50%;
-      right: 10%;
-      animation-delay: 10s;
-    }
-
-    .dark-theme & {
-      opacity: 0.3;
-    }
-  }
 
   &__content {
-    position: relative;
-    z-index: 1;
     max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
     padding: 0 map-get($spacings, 2);
-  }
-
-  &__badge {
-    display: inline-block;
-    margin-bottom: map-get($spacings, 4);
-    padding: map-get($spacings, 2) map-get($spacings, 4);
-    background: rgba($primary-color, 0.1);
-    border: 1px solid rgba($primary-color, 0.2);
-    border-radius: 50px;
-    backdrop-filter: blur(10px);
-    animation: fadeInDown 0.8s ease 0.1s both;
-
-    .dark-theme & {
-      background: rgba($primary-color, 0.15);
-      border-color: rgba($primary-color, 0.3);
-    }
-  }
-
-  &__badge-text {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: $primary-color;
   }
 
   &__name {
@@ -95,17 +17,11 @@
     font-size: 3rem;
     font-weight: 800;
     line-height: 1.1;
-    background: linear-gradient(135deg, $text-light 0%, $primary-color 50%, $info-color 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: $text-light;
     animation: fadeInUp 0.8s ease 0.2s both;
 
     .dark-theme & {
-      background: linear-gradient(135deg, $text-dark 0%, $primary-color 50%, $info-color 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: $text-dark;
     }
 
     @include respond-to(md) {
@@ -115,22 +31,21 @@
     @include respond-to(lg) {
       font-size: 5.5rem;
     }
-
-    &-line {
-      display: block;
-      animation: slideInLeft 0.8s ease 0.3s both;
-    }
   }
 
   &__specialization-wrapper {
     display: inline-flex;
     align-items: center;
-    gap: map-get($spacings, 2);
-    margin-bottom: map-get($spacings, 4);
+    gap: map-get($spacings, 1);
+    margin-bottom: map-get($spacings, 5);
     font-size: 1.5rem;
     font-weight: 600;
-    color: $primary-color;
+    color: $text-light;
     animation: fadeInUp 0.8s ease 0.4s both;
+
+    .dark-theme & {
+      color: $text-dark;
+    }
 
     @include respond-to(md) {
       font-size: 2rem;
@@ -144,28 +59,12 @@
 
   &__cursor {
     display: inline-block;
-    width: 3px;
+    width: 2px;
     height: 1.2em;
     background: $primary-color;
     animation: blink 1s infinite;
-    margin-left: 2px;
-  }
-
-  &__description {
-    max-width: 600px;
-    margin: 0 auto map-get($spacings, 5);
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: $secondary-color;
-    animation: fadeInUp 0.8s ease 0.5s both;
-
-    .dark-theme & {
-      color: rgba($text-dark, 0.7);
-    }
-
-    @include respond-to(md) {
-      font-size: 1.25rem;
-    }
+    margin-left: 4px;
+    vertical-align: baseline;
   }
 
   &__actions {
@@ -321,47 +220,12 @@
   }
 }
 
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(30px, -30px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
   }
 }
 

@@ -10,10 +10,8 @@
     }
   },
   "hero": {
-    "name": "Your Name",
-    "specialization": "Web Developer",
-    "description": "Creating modern web applications with focus on user experience",
-    "greeting": "Hello",
+    "name": "My name is Nikolay Dudin",
+    "specialization": "I am a Web Developer from Moscow",
     "cta": "View Projects",
     "contact": "Get In Touch",
     "scroll": "Scroll Down"
