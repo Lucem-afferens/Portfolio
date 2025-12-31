@@ -71,13 +71,65 @@ RULE 36: Use i18n.t('section.key') for translations
 RULE 37: Support Russian (ru) and English (en) languages
 RULE 38: Language switcher must update all text content via i18n
 
-## Performance Optimization
+## Performance and Simplicity (HIGHEST PRIORITY)
 
-RULE 39: Optimize for LCP < 2.5s: use lazy-loading for images, optimize images, optimize fonts
-RULE 40: Optimize for FID < 100ms: use code-splitting, async/defer scripts, minimize JS on main thread
-RULE 41: Optimize for CLS < 0.1: specify element dimensions, use placeholder blocks for images, stable fonts
-RULE 42: All images must have loading="lazy" attribute and width/height attributes
-RULE 43: Use IntersectionObserver for lazy loading images
+RULE 39: Performance and simplicity have the HIGHEST PRIORITY - always prefer the simplest possible solution
+RULE 40: Always prefer the simplest possible solution that meets the requirements
+RULE 41: Do NOT add abstractions, libraries, or logic unless explicitly required
+RULE 42: Do not add code "for future use" - only add what is needed now
+RULE 43: Do not add features that were not explicitly requested
+RULE 44: Avoid overengineering and premature optimization
+RULE 45: Avoid unnecessary configuration, helpers, wrappers, or utils
+
+## JavaScript Performance
+
+RULE 46: Minimize JavaScript execution on the main thread
+RULE 47: Avoid heavy computations, large loops, and unnecessary re-renders
+RULE 48: Use native browser APIs instead of custom abstractions whenever possible
+RULE 49: Avoid unnecessary event listeners and observers
+RULE 50: All code must aim to meet Core Web Vitals targets: LCP < 2.5s, FID < 100ms, CLS < 0.1
+
+## DOM and Rendering
+
+RULE 51: Minimize DOM nodes and nesting
+RULE 52: Avoid unnecessary wrappers and containers
+RULE 53: Batch DOM updates and avoid layout thrashing
+RULE 54: Do not manipulate the DOM unless required
+
+## CSS/SCSS Performance
+
+RULE 55: Keep CSS/SCSS minimal and component-scoped
+RULE 56: Avoid global styles unless absolutely necessary
+RULE 57: Avoid deep selectors and excessive nesting
+RULE 58: Do not add unused variables, mixins, or styles
+
+## Assets and Media
+
+RULE 59: Optimize images for size and format (WebP/AVIF when possible)
+RULE 60: Always specify width and height for images to avoid layout shifts
+RULE 61: Avoid loading assets that are not visible on the first screen
+RULE 62: Load fonts efficiently and avoid blocking rendering
+RULE 63: All images must have loading="lazy" attribute and width/height attributes
+RULE 64: Use IntersectionObserver for lazy loading images
+
+## Animations
+
+RULE 65: Avoid animations unless they improve UX
+RULE 66: Prefer CSS animations over JavaScript
+RULE 67: Avoid continuous or infinite animations
+RULE 68: Respect reduced motion preferences when applicable
+
+## Prohibitions
+
+RULE 69: Do not add third-party libraries without explicit approval
+RULE 70: Do not add polyfills unless required by target browsers
+RULE 71: Do not add analytics, trackers, or monitoring by default
+RULE 72: Do not add console.logs in production code
+
+## Super Rules (Most Important)
+
+RULE 73: If there is a choice between a simpler and a more complex solution, ALWAYS choose the simpler one
+RULE 74: If you are unsure whether something is needed, do NOT add it
 
 ## SEO
 
