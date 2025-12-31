@@ -4,6 +4,12 @@ import { resolve } from 'path';
 export default defineConfig({
   root: 'src',
   publicDir: '../public',
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+      '@styles': resolve(__dirname, 'src/styles'),
+    },
+  },
   build: {
     outDir: '../dist',
     emptyOutDir: true,
@@ -30,7 +36,9 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "./styles/variables.scss"; @import "./styles/mixins.scss";`,
+        // Import variables and mixins for all SCSS files
+        // Path is relative to root (src/)
+        additionalData: `@import "styles/variables.scss"; @import "styles/mixins.scss";`,
       },
     },
   },
@@ -39,4 +47,3 @@ export default defineConfig({
     include: [],
   },
 });
-

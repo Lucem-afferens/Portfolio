@@ -15,6 +15,20 @@ module.exports = {
   rules: {
     // Отключаем правила, которые конфликтуют с Prettier
     'prettier/prettier': 'error',
+    // Разрешаем devDependencies в конфигурационных файлах
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: [
+          '**/*.config.js',
+          '**/*.config.cjs',
+          '**/vite.config.js',
+          '**/vitest.config.js',
+          '**/*.test.js',
+          '**/*.spec.js',
+        ],
+      },
+    ],
     // Разрешаем console в dev режиме (можно настроить по-другому)
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
