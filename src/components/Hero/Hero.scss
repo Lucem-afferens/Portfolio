@@ -1,0 +1,50 @@
+.hero {
+  min-height: 100vh;
+  @include flex-center;
+  padding: map-get($spacings, 4) 0;
+  text-align: center;
+  
+  &__content {
+    max-width: 800px;
+  }
+  
+  &__name {
+    margin-bottom: map-get($spacings, 2);
+    animation: fadeInUp 0.8s ease;
+  }
+  
+  &__specialization {
+    font-size: 1.25rem;
+    margin-bottom: map-get($spacings, 4);
+    color: $secondary-color;
+    animation: fadeInUp 0.8s ease 0.2s both;
+    
+    .dark-theme & {
+      color: rgba($text-dark, 0.7);
+    }
+  }
+  
+  &__cta {
+    @include button-base;
+    background-color: $primary-color;
+    color: white;
+    animation: fadeInUp 0.8s ease 0.4s both;
+    
+    &:hover {
+      background-color: darken($primary-color, 10%);
+      text-decoration: none;
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

@@ -1,0 +1,96 @@
+.contact {
+  padding: map-get($spacings, 6) 0;
+  
+  &__title {
+    text-align: center;
+    margin-bottom: map-get($spacings, 5);
+  }
+  
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacings, 5);
+    max-width: 800px;
+    margin: 0 auto;
+    
+    @include respond-to(md) {
+      flex-direction: row;
+    }
+  }
+  
+  &__form {
+    flex: 1;
+  }
+  
+  &__form-group {
+    margin-bottom: map-get($spacings, 3);
+  }
+  
+  &__label {
+    display: block;
+    margin-bottom: map-get($spacings, 1);
+    font-weight: 500;
+  }
+  
+  &__input,
+  &__textarea {
+    width: 100%;
+    padding: map-get($spacings, 2);
+    border: 1px solid $border-light;
+    border-radius: 4px;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    @include transition(border-color);
+    
+    .dark-theme & {
+      background-color: $bg-secondary-dark;
+      border-color: $border-dark;
+      color: $text-dark;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+  
+  &__textarea {
+    resize: vertical;
+  }
+  
+  &__submit {
+    @include button-base;
+    width: 100%;
+    background-color: $primary-color;
+    color: white;
+    
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+  
+  &__social {
+    flex: 1;
+    
+    h3 {
+      margin-bottom: map-get($spacings, 3);
+    }
+  }
+  
+  &__social-links {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacings, 2);
+  }
+  
+  &__social-link {
+    color: $primary-color;
+    @include transition(color);
+    
+    &:hover {
+      color: darken($primary-color, 10%);
+      text-decoration: underline;
+    }
+  }
+}
+

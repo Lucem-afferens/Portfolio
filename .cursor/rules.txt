@@ -1,0 +1,162 @@
+# Portfolio Development Rules for Cursor AI
+
+## Technology Stack
+
+RULE 1: Use pure JavaScript (ES6+ modules), NO frameworks (React, Vue, etc.)
+RULE 2: Use Vite as build tool
+RULE 3: Use SCSS with component-based approach
+RULE 4: NO TypeScript - use JavaScript only
+
+## Code Quality
+
+RULE 5: Code must be readable, maintainable, and avoid duplicates or unused functions
+RULE 6: Before committing, always run ESLint, remove unused code, check for duplicates, and format with Prettier
+RULE 7: Use ESLint with eslint-config-airbnb-base, ensure no conflicts with Prettier
+RULE 8: Use Prettier with these settings: single quotes, semicolons, 2 spaces, 100 char width
+RULE 9: Always check for code conflicts and ensure code readability before submitting
+
+## Project Structure
+
+RULE 10: Use component-based architecture with ES6 modules
+RULE 11: Use local state only, NO global state management libraries
+RULE 12: Each component must reside in its own folder: ComponentName/ComponentName.js and ComponentName.scss
+RULE 13: Component files use PascalCase (e.g., Header.js, Hero.js)
+RULE 14: SCSS files use the same name as component (e.g., Header.scss, Hero.scss)
+RULE 15: Functions use camelCase, classes use PascalCase
+RULE 16: Project structure: src/components/, src/styles/, src/locales/, src/utils/, src/assets/
+
+## Component Structure
+
+RULE 17: Header component must contain: logo, navigation menu, language switcher (RU/EN), theme toggle (Light/Dark)
+RULE 18: Hero component must contain: name, specialization, CTA button
+RULE 19: About component must contain: photo/image, description text, skills list
+RULE 20: Projects component must contain: grid of project cards, filter by categories (UI, Web, Branding)
+RULE 21: Project Detail component must contain: image gallery, description, links (demo, code)
+RULE 22: Testimonials component must contain: slider/carousel with client testimonials
+RULE 23: Contact component must contain: contact form (name, email, message), social media links
+
+## Component Template
+
+RULE 24: Each component must follow this structure:
+```javascript
+class ComponentName {
+  static render() {
+    return `HTML template with i18n`;
+  }
+  
+  static init() {
+    // Event listeners and initialization
+  }
+}
+```
+
+RULE 25: Import component SCSS in component JS file: import './ComponentName.scss'
+RULE 26: Import i18n utility: import { i18n } from '../../utils/i18n.js'
+RULE 27: Use i18n.t('key.path') for all text content, never hardcode text
+
+## Styling Rules
+
+RULE 28: DO NOT modify global CSS/styles without explicit user request
+RULE 29: Component SCSS files can be edited when needed
+RULE 30: Use SCSS variables from src/styles/variables.scss
+RULE 31: Use SCSS mixins from src/styles/mixins.scss
+RULE 32: Follow mobile-first approach: start with mobile styles, then add desktop with @include respond-to()
+RULE 33: Support dark theme: use .dark-theme class for dark mode styles
+
+## Internationalization (i18n)
+
+RULE 34: All text content must be loaded from locale JSON files (src/locales/ru.json, en.json)
+RULE 35: Never hardcode text strings in components
+RULE 36: Use i18n.t('section.key') for translations
+RULE 37: Support Russian (ru) and English (en) languages
+RULE 38: Language switcher must update all text content via i18n
+
+## Performance Optimization
+
+RULE 39: Optimize for LCP < 2.5s: use lazy-loading for images, optimize images, optimize fonts
+RULE 40: Optimize for FID < 100ms: use code-splitting, async/defer scripts, minimize JS on main thread
+RULE 41: Optimize for CLS < 0.1: specify element dimensions, use placeholder blocks for images, stable fonts
+RULE 42: All images must have loading="lazy" attribute and width/height attributes
+RULE 43: Use IntersectionObserver for lazy loading images
+
+## SEO
+
+RULE 44: Use semantic HTML elements (header, nav, main, section, article, footer)
+RULE 45: Include meta tags: title, description, og:tags, twitter:tags
+RULE 46: Add structured data (JSON-LD) for SEO
+RULE 47: All images must have descriptive alt text
+RULE 48: Use proper heading hierarchy (h1-h6)
+RULE 49: Include robots.txt and sitemap.xml
+
+## Testing
+
+RULE 50: Critical components and utility functions must include unit tests
+RULE 51: Tests should be in __tests__ folder next to the file being tested
+RULE 52: Use Vitest for testing
+RULE 53: Test file naming: ComponentName.test.js or functionName.test.js
+
+## File Management
+
+RULE 54: Delete outdated files, directories, and archives - keep only current relevant files
+RULE 55: Maintain clean project structure with only necessary files
+
+## Deployment
+
+RULE 56: Hosting: Beget
+RULE 57: Domain: https://develonik.ru/
+RULE 58: Production build must be optimized: minification, compression, code splitting
+
+## Code Generation Commands
+
+When generating code, Cursor AI must:
+1. Check ESLint rules before generating
+2. Format code with Prettier after generation
+3. Remove any unused imports or variables
+4. Check for duplicate code patterns
+5. Ensure all text uses i18n.t() function
+6. Add proper alt text to images
+7. Include width and height attributes for images
+8. Use semantic HTML elements
+9. Follow component structure (render() and init() methods)
+10. Import component SCSS file in component JS
+
+## Explicit Formatting Rules
+
+- Single quotes for strings
+- Semicolons required
+- 2 spaces indentation
+- 100 character line width
+- Trailing commas in objects/arrays
+- Arrow functions: avoid parentheses for single params
+- No console.log in production code
+
+## Explicit ESLint Rules
+
+- Follow airbnb-base config
+- No unused variables (use _ prefix for intentionally unused)
+- No console in production
+- Import order: external, internal, relative
+- Use const/let, avoid var
+
+## Terminal and Command Execution
+
+RULE 59: Always execute terminal commands yourself - never ask user to run commands manually
+RULE 60: Use terminal commands for npm install, git operations, build processes, and all CLI tasks
+RULE 61: Execute commands directly without requesting user permission for standard operations
+RULE 62: If command fails, analyze error and fix issues automatically when possible
+
+## Workflow and Planning
+
+RULE 63: Before making any code changes, provide a clear action plan listing all steps
+RULE 64: After presenting the plan, immediately proceed with implementation without waiting for approval
+RULE 65: Action plan should include: files to create/modify, changes to make, dependencies to add
+RULE 66: Execute all planned changes in sequence, completing the full task
+
+## Git Workflow
+
+RULE 67: After completing code changes, ALWAYS commit changes with detailed commit message
+RULE 68: Commit message must clearly describe ALL changes made in that commit
+RULE 69: Commit message format: brief summary line, then detailed list of changes
+RULE 70: After committing, ALWAYS push changes to remote repository
+RULE 71: Use git commands: git add, git commit, git push - execute all automatically
+RULE 72: Commit message example: "feat: add feature X - detailed description of changes, files modified, functionality added"

@@ -1,0 +1,46 @@
+{
+  "header": {
+    "logo": "Портфолио",
+    "nav": {
+      "home": "Главная",
+      "about": "О себе",
+      "projects": "Проекты",
+      "testimonials": "Отзывы",
+      "contact": "Контакты"
+    }
+  },
+  "hero": {
+    "name": "Ваше Имя",
+    "specialization": "Веб-разработчик",
+    "cta": "Посмотреть проекты"
+  },
+  "about": {
+    "title": "О себе",
+    "description": "Описание о себе и опыте работы",
+    "skills": "Навыки"
+  },
+  "projects": {
+    "title": "Проекты",
+    "filter": {
+      "all": "Все",
+      "ui": "UI",
+      "web": "Web",
+      "branding": "Branding"
+    },
+    "viewProject": "Посмотреть проект"
+  },
+  "testimonials": {
+    "title": "Отзывы"
+  },
+  "contact": {
+    "title": "Связаться со мной",
+    "form": {
+      "name": "Имя",
+      "email": "Email",
+      "message": "Сообщение",
+      "submit": "Отправить"
+    },
+    "social": "Социальные сети"
+  }
+}
+

@@ -1,0 +1,100 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+// Reset и базовые стили
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: $font-size-base;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $text-light;
+  background-color: $bg-light;
+  @include transition(background-color, color);
+  
+  // Dark theme
+  &.dark-theme {
+    color: $text-dark;
+    background-color: $bg-dark;
+  }
+}
+
+// Семантические элементы
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: map-get($spacings, 2);
+}
+
+h1 {
+  font-size: 2.5rem;
+  
+  @include respond-to(md) {
+    font-size: 3.5rem;
+  }
+}
+
+h2 {
+  font-size: 2rem;
+  
+  @include respond-to(md) {
+    font-size: 2.5rem;
+  }
+}
+
+h3 {
+  font-size: 1.75rem;
+  
+  @include respond-to(md) {
+    font-size: 2rem;
+  }
+}
+
+p {
+  margin-bottom: map-get($spacings, 2);
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+  @include transition(color);
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// Утилиты
+.container {
+  @include container;
+}
+
+.sr-only {
+  @include visually-hidden;
+}
+
+// Оптимизация для производительности
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.3s;
+  
+  &.loaded {
+    opacity: 1;
+  }
+}
+

@@ -1,0 +1,46 @@
+{
+  "header": {
+    "logo": "Portfolio",
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "projects": "Projects",
+      "testimonials": "Testimonials",
+      "contact": "Contact"
+    }
+  },
+  "hero": {
+    "name": "Your Name",
+    "specialization": "Web Developer",
+    "cta": "View Projects"
+  },
+  "about": {
+    "title": "About Me",
+    "description": "Description about yourself and work experience",
+    "skills": "Skills"
+  },
+  "projects": {
+    "title": "Projects",
+    "filter": {
+      "all": "All",
+      "ui": "UI",
+      "web": "Web",
+      "branding": "Branding"
+    },
+    "viewProject": "View Project"
+  },
+  "testimonials": {
+    "title": "Testimonials"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Send"
+    },
+    "social": "Social Media"
+  }
+}
+
