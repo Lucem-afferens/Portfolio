@@ -12,7 +12,11 @@
   "hero": {
     "name": "Your Name",
     "specialization": "Web Developer",
-    "cta": "View Projects"
+    "description": "Creating modern web applications with focus on user experience",
+    "greeting": "Hello",
+    "cta": "View Projects",
+    "contact": "Get In Touch",
+    "scroll": "Scroll Down"
   },
   "about": {
     "title": "About Me",
