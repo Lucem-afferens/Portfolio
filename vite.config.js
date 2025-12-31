@@ -37,57 +37,101 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         // Import variables and mixins for all SCSS files
-        // Using function to calculate correct relative paths with safety checks
+        // Using function to calculate correct relative paths with comprehensive safety checks
         additionalData: (content, loaderContext) => {
-          // Safety check: if loaderContext or resourcePath is undefined
-          if (!loaderContext || !loaderContext.resourcePath) {
-            // Fallback: use relative path from components (most common case)
-            return `@import "../../styles/variables.scss"; @import "../../styles/mixins.scss";\n${content}`;
-          }
+          // Helper function to determine import path
+          const getImportPath = filePath => {
+            if (!filePath) return null;
 
-          try {
-            const { resourcePath } = loaderContext;
-            const srcPath = resolve(__dirname, 'src');
-
-            // Check if resourcePath is a string
-            if (typeof resourcePath !== 'string') {
-              return `@import "../../styles/variables.scss"; @import "../../styles/mixins.scss";\n${content}`;
-            }
-
-            // Normalize path separators
-            const normalizedPath = resourcePath.replace(/\\/g, '/');
-            const normalizedSrcPath = srcPath.replace(/\\/g, '/');
+            const normalizedPath = filePath.replace(/\\/g, '/');
+            const normalizedSrcPath = resolve(__dirname, 'src').replace(/\\/g, '/');
 
             // Get relative path from src/
             const relativePath = normalizedPath.replace(normalizedSrcPath, '').replace(/^\//, '');
 
-            // Determine import path based on file location
-            let importPath;
-
-            if (relativePath.includes('/styles/')) {
+            // Check if file is directly in styles/ directory (e.g., "styles/main.scss")
+            if (relativePath.startsWith('styles/') || relativePath === 'styles') {
               // File is in styles/ directory - use current directory
-              importPath = './';
-            } else if (relativePath.includes('/components/')) {
-              // File is in components/ - go up two levels
-              importPath = '../../styles/';
-            } else {
-              // Calculate depth for other locations
-              const depth = (relativePath.match(/\//g) || []).length;
-              importPath = depth > 0 ? `${'../'.repeat(depth)}styles/` : './styles/';
+              return './';
             }
 
-            return `@import "${importPath}variables.scss"; @import "${importPath}mixins.scss";\n${content}`;
-          } catch (error) {
-            // If any error occurs, try to determine path from content or use safe fallback
-            console.warn('SCSS additionalData error, using fallback:', error);
-            // Try to detect if we're in styles/ by checking if content uses variables
-            if (content.includes('$font-size-base') || content.includes('$bg-light')) {
-              // Likely in styles/, use current directory
-              return `@import "./variables.scss"; @import "./mixins.scss";\n${content}`;
+            // Check if file is in a subdirectory of styles/
+            if (relativePath.includes('/styles/')) {
+              // File is in styles/ subdirectory - use current directory
+              return './';
             }
-            // Default fallback for components
-            return `@import "../../styles/variables.scss"; @import "../../styles/mixins.scss";\n${content}`;
+
+            // Check if file is in components/
+            if (relativePath.includes('/components/')) {
+              // File is in components/ - go up two levels
+              return '../../styles/';
+            }
+
+            // Calculate depth for other locations
+            const depth = (relativePath.match(/\//g) || []).length;
+            return depth > 0 ? `${'../'.repeat(depth)}styles/` : './styles/';
+          };
+
+          // Helper function to detect file location from content
+          const detectPathFromContent = fileContent => {
+            // Check for patterns that indicate styles/ directory
+            const stylesIndicators = [
+              '$font-size-base',
+              '$bg-light',
+              '$text-light',
+              'map-get($spacings',
+              '@include container',
+              '@include respond-to',
+            ];
+
+            const hasStylesIndicators = stylesIndicators.some(indicator =>
+              fileContent.includes(indicator)
+            );
+
+            // Check for component-specific patterns
+            const componentIndicators = [
+              '.header',
+              '.hero',
+              '.about',
+              '.projects',
+              '.testimonials',
+              '.contact',
+            ];
+
+            const hasComponentIndicators = componentIndicators.some(indicator =>
+              fileContent.includes(indicator)
+            );
+
+            if (hasStylesIndicators && !hasComponentIndicators) {
+              return './';
+            }
+            if (hasComponentIndicators) {
+              return '../../styles/';
+            }
+            // Default: assume component
+            return '../../styles/';
+          };
+
+          // Try to get path from loaderContext
+          if (loaderContext && loaderContext.resourcePath) {
+            try {
+              const { resourcePath } = loaderContext;
+
+              // Check if resourcePath is a string
+              if (typeof resourcePath === 'string') {
+                const importPath = getImportPath(resourcePath);
+                if (importPath) {
+                  return `@import "${importPath}variables.scss"; @import "${importPath}mixins.scss";\n${content}`;
+                }
+              }
+            } catch (error) {
+              console.warn('SCSS additionalData: Error processing resourcePath:', error);
+            }
           }
+
+          // Fallback: detect path from content
+          const fallbackPath = detectPathFromContent(content);
+          return `@import "${fallbackPath}variables.scss"; @import "${fallbackPath}mixins.scss";\n${content}`;
         },
       },
     },
