@@ -14,22 +14,22 @@
 
   &__name {
     margin-bottom: map-get($spacings, 3);
-    font-size: 3rem;
-    font-weight: 800;
-    line-height: 1.1;
-    color: $text-light;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: $secondary-color;
     animation: fadeInUp 0.8s ease 0.2s both;
 
     .dark-theme & {
-      color: $text-dark;
+      color: rgba($text-dark, 0.7);
     }
 
     @include respond-to(md) {
-      font-size: 4.5rem;
+      font-size: 1.75rem;
     }
 
     @include respond-to(lg) {
-      font-size: 5.5rem;
+      font-size: 2rem;
     }
   }
 
@@ -38,23 +38,35 @@
     align-items: center;
     gap: map-get($spacings, 1);
     margin-bottom: map-get($spacings, 5);
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: $text-light;
     animation: fadeInUp 0.8s ease 0.4s both;
-
-    .dark-theme & {
-      color: $text-dark;
-    }
-
-    @include respond-to(md) {
-      font-size: 2rem;
-    }
   }
 
   &__specialization {
     margin: 0;
     position: relative;
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: $text-light;
+    background: linear-gradient(135deg, $primary-color 0%, $info-color 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    .dark-theme & {
+      background: linear-gradient(135deg, $primary-color 0%, lighten($info-color, 20%) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @include respond-to(md) {
+      font-size: 3.5rem;
+    }
+
+    @include respond-to(lg) {
+      font-size: 4.5rem;
+    }
   }
 
   &__cursor {
