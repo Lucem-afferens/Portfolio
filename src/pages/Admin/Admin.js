@@ -601,6 +601,11 @@ class Admin {
     addBtn?.addEventListener('click', () => {
       this.showProjectForm();
     });
+
+    const seedBtn = document.querySelector('[data-seed-projects]');
+    seedBtn?.addEventListener('click', () => {
+      this.seedInitialProjects();
+    });
   }
 
   static async loadProjects() {
