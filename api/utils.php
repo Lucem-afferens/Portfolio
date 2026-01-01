@@ -5,8 +5,10 @@
 
 /**
  * Отправка уведомления в Telegram
+ * @param string $message Текст сообщения
+ * @param string|null $photoPath Путь к фото (относительный, например /uploads/testimonials/file.jpg)
  */
-function sendTelegramNotification($message) {
+function sendTelegramNotification($message, $photoPath = null) {
     // Проверяем, что константы определены
     if (!defined('TELEGRAM_BOT_TOKEN') || !defined('TELEGRAM_CHAT_ID')) {
         error_log('Telegram constants not defined');
@@ -21,22 +23,57 @@ function sendTelegramNotification($message) {
         return false;
     }
     
-    $url = "https://api.telegram.org/bot{$token}/sendMessage";
-    $data = [
-        'chat_id' => $chatId,
-        'text' => $message,
-        'parse_mode' => 'HTML',
-    ];
-    
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    
-    $response = curl_exec($ch);
-    curl_close($ch);
-    
-    return $response !== false;
+    // Если есть фото, отправляем его вместе с текстом
+    if (!empty($photoPath) && file_exists(__DIR__ . '/..' . $photoPath)) {
+        // Формируем полный URL к фото
+        $photoUrl = 'https://develonik.ru' . $photoPath;
+        
+        // Отправляем фото с подписью
+        $url = "https://api.telegram.org/bot{$token}/sendPhoto";
+        $data = [
+            'chat_id' => $chatId,
+            'photo' => $photoUrl,
+            'caption' => $message,
+            'parse_mode' => 'HTML',
+        ];
+        
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        // Если отправка фото не удалась, отправляем только текст
+        if ($httpCode !== 200) {
+            error_log('Failed to send photo to Telegram, sending text only');
+            return sendTelegramNotification($message);
+        }
+        
+        return $response !== false;
+    } else {
+        // Отправляем только текст
+        $url = "https://api.telegram.org/bot{$token}/sendMessage";
+        $data = [
+            'chat_id' => $chatId,
+            'text' => $message,
+            'parse_mode' => 'HTML',
+        ];
+        
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        
+        $response = curl_exec($ch);
+        curl_close($ch);
+        
+        return $response !== false;
+    }
 }
 
 /**

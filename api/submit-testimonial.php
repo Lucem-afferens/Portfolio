@@ -154,7 +154,9 @@ try {
     ";
     
     // Отправка уведомлений
-    sendTelegramNotification($telegramMessage);
+    // Передаем путь к фото, если оно есть
+    $photoPath = !empty($data['photo']) ? $data['photo'] : null;
+    sendTelegramNotification($telegramMessage, $photoPath);
     sendEmailNotification($emailSubject, $emailMessage);
     
     http_response_code(200);
