@@ -30,8 +30,6 @@ class About {
                 class="about__image"
                 data-about-image
                 loading="lazy"
-                width="400"
-                height="400"
               />
             </div>
             <div class="about__text">
