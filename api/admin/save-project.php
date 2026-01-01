@@ -32,16 +32,30 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendError('Method not allowed', 405);
 }
 
-// Получение данных
-$rawInput = file_get_contents('php://input');
-$data = json_decode($rawInput, true);
+// Получение данных (поддержка FormData и JSON)
+$data = [];
 
-if (json_last_error() !== JSON_ERROR_NONE) {
-    sendError('Некорректный JSON: ' . json_last_error_msg(), 400);
-}
-
-if (!is_array($data)) {
-    sendError('Данные не получены или имеют неверный формат', 400);
+// Проверяем, отправлены ли данные как FormData
+if (!empty($_POST)) {
+    $data = $_POST;
+    
+    // Преобразуем tools из JSON строки в массив
+    if (isset($data['tools']) && is_string($data['tools'])) {
+        $decoded = json_decode($data['tools'], true);
+        $data['tools'] = is_array($decoded) ? $decoded : [];
+    }
+} else {
+    // Fallback для JSON
+    $rawInput = file_get_contents('php://input');
+    $data = json_decode($rawInput, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        sendError('Некорректный JSON: ' . json_last_error_msg(), 400);
+    }
+    
+    if (!is_array($data)) {
+        sendError('Данные не получены или имеют неверный формат', 400);
+    }
 }
 
 // Валидация
@@ -114,6 +128,19 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
     
     // Сохраняем относительный путь
     $imagePath = '/uploads/projects/' . $fileName;
+    
+    // Удаляем старое изображение, если обновляем проект
+    if (isset($data['id']) && !empty($data['id'])) {
+        $oldStmt = $pdo->prepare('SELECT image FROM projects WHERE id = :id');
+        $oldStmt->execute([':id' => (int)$data['id']]);
+        $oldProject = $oldStmt->fetch(PDO::FETCH_ASSOC);
+        if ($oldProject && !empty($oldProject['image'])) {
+            $oldPath = __DIR__ . '/../..' . $oldProject['image'];
+            if (file_exists($oldPath)) {
+                @unlink($oldPath);
+            }
+        }
+    }
 }
 
 try {

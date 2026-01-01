@@ -3,59 +3,6 @@ import './Projects.scss';
 
 class Projects {
   static render() {
-    const projects = [
-      {
-        id: 1,
-        title: 'Точка GG',
-        role: 'Full-stack Developer',
-        category: 'web',
-        image: {
-          src: '/images/project-placeholder.svg',
-          srcset: '/images/project-placeholder.svg 400w, /images/project-placeholder.svg 800w',
-          width: 800,
-          height: 600,
-          alt: 'Превью проекта: Сайт компьютерного клуба Точка GG',
-        },
-        tags: ['WordPress', 'PHP', 'SEO', 'PageSpeed'],
-        link: 'https://kungur-tochkagg.ru',
-        description:
-          'Разработка WordPress-темы с нуля, SEO-оптимизация и улучшение производительности',
-      },
-      {
-        id: 2,
-        title: 'Приз Бокс',
-        role: 'Full-stack Developer',
-        category: 'web',
-        image: {
-          src: '/images/project-placeholder.svg',
-          srcset: '/images/project-placeholder.svg 400w, /images/project-placeholder.svg 800w',
-          width: 800,
-          height: 600,
-          alt: 'Превью проекта: Telegram-бот Приз Бокс',
-        },
-        tags: ['Telegram API', 'PHP', 'MySQL', 'AI'],
-        link: 'https://t.me/wheel_prize_test_bot',
-        description: 'Telegram-бот с личным кабинетом, рейтингом и админ-панелью',
-      },
-      {
-        id: 3,
-        title: 'Welcome to Day',
-        role: 'Full-stack Developer',
-        category: 'web',
-        image: {
-          src: '/images/project-placeholder.svg',
-          srcset: '/images/project-placeholder.svg 400w, /images/project-placeholder.svg 800w',
-          width: 800,
-          height: 600,
-          alt: 'Превью проекта: Сайт электронных приглашений Welcome to Day',
-        },
-        tags: ['Frontend', 'SEO', 'Analytics', 'Optimization'],
-        link: 'https://welcome-to-day.ru',
-        description:
-          'Каталог интерактивных приглашений с формами заявок, промокодами и уведомлениями',
-      },
-    ];
-
     return `
       <section id="projects" class="projects" aria-labelledby="projects-title">
         <div class="container">
@@ -65,7 +12,7 @@ class Projects {
           </header>
           
           <div class="projects__grid" role="list" aria-label="${i18n.t('projects.gridLabel')}" data-projects-grid>
-            ${Projects.renderProjects(projects)}
+            <div class="projects__loading">Загрузка проектов...</div>
           </div>
         </div>
       </section>
@@ -73,55 +20,87 @@ class Projects {
   }
 
   static renderProjects(projects) {
+    if (!projects || projects.length === 0) {
+      return '<p class="projects__empty">Проектов пока нет</p>';
+    }
+
     return projects
-      .map(
-        project => `
+      .map(project => {
+        const imageSrc = project.image || '/images/project-placeholder.svg';
+        const imageAlt = `Превью проекта: ${project.title}`;
+        const tools = Array.isArray(project.tools) ? project.tools : [];
+
+        return `
       <article 
         class="projects__card" 
         role="listitem" 
-        data-category="${project.category}"
+        data-category="web"
       >
         <a 
-          href="${project.link}" 
+          href="${this.escapeHtml(project.link)}" 
           class="projects__card-link" 
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="${i18n.t('projects.viewProject')}: ${project.title}"
+          aria-label="${i18n.t('projects.viewProject')}: ${this.escapeHtml(project.title)}"
         >
           <div class="projects__card-image-wrapper">
             <img 
-              src="${project.image.src}"
-              srcset="${project.image.srcset}"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              alt="${project.image.alt}"
+              src="${this.escapeHtml(imageSrc)}"
+              alt="${this.escapeHtml(imageAlt)}"
               class="projects__card-image"
               loading="lazy"
-              width="${project.image.width}"
-              height="${project.image.height}"
+              width="800"
+              height="600"
               decoding="async"
             />
             <div class="projects__card-overlay" aria-hidden="true"></div>
           </div>
           <div class="projects__card-content">
-            <h3 class="projects__card-title">${project.title}</h3>
-            <p class="projects__card-role">${i18n.t('projects.role')}: ${project.role}</p>
-            <p class="projects__card-description">${project.description}</p>
+            <h3 class="projects__card-title">${this.escapeHtml(project.title)}</h3>
+            <p class="projects__card-role">${i18n.t('projects.role')}: ${this.escapeHtml(project.role)}</p>
+            <p class="projects__card-description">${this.escapeHtml(project.description)}</p>
             <div class="projects__card-tags" aria-label="${i18n.t('projects.technologies')}">
-              ${project.tags.map(tag => `<span class="projects__tag">${tag}</span>`).join('')}
+              ${tools.map(tool => `<span class="projects__tag">${this.escapeHtml(tool)}</span>`).join('')}
             </div>
           </div>
         </a>
       </article>
-    `
-      )
+    `;
+      })
       .join('');
   }
 
-  static init() {
-    const grid = document.querySelector('.projects__grid');
+  static escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
+  static init() {
+    this.loadProjects();
+  }
+
+  static async loadProjects() {
+    const grid = document.querySelector('[data-projects-grid]');
     if (!grid) return;
 
+    try {
+      const response = await fetch('/api/get-projects.php');
+      const result = await response.json();
+
+      if (result.success && result.projects.length > 0) {
+        grid.innerHTML = this.renderProjects(result.projects);
+        this.initLazyLoading();
+      } else {
+        grid.innerHTML = '<p class="projects__empty">Проектов пока нет</p>';
+      }
+    } catch (error) {
+      console.error('Error loading projects:', error);
+      grid.innerHTML = '<p class="projects__empty">Ошибка загрузки проектов</p>';
+    }
+  }
+
+  static initLazyLoading() {
     // Lazy loading для изображений с Intersection Observer
     const imageObserver = new IntersectionObserver(
       (entries, observer) => {

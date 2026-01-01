@@ -583,4 +583,158 @@
     display: flex;
     gap: map-get($spacings, 2);
   }
+
+  &__modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: map-get($spacings, 2);
+  }
+
+  &__modal {
+    background-color: var(--bg-surface);
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    @include box-shadow(3);
+  }
+
+  &__modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: map-get($spacings, 4);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  &__modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  &__modal-close {
+    @include button-base;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+  }
+
+  &__project-form {
+    padding: map-get($spacings, 4);
+  }
+
+  &__textarea {
+    width: 100%;
+    padding: map-get($spacings, 2) map-get($spacings, 3);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: var(--text-primary);
+    resize: vertical;
+    min-height: 100px;
+    @include transition(border-color);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+    }
+  }
+
+  &__hint {
+    display: block;
+    margin-top: map-get($spacings, 1);
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  &__project-image-preview {
+    margin-bottom: map-get($spacings, 2);
+
+    img {
+      max-width: 200px;
+      max-height: 150px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      object-fit: cover;
+    }
+
+    p {
+      margin-top: map-get($spacings, 1);
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+  }
+
+  &__file-input {
+    width: 100%;
+    padding: map-get($spacings, 2);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: var(--text-primary);
+    cursor: pointer;
+    @include transition(border-color);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+    }
+
+    &::file-selector-button {
+      padding: map-get($spacings, 1) map-get($spacings, 3);
+      margin-right: map-get($spacings, 2);
+      background-color: var(--color-primary);
+      color: var(--bg-surface);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      @include transition(background-color);
+
+      &:hover {
+        background-color: rgba(31, 166, 160, 0.9);
+      }
+    }
+  }
+
+  &__modal-actions {
+    display: flex;
+    gap: map-get($spacings, 2);
+    margin-top: map-get($spacings, 4);
+    justify-content: flex-end;
+  }
+
+  &__btn--cancel {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+  }
 }

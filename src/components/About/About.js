@@ -28,6 +28,7 @@ class About {
                 src="/images/about-placeholder.svg" 
                 alt="Николай Дудин - Web-разработчик" 
                 class="about__image"
+                data-about-image
                 loading="lazy"
                 width="400"
                 height="400"
@@ -47,6 +48,8 @@ class About {
   }
 
   static init() {
+    this.loadAboutPhoto();
+
     const images = document.querySelectorAll('.about img[loading="lazy"]');
     images.forEach(img => {
       if (img.complete) {
@@ -57,6 +60,22 @@ class About {
         });
       }
     });
+  }
+
+  static async loadAboutPhoto() {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success && result.settings.about_photo) {
+        const aboutImage = document.querySelector('[data-about-image]');
+        if (aboutImage) {
+          aboutImage.src = result.settings.about_photo;
+        }
+      }
+    } catch (error) {
+      console.error('Error loading about photo:', error);
+    }
   }
 }
 
