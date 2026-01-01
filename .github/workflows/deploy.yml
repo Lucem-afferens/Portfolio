@@ -19,7 +19,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
             echo "📁 Copying public files..."
             cp -r public/* dist/ || true
           fi
-          
+
           # Копируем PHP API файлы
           echo "📄 Copying PHP API files..."
           mkdir -p dist/api
@@ -111,7 +111,7 @@ jobs:
           ls -la dist/uploads/projects/ || true
           ls -la dist/uploads/site/ || true
           ls -la dist/uploads/testimonials/ || true
-          
+
           echo "✅ Files prepared for deployment"
           echo "📁 Contents of dist:"
           ls -la dist/ || true
@@ -272,17 +272,25 @@ jobs:
           state-name: .ftp-deploy-sync-state.json
 
       - name: Verify deployment
-        if: success()
+        if: always()
         run: |
-          echo "✅ Deployment completed successfully!"
-          echo "🌐 Your portfolio should be available at https://develonik.ru"
-          echo "📝 Files deployed:"
-          echo "  - Frontend: dist/*"
-          echo "  - API: dist/api/*.php"
-          echo "  - Database config: dist/database/config.php"
-          echo "  - API config: dist/api/config.php (with secrets)"
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment completed successfully!"
+            echo "🌐 Your portfolio should be available at https://develonik.ru"
+            echo "📝 Files deployed:"
+            echo "  - Frontend: dist/*"
+            echo "  - API: dist/api/*.php"
+            echo "  - Admin API: dist/api/admin/*.php"
+            echo "  - Database config: dist/database/config.php"
+            echo "  - API config: dist/api/config.php (with secrets)"
           echo ""
-          echo "🔍 Next steps:"
-          echo "  1. Check https://develonik.ru/"
-          echo "  2. Check https://develonik.ru/admin.html"
-          echo "  3. Check https://develonik.ru/api/test-db.php"
+            echo "🔍 Next steps:"
+            echo "  1. Check https://develonik.ru/"
+            echo "  2. Check https://develonik.ru/admin.html"
+            echo "  3. Check https://develonik.ru/api/test-db.php"
+            echo "  4. Check https://develonik.ru/api/admin/get-projects.php (after login)"
+          else
+            echo "❌ Deployment failed!"
+            echo "Please check the logs above for errors."
+            exit 1
+          fi
