@@ -33,13 +33,7 @@ export default defineConfig({
       },
     },
     // Оптимизация для производительности
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
+    minify: 'esbuild', // Используем esbuild (быстрее и не требует дополнительных зависимостей)
     // Code splitting для лучшей производительности
     chunkSizeWarningLimit: 1000,
   },
