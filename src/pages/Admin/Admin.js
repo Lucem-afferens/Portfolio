@@ -28,21 +28,36 @@ class Admin {
         
         <div class="admin__panel" data-admin-panel style="display: none;">
           <header class="admin__header">
-            <h1 class="admin__panel-title">Модерация отзывов</h1>
+            <h1 class="admin__panel-title">Админ-панель</h1>
             <button class="admin__logout" data-logout-btn>Выйти</button>
           </header>
           
-          <nav class="admin__tabs">
-            <button class="admin__tab active" data-tab="pending">
-              На модерации <span class="admin__badge" data-pending-count>0</span>
+          <nav class="admin__main-tabs">
+            <button class="admin__main-tab active" data-main-tab="testimonials">
+              Отзывы
             </button>
-            <button class="admin__tab" data-tab="approved">
-              Одобренные
+            <button class="admin__main-tab" data-main-tab="projects">
+              Проекты
             </button>
-            <button class="admin__tab" data-tab="rejected">
-              Архив
+            <button class="admin__main-tab" data-main-tab="photos">
+              Фото
             </button>
           </nav>
+          
+          <div class="admin__main-content">
+            <!-- Вкладка Отзывы -->
+            <div class="admin__main-tab-content active" data-main-tab-content="testimonials">
+              <nav class="admin__tabs">
+                <button class="admin__tab active" data-tab="pending">
+                  На модерации <span class="admin__badge" data-pending-count>0</span>
+                </button>
+                <button class="admin__tab" data-tab="approved">
+                  Одобренные
+                </button>
+                <button class="admin__tab" data-tab="rejected">
+                  Архив
+                </button>
+              </nav>
           
           <div class="admin__content">
             <div class="admin__tab-content active" data-tab-content="pending">
@@ -78,6 +93,67 @@ class Admin {
               <div class="admin__testimonials" data-rejected-list></div>
             </div>
           </div>
+            </div>
+            
+            <!-- Вкладка Проекты -->
+            <div class="admin__main-tab-content" data-main-tab-content="projects">
+              <div class="admin__projects-header">
+                <button class="admin__btn admin__btn--primary" data-add-project>
+                  + Добавить проект
+                </button>
+              </div>
+              <div class="admin__projects-list" data-projects-list></div>
+            </div>
+            
+            <!-- Вкладка Фото -->
+            <div class="admin__main-tab-content" data-main-tab-content="photos">
+              <div class="admin__photos">
+                <div class="admin__photo-section">
+                  <h3 class="admin__photo-title">Фото на главном экране (Hero)</h3>
+                  <div class="admin__photo-preview" data-hero-photo-preview>
+                    <div class="admin__photo-placeholder">Нет фото</div>
+                  </div>
+                  <div class="admin__photo-actions">
+                    <input
+                      type="file"
+                      id="hero-photo-input"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      data-hero-photo-input
+                      style="display: none;"
+                    />
+                    <label for="hero-photo-input" class="admin__btn admin__btn--primary">
+                      Загрузить фото
+                    </label>
+                    <button class="admin__btn admin__btn--delete" data-delete-hero-photo style="display: none;">
+                      Удалить фото
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="admin__photo-section">
+                  <h3 class="admin__photo-title">Фото в блоке "О себе" (About)</h3>
+                  <div class="admin__photo-preview" data-about-photo-preview>
+                    <div class="admin__photo-placeholder">Нет фото</div>
+                  </div>
+                  <div class="admin__photo-actions">
+                    <input
+                      type="file"
+                      id="about-photo-input"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      data-about-photo-input
+                      style="display: none;"
+                    />
+                    <label for="about-photo-input" class="admin__btn admin__btn--primary">
+                      Загрузить фото
+                    </label>
+                    <button class="admin__btn admin__btn--delete" data-delete-about-photo style="display: none;">
+                      Удалить фото
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -86,9 +162,12 @@ class Admin {
   static init() {
     this.checkAuth();
     this.setupLogin();
+    this.setupMainTabs();
     this.setupTabs();
     this.setupLogout();
     this.setupArchiveSearch();
+    this.setupProjects();
+    this.setupPhotos();
     this.loadTestimonials('pending');
   }
 
@@ -164,11 +243,19 @@ class Admin {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
 
-        // Показываем нужный контент
-        document.querySelectorAll('[data-tab-content]').forEach(content => {
-          content.classList.remove('active');
-        });
-        document.querySelector(`[data-tab-content="${tabName}"]`).classList.add('active');
+        // Показываем нужный контент (только внутри вкладки отзывов)
+        const testimonialsContent = document.querySelector(
+          '[data-main-tab-content="testimonials"]'
+        );
+        if (testimonialsContent) {
+          testimonialsContent.querySelectorAll('[data-tab-content]').forEach(content => {
+            content.classList.remove('active');
+          });
+          const targetContent = testimonialsContent.querySelector(
+            `[data-tab-content="${tabName}"]`
+          );
+          if (targetContent) targetContent.classList.add('active');
+        }
 
         // Загружаем данные
         if (tabName === 'rejected') {
@@ -476,6 +563,281 @@ class Admin {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  // ========== Управление главными вкладками ==========
+  static setupMainTabs() {
+    const mainTabs = document.querySelectorAll('[data-main-tab]');
+    mainTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.mainTab;
+
+        // Обновляем активные табы
+        mainTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Показываем нужный контент
+        document.querySelectorAll('[data-main-tab-content]').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.querySelector(`[data-main-tab-content="${tabName}"]`).classList.add('active');
+
+        // Загружаем данные для вкладки
+        if (tabName === 'projects') {
+          this.loadProjects();
+        } else if (tabName === 'photos') {
+          this.loadPhotos();
+        }
+      });
+    });
+  }
+
+  // ========== Управление проектами ==========
+  static setupProjects() {
+    const addBtn = document.querySelector('[data-add-project]');
+    addBtn?.addEventListener('click', () => {
+      this.showProjectForm();
+    });
+  }
+
+  static async loadProjects() {
+    const listEl = document.querySelector('[data-projects-list]');
+    if (!listEl) return;
+
+    listEl.innerHTML = '<div class="admin__loading">Загрузка...</div>';
+
+    try {
+      const response = await fetch('/api/admin/get-projects.php');
+      const result = await response.json();
+
+      if (result.success) {
+        this.renderProjects(listEl, result.projects);
+      } else {
+        listEl.innerHTML = '<div class="admin__error">Ошибка загрузки</div>';
+      }
+    } catch (error) {
+      listEl.innerHTML = '<div class="admin__error">Ошибка загрузки</div>';
+    }
+  }
+
+  static renderProjects(containerEl, projects) {
+    const container = containerEl;
+    if (projects.length === 0) {
+      container.innerHTML = '<div class="admin__empty">Проектов пока нет</div>';
+      return;
+    }
+
+    container.innerHTML = projects
+      .map(
+        project => `
+      <div class="admin__project-card" data-project-id="${project.id}">
+        <div class="admin__project-header">
+          ${project.image ? `<img src="${this.escapeHtml(project.image)}" alt="${this.escapeHtml(project.title)}" class="admin__project-image" />` : ''}
+          <div class="admin__project-info">
+            <h3 class="admin__project-title">${this.escapeHtml(project.title)}</h3>
+            <p class="admin__project-role">${this.escapeHtml(project.role)}</p>
+            <p class="admin__project-description">${this.escapeHtml(project.description)}</p>
+            <div class="admin__project-tools">
+              ${Array.isArray(project.tools) ? project.tools.map(tool => `<span class="admin__tool-tag">${this.escapeHtml(tool)}</span>`).join('') : ''}
+            </div>
+            <a href="${this.escapeHtml(project.link)}" target="_blank" rel="noopener noreferrer" class="admin__project-link">
+              ${this.escapeHtml(project.link)}
+            </a>
+          </div>
+        </div>
+        <div class="admin__project-actions">
+          <button class="admin__btn admin__btn--edit" data-edit-project="${project.id}">
+            Редактировать
+          </button>
+          <button class="admin__btn admin__btn--delete" data-delete-project="${project.id}">
+            Удалить
+          </button>
+        </div>
+      </div>
+    `
+      )
+      .join('');
+
+    // Обработчики
+    container.querySelectorAll('[data-edit-project]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.editProject;
+        this.showProjectForm(id);
+      });
+    });
+
+    container.querySelectorAll('[data-delete-project]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.deleteProject;
+        // eslint-disable-next-line no-alert
+        if (window.confirm('Вы уверены, что хотите удалить этот проект?')) {
+          this.deleteProject(id);
+        }
+      });
+    });
+  }
+
+  static showProjectForm(_projectId = null) {
+    // TODO: Реализовать форму редактирования проекта
+    // eslint-disable-next-line no-alert
+    alert('Форма редактирования проекта будет реализована');
+  }
+
+  static async deleteProject(id) {
+    try {
+      const response = await fetch('/api/admin/delete-project.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10) }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        this.loadProjects();
+        // eslint-disable-next-line no-alert
+        alert('Проект удален');
+      } else {
+        // eslint-disable-next-line no-alert
+        alert(`Ошибка: ${result.error || 'Неизвестная ошибка'}`);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert('Ошибка при удалении проекта');
+    }
+  }
+
+  // ========== Управление фото ==========
+  static setupPhotos() {
+    const heroInput = document.querySelector('[data-hero-photo-input]');
+    const aboutInput = document.querySelector('[data-about-photo-input]');
+    const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
+    const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
+
+    heroInput?.addEventListener('change', e => {
+      if (e.target.files[0]) {
+        this.uploadPhoto('hero_photo', e.target.files[0]);
+      }
+    });
+
+    aboutInput?.addEventListener('change', e => {
+      if (e.target.files[0]) {
+        this.uploadPhoto('about_photo', e.target.files[0]);
+      }
+    });
+
+    deleteHeroBtn?.addEventListener('click', () => {
+      this.deletePhoto('hero_photo');
+    });
+
+    deleteAboutBtn?.addEventListener('click', () => {
+      this.deletePhoto('about_photo');
+    });
+  }
+
+  static async loadPhotos() {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success) {
+        this.renderPhotos(result.settings);
+      }
+    } catch (error) {
+      console.error('Error loading photos:', error);
+    }
+  }
+
+  static renderPhotos(settings) {
+    const heroPreview = document.querySelector('[data-hero-photo-preview]');
+    const aboutPreview = document.querySelector('[data-about-photo-preview]');
+    const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
+    const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
+
+    // Hero photo
+    if (settings.hero_photo) {
+      if (heroPreview) {
+        heroPreview.innerHTML = `<img src="${this.escapeHtml(settings.hero_photo)}" alt="Hero photo" />`;
+      }
+      if (deleteHeroBtn) deleteHeroBtn.style.display = 'inline-block';
+    } else {
+      if (heroPreview) {
+        heroPreview.innerHTML = '<div class="admin__photo-placeholder">Нет фото</div>';
+      }
+      if (deleteHeroBtn) deleteHeroBtn.style.display = 'none';
+    }
+
+    // About photo
+    if (settings.about_photo) {
+      if (aboutPreview) {
+        aboutPreview.innerHTML = `<img src="${this.escapeHtml(settings.about_photo)}" alt="About photo" />`;
+      }
+      if (deleteAboutBtn) deleteAboutBtn.style.display = 'inline-block';
+    } else {
+      if (aboutPreview) {
+        aboutPreview.innerHTML = '<div class="admin__photo-placeholder">Нет фото</div>';
+      }
+      if (deleteAboutBtn) deleteAboutBtn.style.display = 'none';
+    }
+  }
+
+  static async uploadPhoto(settingKey, file) {
+    const formData = new FormData();
+    formData.append('setting_key', settingKey);
+    formData.append('photo', file);
+
+    try {
+      const response = await fetch('/api/admin/save-site-setting.php', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        this.loadPhotos();
+        // eslint-disable-next-line no-alert
+        alert('Фото загружено');
+      } else {
+        // eslint-disable-next-line no-alert
+        alert(`Ошибка: ${result.error || 'Неизвестная ошибка'}`);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert('Ошибка при загрузке фото');
+    }
+  }
+
+  static async deletePhoto(settingKey) {
+    // eslint-disable-next-line no-alert
+    if (!window.confirm('Вы уверены, что хотите удалить это фото?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/admin/save-site-setting.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          setting_key: settingKey,
+          delete: true,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        this.loadPhotos();
+        // eslint-disable-next-line no-alert
+        alert('Фото удалено');
+      } else {
+        // eslint-disable-next-line no-alert
+        alert(`Ошибка: ${result.error || 'Неизвестная ошибка'}`);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert('Ошибка при удалении фото');
+    }
   }
 }
 
