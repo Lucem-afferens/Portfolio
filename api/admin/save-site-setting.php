@@ -7,12 +7,16 @@ session_start();
 
 header('Content-Type: application/json; charset=utf-8');
 
-function sendError($message, $code = 500) {
+function sendError($message, $code = 500, $details = null) {
     http_response_code($code);
-    echo json_encode([
+    $response = [
         'success' => false,
         'error' => $message,
-    ]);
+    ];
+    if ($details !== null) {
+        $response['details'] = $details;
+    }
+    echo json_encode($response);
     exit;
 }
 
@@ -162,10 +166,18 @@ if ($delete) {
     if (!move_uploaded_file($file['tmp_name'], $filePath)) {
         $lastError = error_get_last();
         $errorMsg = 'Ошибка при сохранении файла';
+        $details = [
+            'tmp_name' => $file['tmp_name'],
+            'target_path' => $filePath,
+            'file_exists' => file_exists($file['tmp_name']),
+            'target_dir_writable' => is_writable($uploadDir),
+        ];
         if ($lastError) {
             $errorMsg .= ': ' . $lastError['message'];
+            $details['php_error'] = $lastError;
         }
-        sendError($errorMsg, 500);
+        error_log('move_uploaded_file failed: ' . print_r($details, true));
+        sendError($errorMsg, 500, $details);
     }
     
     // Проверяем, что файл действительно сохранен
@@ -181,6 +193,11 @@ if ($delete) {
 }
 
 try {
+    // Проверяем, что $pdo доступен
+    if (!isset($pdo)) {
+        sendError('Ошибка подключения к базе данных', 500);
+    }
+    
     // Обновляем или создаем настройку
     $stmt = $pdo->prepare("
         INSERT INTO site_settings (setting_key, setting_value)
@@ -188,10 +205,21 @@ try {
         ON DUPLICATE KEY UPDATE setting_value = :value
     ");
     
-    $stmt->execute([
+    if (!$stmt) {
+        $errorInfo = $pdo->errorInfo();
+        sendError('Ошибка подготовки запроса к БД', 500, $errorInfo);
+    }
+    
+    $result = $stmt->execute([
         ':key' => $settingKey,
         ':value' => $settingValue,
     ]);
+    
+    if (!$result) {
+        $errorInfo = $stmt->errorInfo();
+        error_log('Database execute error: ' . print_r($errorInfo, true));
+        sendError('Ошибка при выполнении запроса к БД', 500, $errorInfo);
+    }
     
     http_response_code(200);
     echo json_encode([
@@ -201,6 +229,11 @@ try {
     ]);
 } catch (PDOException $e) {
     error_log('Database error in admin/save-site-setting.php: ' . $e->getMessage());
-    sendError('Ошибка при сохранении настройки', 500);
+    error_log('Stack trace: ' . $e->getTraceAsString());
+    sendError('Ошибка при сохранении настройки: ' . $e->getMessage(), 500);
+} catch (Exception $e) {
+    error_log('General error in admin/save-site-setting.php: ' . $e->getMessage());
+    error_log('Stack trace: ' . $e->getTraceAsString());
+    sendError('Неожиданная ошибка: ' . $e->getMessage(), 500);
 }
 
