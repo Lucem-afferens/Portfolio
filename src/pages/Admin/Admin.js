@@ -677,10 +677,261 @@ class Admin {
     });
   }
 
-  static showProjectForm(_projectId = null) {
-    // TODO: Реализовать форму редактирования проекта
-    // eslint-disable-next-line no-alert
-    alert('Форма редактирования проекта будет реализована');
+  static async showProjectForm(projectId = null) {
+    let project = null;
+
+    if (projectId) {
+      try {
+        const response = await fetch('/api/admin/get-projects.php');
+        const result = await response.json();
+        if (result.success) {
+          project = result.projects.find(p => p.id === parseInt(projectId, 10));
+        }
+      } catch (error) {
+        console.error('Error loading project:', error);
+      }
+    }
+
+    const formHtml = `
+      <div class="admin__modal-overlay" data-project-modal-overlay>
+        <div class="admin__modal">
+          <div class="admin__modal-header">
+            <h2 class="admin__modal-title">${project ? 'Редактировать проект' : 'Добавить проект'}</h2>
+            <button class="admin__modal-close" data-close-project-modal>×</button>
+          </div>
+          <form class="admin__project-form" data-project-form enctype="multipart/form-data">
+            <input type="hidden" name="id" value="${project ? project.id : ''}" />
+            
+            <div class="admin__form-group">
+              <label for="project-title" class="admin__label">Название *</label>
+              <input
+                type="text"
+                id="project-title"
+                name="title"
+                class="admin__input"
+                value="${project ? this.escapeHtml(project.title) : ''}"
+                required
+                maxlength="255"
+              />
+            </div>
+            
+            <div class="admin__form-group">
+              <label for="project-role" class="admin__label">Роль *</label>
+              <input
+                type="text"
+                id="project-role"
+                name="role"
+                class="admin__input"
+                value="${project ? this.escapeHtml(project.role) : ''}"
+                required
+                maxlength="255"
+              />
+            </div>
+            
+            <div class="admin__form-group">
+              <label for="project-description" class="admin__label">Описание *</label>
+              <textarea
+                id="project-description"
+                name="description"
+                class="admin__textarea"
+                rows="4"
+                required
+              >${project ? this.escapeHtml(project.description) : ''}</textarea>
+            </div>
+            
+            <div class="admin__form-group">
+              <label for="project-tools" class="admin__label">Инструменты (через запятую) *</label>
+              <input
+                type="text"
+                id="project-tools"
+                name="tools"
+                class="admin__input"
+                value="${project && Array.isArray(project.tools) ? this.escapeHtml(project.tools.join(', ')) : ''}"
+                placeholder="Например: React, TypeScript, Node.js"
+                required
+              />
+              <small class="admin__hint">Введите инструменты через запятую</small>
+            </div>
+            
+            <div class="admin__form-group">
+              <label for="project-link" class="admin__label">Ссылка на проект *</label>
+              <input
+                type="url"
+                id="project-link"
+                name="link"
+                class="admin__input"
+                value="${project ? this.escapeHtml(project.link) : ''}"
+                required
+                placeholder="https://example.com"
+              />
+            </div>
+            
+            <div class="admin__form-group">
+              <label for="project-image" class="admin__label">Изображение</label>
+              ${
+                project && project.image
+                  ? `
+                <div class="admin__project-image-preview">
+                  <img src="${this.escapeHtml(project.image)}" alt="Current image" />
+                  <p>Текущее изображение</p>
+                </div>
+              `
+                  : ''
+              }
+              <input
+                type="file"
+                id="project-image"
+                name="image"
+                class="admin__file-input"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+              />
+              <small class="admin__hint">Форматы: JPG, PNG, WebP. Максимальный размер: 5 МБ</small>
+            </div>
+            
+            <div class="admin__form-group">
+              <label for="project-order" class="admin__label">Порядок отображения</label>
+              <input
+                type="number"
+                id="project-order"
+                name="display_order"
+                class="admin__input"
+                value="${project ? project.display_order || 0 : 0}"
+                min="0"
+              />
+              <small class="admin__hint">Меньшее число = выше в списке</small>
+            </div>
+            
+            <div class="admin__modal-actions">
+              <button type="submit" class="admin__btn admin__btn--primary">
+                ${project ? 'Сохранить' : 'Создать'}
+              </button>
+              <button type="button" class="admin__btn admin__btn--cancel" data-close-project-modal>
+                Отмена
+              </button>
+            </div>
+            
+            <div class="admin__message" data-project-form-message role="alert"></div>
+          </form>
+        </div>
+      </div>
+    `;
+
+    // Удаляем существующую модалку, если есть
+    const existingModal = document.querySelector('[data-project-modal-overlay]');
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    // Добавляем модалку
+    document.body.insertAdjacentHTML('beforeend', formHtml);
+
+    // Обработчики
+    const overlay = document.querySelector('[data-project-modal-overlay]');
+    const closeBtns = document.querySelectorAll('[data-close-project-modal]');
+    const form = document.querySelector('[data-project-form]');
+
+    closeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        overlay.remove();
+      });
+    });
+
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) {
+        overlay.remove();
+      }
+    });
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      await this.saveProject(form, projectId);
+    });
+  }
+
+  static async saveProject(form, projectId) {
+    const messageEl = form.querySelector('[data-project-form-message]');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Сохранение...';
+
+    try {
+      const formData = new FormData(form);
+
+      // Преобразуем tools из строки в массив
+      const toolsStr = formData.get('tools');
+      const tools = toolsStr
+        .split(',')
+        .map(t => t.trim())
+        .filter(t => t.length > 0);
+
+      // Создаем JSON для отправки
+      const projectData = {
+        id: projectId ? parseInt(projectId, 10) : null,
+        title: formData.get('title'),
+        role: formData.get('role'),
+        description: formData.get('description'),
+        tools,
+        link: formData.get('link'),
+        display_order: parseInt(formData.get('display_order') || '0', 10),
+      };
+
+      // Если есть новое изображение, добавляем его
+      if (formData.get('image') && formData.get('image').size > 0) {
+        // Отправляем как FormData для поддержки файла
+        const fileFormData = new FormData();
+        fileFormData.append('id', projectId || '');
+        fileFormData.append('title', projectData.title);
+        fileFormData.append('role', projectData.role);
+        fileFormData.append('description', projectData.description);
+        fileFormData.append('tools', JSON.stringify(projectData.tools));
+        fileFormData.append('link', projectData.link);
+        fileFormData.append('display_order', projectData.display_order);
+        fileFormData.append('image', formData.get('image'));
+
+        const response = await fetch('/api/admin/save-project.php', {
+          method: 'POST',
+          body: fileFormData,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          this.showMessage(messageEl, 'Проект сохранен', 'success');
+          setTimeout(() => {
+            document.querySelector('[data-project-modal-overlay]')?.remove();
+            this.loadProjects();
+          }, 1000);
+        } else {
+          this.showMessage(messageEl, result.error || 'Ошибка при сохранении', 'error');
+        }
+      } else {
+        // Отправляем как JSON без файла
+        const response = await fetch('/api/admin/save-project.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(projectData),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          this.showMessage(messageEl, 'Проект сохранен', 'success');
+          setTimeout(() => {
+            document.querySelector('[data-project-modal-overlay]')?.remove();
+            this.loadProjects();
+          }, 1000);
+        } else {
+          this.showMessage(messageEl, result.error || 'Ошибка при сохранении', 'error');
+        }
+      }
+    } catch (error) {
+      this.showMessage(messageEl, 'Ошибка при сохранении проекта', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
   }
 
   static async deleteProject(id) {
