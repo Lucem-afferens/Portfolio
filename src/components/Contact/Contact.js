@@ -118,36 +118,30 @@ class Contact {
         }
 
         try {
-          // Отправка на email через mailto (fallback)
-          const emailSubject = encodeURIComponent(`Сообщение с портфолио от ${data.name}`);
-          const emailBody = encodeURIComponent(
-            `Имя: ${data.name}\nEmail: ${data.email}\n\nСообщение:\n${data.message}`
-          );
-          const emailLink = `mailto:nikwebdev.2025@gmail.com?subject=${emailSubject}&body=${emailBody}`;
+          const response = await fetch('/api/submit-contact.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
 
-          // Открываем email клиент
-          window.location.href = emailLink;
+          const result = await response.json();
 
-          // Также отправляем уведомление в Telegram (через Telegram Bot API, если настроен)
-          // Пока используем простой способ - открытие Telegram с сообщением
-          const telegramMessage = encodeURIComponent(
-            `Новое сообщение с портфолио:\n\nИмя: ${data.name}\nEmail: ${data.email}\n\nСообщение:\n${data.message}`
-          );
-          const telegramLink = `https://t.me/lucem_afferens?text=${telegramMessage}`;
+          if (result.success) {
+            // Показываем успешное сообщение
+            if (messageEl) {
+              messageEl.textContent = i18n.t('contact.form.success');
+              messageEl.className = 'contact__form-message contact__form-message--success';
+            }
 
-          // Показываем успешное сообщение
-          if (messageEl) {
-            messageEl.textContent = i18n.t('contact.form.success');
-            messageEl.className = 'contact__form-message contact__form-message--success';
+            // Очищаем форму
+            form.reset();
+          } else if (messageEl) {
+            // Показываем ошибку
+            messageEl.textContent = result.error || i18n.t('contact.form.error');
+            messageEl.className = 'contact__form-message contact__form-message--error';
           }
-
-          // Очищаем форму
-          form.reset();
-
-          // Через небольшую задержку открываем Telegram (опционально)
-          setTimeout(() => {
-            window.open(telegramLink, '_blank');
-          }, 500);
         } catch (error) {
           console.error('Form submission error:', error);
           if (messageEl) {
