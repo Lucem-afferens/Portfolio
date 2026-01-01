@@ -92,8 +92,8 @@ jobs:
           
           # Если секреты не заданы, используем значения по умолчанию
           if [ -z "$DB_USERNAME" ]; then
-            DB_USERNAME="nikolr4t"
-            echo "⚠️ Using default username: nikolr4t"
+            DB_USERNAME="nikolr4t_portfol"
+            echo "⚠️ Using default username: nikolr4t_portfol"
             echo "💡 Tip: Set FTP_DB_USERNAME secret if username differs"
           fi
           
