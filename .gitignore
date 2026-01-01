@@ -40,5 +40,7 @@ coverage
 database/config.php
 api/config.php
 
-# Uploads
-uploads/
+# Uploads (keep directory structure, ignore files)
+/uploads/*
+!/uploads/.gitkeep
+!/uploads/**/.gitkeep

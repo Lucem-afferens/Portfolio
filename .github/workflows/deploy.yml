@@ -77,6 +77,27 @@ jobs:
             echo "✅ testimonial-form.html copied to root"
           fi
           
+          # Создаем директории для загрузок
+          echo "📁 Creating upload directories..."
+          mkdir -p dist/uploads/projects
+          mkdir -p dist/uploads/site
+          mkdir -p dist/uploads/testimonials
+          
+          # Создаем .gitkeep файлы для сохранения структуры директорий
+          touch dist/uploads/projects/.gitkeep
+          touch dist/uploads/site/.gitkeep
+          touch dist/uploads/testimonials/.gitkeep
+          
+          # Устанавливаем права доступа (для локальной проверки)
+          chmod -R 755 dist/uploads/ || true
+          
+          echo "✅ Upload directories created"
+          echo "📁 Upload directories structure:"
+          ls -la dist/uploads/ || true
+          ls -la dist/uploads/projects/ || true
+          ls -la dist/uploads/site/ || true
+          ls -la dist/uploads/testimonials/ || true
+          
           echo "✅ Files prepared for deployment"
           echo "📁 Contents of dist:"
           ls -la dist/ || true
