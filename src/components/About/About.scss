@@ -19,17 +19,33 @@
 
   &__image-wrapper {
     flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 3 / 4; // Пропорции портрета
+    overflow: hidden;
+    border-radius: 8px;
+    @include box-shadow(2);
+
+    @include respond-to(sm) {
+      max-width: 300px;
+      margin: 0 auto; // Центрирование на мобильных
+    }
 
     @include respond-to(md) {
       width: 40%;
+      max-width: 400px;
+      margin: 0;
+      aspect-ratio: 4 / 5; // Немного шире на десктопе
     }
   }
 
   &__image {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover; // Заполняет контейнер, обрезая при необходимости
+    object-position: center; // Центрирует изображение
     border-radius: 8px;
-    @include box-shadow(2);
+    display: block;
   }
 
   &__text {
