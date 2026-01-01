@@ -38,7 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Получение данных
-$data = json_decode(file_get_contents('php://input'), true);
+$rawInput = file_get_contents('php://input');
+$data = json_decode($rawInput, true);
+
+// Проверка корректности JSON
+if (json_last_error() !== JSON_ERROR_NONE) {
+    sendError('Некорректный JSON: ' . json_last_error_msg(), 400);
+}
+
+// Проверка наличия данных
+if (!is_array($data)) {
+    sendError('Данные не получены или имеют неверный формат', 400);
+}
 
 // Валидация
 $errors = validateTestimonial($data);
