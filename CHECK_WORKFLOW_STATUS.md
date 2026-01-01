@@ -87,3 +87,4 @@ ls -la .github/workflows/deploy.yml
 
 **После этих шагов workflow должен запуститься и статус появится!**
 
+

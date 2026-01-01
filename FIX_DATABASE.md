@@ -79,3 +79,4 @@ SQLSTATE[HY000] [1045] Access denied for user 'nikolr4t'@'localhost' (using pass
 1. Проверьте: `https://develonik.ru/api/test-db.php`
 2. Должно быть: `{"success":true,"message":"Database connected successfully!"}`
 
+

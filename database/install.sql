@@ -29,3 +29,4 @@ CREATE TABLE IF NOT EXISTS admins (
 -- Проверка успешного создания
 SELECT 'Tables created successfully!' AS status;
 
+

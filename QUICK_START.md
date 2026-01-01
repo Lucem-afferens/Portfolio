@@ -62,3 +62,4 @@ define('ADMIN_PASSWORD_HASH', password_hash('ВАШ_ПАРОЛЬ', PASSWORD_DEFA
 
 **Подробная инструкция:** см. `INSTALLATION_GUIDE.md`
 
+

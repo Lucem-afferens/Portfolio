@@ -134,3 +134,4 @@ chmod 644 /public_html/api/config.php
    - Убедитесь, что БД создана
    - Импортируйте `install.sql` вручную через phpMyAdmin
 
+
