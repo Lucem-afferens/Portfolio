@@ -64,41 +64,6 @@ class Projects {
             <p class="projects__subtitle">${i18n.t('projects.subtitle')}</p>
           </header>
           
-          <nav class="projects__filters" aria-label="${i18n.t('projects.filterLabel')}">
-            <button 
-              class="projects__filter active" 
-              data-filter="all"
-              aria-pressed="true"
-              type="button"
-            >
-              ${i18n.t('projects.filter.all')}
-            </button>
-            <button 
-              class="projects__filter" 
-              data-filter="web"
-              aria-pressed="false"
-              type="button"
-            >
-              ${i18n.t('projects.filter.web')}
-            </button>
-            <button 
-              class="projects__filter" 
-              data-filter="ui"
-              aria-pressed="false"
-              type="button"
-            >
-              ${i18n.t('projects.filter.ui')}
-            </button>
-            <button 
-              class="projects__filter" 
-              data-filter="branding"
-              aria-pressed="false"
-              type="button"
-            >
-              ${i18n.t('projects.filter.branding')}
-            </button>
-          </nav>
-          
           <div class="projects__grid" role="list" aria-label="${i18n.t('projects.gridLabel')}" data-projects-grid>
             ${Projects.renderProjects(projects)}
           </div>
