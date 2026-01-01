@@ -209,11 +209,7 @@ class TestimonialForm {
         const result = await response.json();
 
         if (result.success) {
-          this.showMessage(
-            messageEl,
-            'Спасибо! Ваш отзыв отправлен на модерацию. Я свяжусь с вами после проверки.',
-            'success'
-          );
+          this.showMessage(messageEl, 'Спасибо! Ваш отзыв отправлен на модерацию.', 'success');
           form.reset();
           if (charCountEl) charCountEl.textContent = '0';
           if (photoPreview) photoPreview.style.display = 'none';
