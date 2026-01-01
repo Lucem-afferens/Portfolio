@@ -118,71 +118,9 @@ class Projects {
   }
 
   static init() {
-    const filters = document.querySelectorAll('.projects__filter');
     const grid = document.querySelector('.projects__grid');
 
     if (!grid) return;
-
-    // Event delegation для фильтров
-    const handleFilterClick = event => {
-      const filter = event.currentTarget;
-      const filterValue = filter.dataset.filter;
-
-      // Обновляем активный фильтр и ARIA
-      filters.forEach(f => {
-        f.classList.remove('active');
-        f.setAttribute('aria-pressed', 'false');
-      });
-      filter.classList.add('active');
-      filter.setAttribute('aria-pressed', 'true');
-
-      // Фильтруем проекты с плавной анимацией
-      const cards = grid.querySelectorAll('.projects__card');
-      let visibleCount = 0;
-
-      cards.forEach(card => {
-        const cardElement = card;
-        const shouldShow = filterValue === 'all' || cardElement.dataset.category === filterValue;
-
-        if (shouldShow) {
-          cardElement.style.display = '';
-          cardElement.style.opacity = '0';
-          visibleCount += 1;
-
-          // Плавное появление
-          requestAnimationFrame(() => {
-            cardElement.style.transition = 'opacity 0.3s ease';
-            cardElement.style.opacity = '1';
-          });
-        } else {
-          cardElement.style.transition = 'opacity 0.3s ease';
-          cardElement.style.opacity = '0';
-          setTimeout(() => {
-            cardElement.style.display = 'none';
-          }, 300);
-        }
-      });
-
-      // Обновляем aria-label для сетки
-      if (visibleCount > 0) {
-        grid.setAttribute(
-          'aria-label',
-          `${i18n.t('projects.gridLabel')}: ${visibleCount} ${i18n.t('projects.items')}`
-        );
-      }
-    };
-
-    filters.forEach(filter => {
-      filter.addEventListener('click', handleFilterClick);
-
-      // Keyboard navigation
-      filter.addEventListener('keydown', event => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          handleFilterClick(event);
-        }
-      });
-    });
 
     // Lazy loading для изображений с Intersection Observer
     const imageObserver = new IntersectionObserver(
