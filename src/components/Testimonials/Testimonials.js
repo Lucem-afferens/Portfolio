@@ -24,25 +24,26 @@ class Testimonials {
     }
 
     return testimonials
-      .map(
-        testimonial => `
-      <div class="testimonials__slide">
-        <blockquote class="testimonials__quote">
-          ${
-            testimonial.photo
-              ? `
-            <div class="testimonials__photo">
+      .map(testimonial => {
+        // Проверяем наличие фото (может быть null, пустой строкой или путем)
+        const hasPhoto = testimonial.photo && testimonial.photo.trim() !== '';
+        const photoPath = hasPhoto ? testimonial.photo.trim() : null;
+        const photoHtml = photoPath
+          ? `<div class="testimonials__photo">
               <img 
-                src="${this.escapeHtml(testimonial.photo)}" 
+                src="${this.escapeHtml(photoPath)}" 
                 alt="${this.escapeHtml(testimonial.name)}"
                 loading="lazy"
                 width="80"
                 height="80"
               />
-            </div>
-          `
-              : ''
-          }
+            </div>`
+          : '';
+
+        return `
+      <div class="testimonials__slide">
+        <blockquote class="testimonials__quote">
+          ${photoHtml}
           <p>${this.escapeHtml(testimonial.message)}</p>
           <footer>
             <div class="testimonials__author">${this.escapeHtml(testimonial.name)}</div>
@@ -51,8 +52,8 @@ class Testimonials {
           </footer>
         </blockquote>
       </div>
-    `
-      )
+    `;
+      })
       .join('');
   }
 
