@@ -21,7 +21,11 @@ function sendError($message, $code = 500) {
 }
 
 try {
+    // Загружаем config.php первым (определяет константы)
+    require_once __DIR__ . '/config.php';
+    // Затем db.php (использует config)
     require_once __DIR__ . '/db.php';
+    // Затем utils.php (использует константы из config)
     require_once __DIR__ . '/utils.php';
 } catch (Exception $e) {
     sendError('Ошибка инициализации: ' . $e->getMessage());

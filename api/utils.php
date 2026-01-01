@@ -7,10 +7,17 @@
  * Отправка уведомления в Telegram
  */
 function sendTelegramNotification($message) {
+    // Проверяем, что константы определены
+    if (!defined('TELEGRAM_BOT_TOKEN') || !defined('TELEGRAM_CHAT_ID')) {
+        error_log('Telegram constants not defined');
+        return false;
+    }
+    
     $token = TELEGRAM_BOT_TOKEN;
     $chatId = TELEGRAM_CHAT_ID;
     
-    if (!$token || !$chatId) {
+    if (empty($token) || empty($chatId) || $token === 'YOUR_BOT_TOKEN' || $chatId === 'YOUR_CHAT_ID') {
+        error_log('Telegram token or chat ID not configured');
         return false;
     }
     
@@ -36,6 +43,11 @@ function sendTelegramNotification($message) {
  * Отправка email уведомления
  */
 function sendEmailNotification($subject, $message) {
+    if (!defined('ADMIN_EMAIL')) {
+        error_log('ADMIN_EMAIL constant not defined');
+        return false;
+    }
+    
     $to = ADMIN_EMAIL;
     $headers = [
         'From: Portfolio <noreply@develonik.ru>',
