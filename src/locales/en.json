@@ -22,7 +22,13 @@
     "skills": "Skills"
   },
   "projects": {
-    "title": "Projects",
+    "title": "My Projects",
+    "subtitle": "Best works reflecting my approach",
+    "filterLabel": "Project filter",
+    "gridLabel": "Projects list",
+    "role": "Role",
+    "technologies": "Technologies",
+    "items": "projects",
     "filter": {
       "all": "All",
       "ui": "UI",

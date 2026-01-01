@@ -6,46 +6,95 @@ class Projects {
     const projects = [
       {
         id: 1,
-        title: 'Project 1',
+        title: 'E-commerce Platform',
+        role: 'Front-end Developer',
         category: 'web',
-        image: '/images/project1.jpg',
-        description: 'Description of project 1',
+        image: {
+          src: '/images/project-1.webp',
+          srcset: '/images/project-1-400.webp 400w, /images/project-1-800.webp 800w',
+          width: 800,
+          height: 600,
+          alt: 'Превью проекта: E-commerce Platform',
+        },
+        tags: ['React', 'TypeScript', 'SCSS'],
+        link: '#project-1',
       },
       {
         id: 2,
-        title: 'Project 2',
+        title: 'Mobile App UI',
+        role: 'UI/UX Designer',
         category: 'ui',
-        image: '/images/project2.jpg',
-        description: 'Description of project 2',
+        image: {
+          src: '/images/project-2.webp',
+          srcset: '/images/project-2-400.webp 400w, /images/project-2-800.webp 800w',
+          width: 800,
+          height: 600,
+          alt: 'Превью проекта: Mobile App UI',
+        },
+        tags: ['Figma', 'Design System', 'Prototyping'],
+        link: '#project-2',
       },
       {
         id: 3,
-        title: 'Project 3',
+        title: 'Brand Identity',
+        role: 'Brand Designer',
         category: 'branding',
-        image: '/images/project3.jpg',
-        description: 'Description of project 3',
+        image: {
+          src: '/images/project-3.webp',
+          srcset: '/images/project-3-400.webp 400w, /images/project-3-800.webp 800w',
+          width: 800,
+          height: 600,
+          alt: 'Превью проекта: Brand Identity',
+        },
+        tags: ['Logo Design', 'Branding', 'Visual Identity'],
+        link: '#project-3',
       },
     ];
 
     return `
-      <section id="projects" class="projects">
+      <section id="projects" class="projects" aria-labelledby="projects-title">
         <div class="container">
-          <h2 class="projects__title">${i18n.t('projects.title')}</h2>
-          <div class="projects__filters">
-            <button class="projects__filter active" data-filter="all">
+          <header class="projects__header">
+            <h2 id="projects-title" class="projects__title">${i18n.t('projects.title')}</h2>
+            <p class="projects__subtitle">${i18n.t('projects.subtitle')}</p>
+          </header>
+          
+          <nav class="projects__filters" aria-label="${i18n.t('projects.filterLabel')}">
+            <button 
+              class="projects__filter active" 
+              data-filter="all"
+              aria-pressed="true"
+              type="button"
+            >
               ${i18n.t('projects.filter.all')}
             </button>
-            <button class="projects__filter" data-filter="ui">
-              ${i18n.t('projects.filter.ui')}
-            </button>
-            <button class="projects__filter" data-filter="web">
+            <button 
+              class="projects__filter" 
+              data-filter="web"
+              aria-pressed="false"
+              type="button"
+            >
               ${i18n.t('projects.filter.web')}
             </button>
-            <button class="projects__filter" data-filter="branding">
+            <button 
+              class="projects__filter" 
+              data-filter="ui"
+              aria-pressed="false"
+              type="button"
+            >
+              ${i18n.t('projects.filter.ui')}
+            </button>
+            <button 
+              class="projects__filter" 
+              data-filter="branding"
+              aria-pressed="false"
+              type="button"
+            >
               ${i18n.t('projects.filter.branding')}
             </button>
-          </div>
-          <div class="projects__grid" data-projects-grid>
+          </nav>
+          
+          <div class="projects__grid" role="list" aria-label="${i18n.t('projects.gridLabel')}" data-projects-grid>
             ${Projects.renderProjects(projects)}
           </div>
         </div>
@@ -57,22 +106,38 @@ class Projects {
     return projects
       .map(
         project => `
-      <article class="projects__card" data-category="${project.category}">
-        <img 
-          src="${project.image}" 
-          alt="${project.title}" 
-          class="projects__card-image"
-          loading="lazy"
-          width="400"
-          height="300"
-        />
-        <div class="projects__card-content">
-          <h3 class="projects__card-title">${project.title}</h3>
-          <p class="projects__card-description">${project.description}</p>
-          <a href="#project-${project.id}" class="projects__card-link">
-            ${i18n.t('projects.viewProject')}
-          </a>
-        </div>
+      <article 
+        class="projects__card" 
+        role="listitem" 
+        data-category="${project.category}"
+      >
+        <a 
+          href="${project.link}" 
+          class="projects__card-link" 
+          aria-label="${i18n.t('projects.viewProject')}: ${project.title}"
+        >
+          <div class="projects__card-image-wrapper">
+            <img 
+              src="${project.image.src}"
+              srcset="${project.image.srcset}"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              alt="${project.image.alt}"
+              class="projects__card-image"
+              loading="lazy"
+              width="${project.image.width}"
+              height="${project.image.height}"
+              decoding="async"
+            />
+            <div class="projects__card-overlay" aria-hidden="true"></div>
+          </div>
+          <div class="projects__card-content">
+            <h3 class="projects__card-title">${project.title}</h3>
+            <p class="projects__card-role">${i18n.t('projects.role')}: ${project.role}</p>
+            <div class="projects__card-tags" aria-label="${i18n.t('projects.technologies')}">
+              ${project.tags.map(tag => `<span class="projects__tag">${tag}</span>`).join('')}
+            </div>
+          </div>
+        </a>
       </article>
     `
       )
@@ -81,33 +146,92 @@ class Projects {
 
   static init() {
     const filters = document.querySelectorAll('.projects__filter');
-    const grid = document.querySelector('[data-projects-grid]');
+    const grid = document.querySelector('.projects__grid');
 
     if (!grid) return;
 
-    filters.forEach(filter => {
-      filter.addEventListener('click', () => {
-        const filterValue = filter.dataset.filter;
+    // Event delegation для фильтров
+    const handleFilterClick = event => {
+      const filter = event.currentTarget;
+      const filterValue = filter.dataset.filter;
 
-        // Обновляем активный фильтр
-        filters.forEach(f => f.classList.remove('active'));
-        filter.classList.add('active');
+      // Обновляем активный фильтр и ARIA
+      filters.forEach(f => {
+        f.classList.remove('active');
+        f.setAttribute('aria-pressed', 'false');
+      });
+      filter.classList.add('active');
+      filter.setAttribute('aria-pressed', 'true');
 
-        // Фильтруем проекты
-        const cards = grid.querySelectorAll('.projects__card');
-        cards.forEach(card => {
-          const cardElement = card;
-          if (filterValue === 'all' || cardElement.dataset.category === filterValue) {
-            cardElement.style.display = 'block';
-          } else {
+      // Фильтруем проекты с плавной анимацией
+      const cards = grid.querySelectorAll('.projects__card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardElement = card;
+        const shouldShow = filterValue === 'all' || cardElement.dataset.category === filterValue;
+
+        if (shouldShow) {
+          cardElement.style.display = '';
+          cardElement.style.opacity = '0';
+          visibleCount += 1;
+
+          // Плавное появление
+          requestAnimationFrame(() => {
+            cardElement.style.transition = 'opacity 0.3s ease';
+            cardElement.style.opacity = '1';
+          });
+        } else {
+          cardElement.style.transition = 'opacity 0.3s ease';
+          cardElement.style.opacity = '0';
+          setTimeout(() => {
             cardElement.style.display = 'none';
-          }
-        });
+          }, 300);
+        }
+      });
+
+      // Обновляем aria-label для сетки
+      if (visibleCount > 0) {
+        grid.setAttribute(
+          'aria-label',
+          `${i18n.t('projects.gridLabel')}: ${visibleCount} ${i18n.t('projects.items')}`
+        );
+      }
+    };
+
+    filters.forEach(filter => {
+      filter.addEventListener('click', handleFilterClick);
+
+      // Keyboard navigation
+      filter.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleFilterClick(event);
+        }
       });
     });
 
-    // Lazy loading для изображений
-    const images = document.querySelectorAll('.projects__card-image[loading="lazy"]');
+    // Lazy loading для изображений с Intersection Observer
+    const imageObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+              img.removeAttribute('data-src');
+            }
+            img.classList.add('loaded');
+            observer.unobserve(img);
+          }
+        });
+      },
+      {
+        rootMargin: '50px',
+      }
+    );
+
+    const images = document.querySelectorAll('.projects__card-image');
     images.forEach(img => {
       if (img.complete) {
         img.classList.add('loaded');
@@ -115,6 +239,7 @@ class Projects {
         img.addEventListener('load', () => {
           img.classList.add('loaded');
         });
+        imageObserver.observe(img);
       }
     });
   }
