@@ -61,11 +61,16 @@ jobs:
           cp database/README.md dist/database/ || true
           # config.php будет создан из секретов
           
-          # Копируем HTML страницы (если есть)
-          if [ -d "src/pages" ]; then
-            echo "📄 Copying page files..."
-            mkdir -p dist/pages
-            cp src/pages/*.html dist/pages/ || true
+          # HTML страницы уже собраны Vite в dist/pages/
+          # Перемещаем их в корень для правильных URL
+          echo "📄 Moving page HTML files to root..."
+          if [ -f "dist/pages/admin.html" ]; then
+            cp dist/pages/admin.html dist/admin.html
+            echo "✅ admin.html copied to root"
+          fi
+          if [ -f "dist/pages/testimonial-form.html" ]; then
+            cp dist/pages/testimonial-form.html dist/testimonial-form.html
+            echo "✅ testimonial-form.html copied to root"
           fi
           
           echo "✅ Files prepared for deployment"
