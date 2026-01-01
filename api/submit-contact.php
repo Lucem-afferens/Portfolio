@@ -10,30 +10,6 @@ header('Content-Type: application/json; charset=utf-8');
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
-// Функция для безопасного вывода ошибки
-function sendError($message, $code = 500) {
-    http_response_code($code);
-    echo json_encode([
-        'success' => false,
-        'error' => $message,
-    ]);
-    exit;
-}
-
-try {
-    // Загружаем config.php первым (определяет константы)
-    require_once __DIR__ . '/config.php';
-    // Затем utils.php (использует константы из config)
-    require_once __DIR__ . '/utils.php';
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Ошибка инициализации: ' . $e->getMessage(),
-    ]);
-    exit;
-}
-
 /**
  * Отправка ошибки
  */
@@ -45,6 +21,15 @@ function sendError($message, $code = 400, $details = []) {
         'details' => $details,
     ]);
     exit;
+}
+
+try {
+    // Загружаем config.php первым (определяет константы)
+    require_once __DIR__ . '/config.php';
+    // Затем utils.php (использует константы из config)
+    require_once __DIR__ . '/utils.php';
+} catch (Exception $e) {
+    sendError('Ошибка инициализации: ' . $e->getMessage(), 500);
 }
 
 // Проверка метода запроса
@@ -130,4 +115,3 @@ echo json_encode([
         'email' => $emailSent,
     ],
 ]);
-
