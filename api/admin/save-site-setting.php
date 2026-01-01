@@ -63,8 +63,30 @@ $settingValue = null;
 if ($delete) {
     // Удаление фото
     $settingValue = null;
-} elseif (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+} elseif (isset($_FILES['photo'])) {
+    // Проверяем ошибки загрузки файла
+    $fileError = $_FILES['photo']['error'];
+    
+    if ($fileError !== UPLOAD_ERR_OK) {
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE => 'Размер файла превышает максимально допустимый',
+            UPLOAD_ERR_FORM_SIZE => 'Размер файла превышает максимально допустимый в форме',
+            UPLOAD_ERR_PARTIAL => 'Файл был загружен частично',
+            UPLOAD_ERR_NO_FILE => 'Файл не был загружен',
+            UPLOAD_ERR_NO_TMP_DIR => 'Отсутствует временная папка',
+            UPLOAD_ERR_CANT_WRITE => 'Не удалось записать файл на диск',
+            UPLOAD_ERR_EXTENSION => 'Загрузка файла остановлена расширением',
+        ];
+        $errorMsg = $errorMessages[$fileError] ?? 'Ошибка загрузки файла (код: ' . $fileError . ')';
+        sendError($errorMsg, 400);
+    }
+    
     $file = $_FILES['photo'];
+    
+    // Проверяем, что файл действительно загружен
+    if (!is_uploaded_file($file['tmp_name'])) {
+        sendError('Файл не был загружен через HTTP POST', 400);
+    }
     
     // Валидация размера (5 МБ)
     $maxSize = 5 * 1024 * 1024;
@@ -72,35 +94,59 @@ if ($delete) {
         sendError('Размер файла не должен превышать 5 МБ', 400);
     }
     
+    if ($file['size'] === 0) {
+        sendError('Файл пустой', 400);
+    }
+    
     // Валидация типа файла
     $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml'];
+    
+    // Проверяем MIME тип через finfo
+    if (!function_exists('finfo_open')) {
+        sendError('Расширение fileinfo не установлено', 500);
+    }
+    
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    if (!$finfo) {
+        sendError('Не удалось инициализировать fileinfo', 500);
+    }
+    
     $mimeType = finfo_file($finfo, $file['tmp_name']);
     finfo_close($finfo);
     
-    if (!in_array($mimeType, $allowedTypes, true)) {
-        sendError('Разрешены только изображения (JPG, PNG, WebP, SVG)', 400);
+    if (!$mimeType || !in_array($mimeType, $allowedTypes, true)) {
+        sendError('Разрешены только изображения (JPG, PNG, WebP, SVG). Получен тип: ' . ($mimeType ?: 'неизвестно'), 400);
     }
     
     // Создаем директорию для загрузок
     $uploadDir = __DIR__ . '/../../uploads/site/';
     if (!is_dir($uploadDir)) {
         if (!mkdir($uploadDir, 0755, true)) {
-            sendError('Ошибка создания директории для загрузок', 500);
+            sendError('Ошибка создания директории для загрузок: ' . $uploadDir, 500);
         }
     }
     
-    // Получаем старое значение для удаления файла
-    $oldStmt = $pdo->prepare('SELECT setting_value FROM site_settings WHERE setting_key = :key');
-    $oldStmt->execute([':key' => $settingKey]);
-    $oldSetting = $oldStmt->fetch(PDO::FETCH_ASSOC);
+    // Проверяем права на запись
+    if (!is_writable($uploadDir)) {
+        sendError('Директория для загрузок недоступна для записи: ' . $uploadDir, 500);
+    }
     
-    // Удаляем старое фото, если есть
-    if ($oldSetting && !empty($oldSetting['setting_value'])) {
-        $oldPath = __DIR__ . '/../..' . $oldSetting['setting_value'];
-        if (file_exists($oldPath)) {
-            @unlink($oldPath);
+    // Получаем старое значение для удаления файла
+    try {
+        $oldStmt = $pdo->prepare('SELECT setting_value FROM site_settings WHERE setting_key = :key');
+        $oldStmt->execute([':key' => $settingKey]);
+        $oldSetting = $oldStmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Удаляем старое фото, если есть
+        if ($oldSetting && !empty($oldSetting['setting_value'])) {
+            $oldPath = __DIR__ . '/../..' . $oldSetting['setting_value'];
+            if (file_exists($oldPath) && is_file($oldPath)) {
+                @unlink($oldPath);
+            }
         }
+    } catch (PDOException $e) {
+        error_log('Error getting old setting: ' . $e->getMessage());
+        // Продолжаем выполнение, даже если не удалось получить старое значение
     }
     
     // Генерируем безопасное имя файла
@@ -109,16 +155,29 @@ if ($delete) {
         ? strtolower($extension)
         : 'jpg';
     
-    $fileName = $settingKey . '_' . time() . '.' . $safeExtension;
+    $fileName = $settingKey . '_' . time() . '_' . uniqid() . '.' . $safeExtension;
     $filePath = $uploadDir . $fileName;
     
     // Перемещаем файл
     if (!move_uploaded_file($file['tmp_name'], $filePath)) {
-        sendError('Ошибка при сохранении файла', 500);
+        $lastError = error_get_last();
+        $errorMsg = 'Ошибка при сохранении файла';
+        if ($lastError) {
+            $errorMsg .= ': ' . $lastError['message'];
+        }
+        sendError($errorMsg, 500);
+    }
+    
+    // Проверяем, что файл действительно сохранен
+    if (!file_exists($filePath) || !is_file($filePath)) {
+        sendError('Файл не был сохранен', 500);
     }
     
     // Сохраняем относительный путь
     $settingValue = '/uploads/site/' . $fileName;
+} else {
+    // Если это не удаление и нет файла - ошибка
+    sendError('Не указан файл для загрузки', 400);
 }
 
 try {
