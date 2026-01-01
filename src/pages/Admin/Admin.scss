@@ -114,6 +114,38 @@
     }
   }
 
+  &__header-controls {
+    display: flex;
+    align-items: center;
+    gap: map-get($spacings, 2);
+    width: 100%;
+
+    @include respond-to(sm) {
+      width: auto;
+    }
+  }
+
+  &__theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid var(--border-color);
+    padding: map-get($spacings, 1) map-get($spacings, 2);
+    border-radius: 4px;
+    cursor: pointer;
+    @include transition(background-color, border-color);
+
+    &:hover {
+      background-color: var(--bg-muted);
+    }
+
+    .theme-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+  }
+
   &__logout {
     @include button-base;
     background-color: transparent;

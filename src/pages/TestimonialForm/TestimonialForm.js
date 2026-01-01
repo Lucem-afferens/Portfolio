@@ -1,10 +1,16 @@
 import './TestimonialForm.scss';
+import { ThemeManager } from '../../utils/themeManager.js';
 
 class TestimonialForm {
   static render() {
     return `
       <section class="testimonial-form">
         <div class="container">
+          <div class="testimonial-form__theme-toggle-wrapper">
+            <button class="testimonial-form__theme-toggle" aria-label="Переключить тему" data-theme-toggle>
+              <span class="theme-icon">🌓</span>
+            </button>
+          </div>
           <header class="testimonial-form__header">
             <h1 class="testimonial-form__title">Оставить отзыв</h1>
             <p class="testimonial-form__subtitle">
@@ -111,6 +117,14 @@ class TestimonialForm {
   }
 
   static init() {
+    // Инициализация переключателя темы
+    const themeToggle = document.querySelector('[data-theme-toggle]');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        ThemeManager.toggleTheme();
+      });
+    }
+
     const form = document.querySelector('[data-testimonial-form]');
     const messageEl = document.querySelector('[data-form-message]');
     const charCountEl = document.querySelector('[data-char-count]');

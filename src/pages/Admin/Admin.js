@@ -1,4 +1,5 @@
 import './Admin.scss';
+import { ThemeManager } from '../../utils/themeManager.js';
 
 class Admin {
   static render() {
@@ -29,7 +30,12 @@ class Admin {
         <div class="admin__panel" data-admin-panel style="display: none;">
           <header class="admin__header">
             <h1 class="admin__panel-title">Админ-панель</h1>
-            <button class="admin__logout" data-logout-btn>Выйти</button>
+            <div class="admin__header-controls">
+              <button class="admin__theme-toggle" aria-label="Переключить тему" data-theme-toggle>
+                <span class="theme-icon">🌓</span>
+              </button>
+              <button class="admin__logout" data-logout-btn>Выйти</button>
+            </div>
           </header>
           
           <nav class="admin__main-tabs">
@@ -246,6 +252,9 @@ class Admin {
   }
 
   static init() {
+    // Инициализация переключателя темы
+    this.setupThemeToggle();
+
     this.checkAuth();
     this.setupLogin();
     this.setupMainTabs();
@@ -255,6 +264,15 @@ class Admin {
     this.setupProjects();
     this.setupPhotos();
     this.loadTestimonials('pending');
+  }
+
+  static setupThemeToggle() {
+    const themeToggle = document.querySelector('[data-theme-toggle]');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        ThemeManager.toggleTheme();
+      });
+    }
   }
 
   static checkAuth() {
