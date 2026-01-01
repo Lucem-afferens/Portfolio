@@ -113,23 +113,84 @@ class Admin {
               <div class="admin__photos">
                 <div class="admin__photo-section">
                   <h3 class="admin__photo-title">Логотип</h3>
-                  <div class="admin__photo-preview admin__photo-preview--logo" data-logo-preview>
-                    <div class="admin__photo-placeholder">Логотип не загружен</div>
-                  </div>
-                  <div class="admin__photo-actions">
-                    <input
-                      type="file"
-                      id="logo-input"
-                      accept="image/jpeg,image/jpg,image/png,image/webp,image/svg+xml"
-                      data-logo-input
-                      style="display: none;"
-                    />
-                    <label for="logo-input" class="admin__btn admin__btn--primary">
-                      Загрузить логотип
+                  
+                  <div class="admin__logo-option">
+                    <label class="admin__checkbox-label">
+                      <input
+                        type="checkbox"
+                        data-logo-theme-switch
+                        class="admin__checkbox"
+                      />
+                      <span>Менять логотип при переключении темы</span>
                     </label>
-                    <button class="admin__btn admin__btn--delete" data-delete-logo style="display: none;">
-                      Удалить логотип
-                    </button>
+                  </div>
+                  
+                  <div class="admin__logo-single" data-logo-single>
+                    <h4 class="admin__photo-subtitle">Единый логотип</h4>
+                    <div class="admin__photo-preview admin__photo-preview--logo" data-logo-preview>
+                      <div class="admin__photo-placeholder">Логотип не загружен</div>
+                    </div>
+                    <div class="admin__photo-actions">
+                      <input
+                        type="file"
+                        id="logo-input"
+                        accept="image/jpeg,image/jpg,image/png,image/webp,image/svg+xml"
+                        data-logo-input
+                        style="display: none;"
+                      />
+                      <label for="logo-input" class="admin__btn admin__btn--primary">
+                        Загрузить логотип
+                      </label>
+                      <button class="admin__btn admin__btn--delete" data-delete-logo style="display: none;">
+                        Удалить логотип
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="admin__logo-dual" data-logo-dual style="display: none;">
+                    <div class="admin__logo-theme">
+                      <h4 class="admin__photo-subtitle">Логотип для светлой темы</h4>
+                      <div class="admin__photo-preview admin__photo-preview--logo" data-logo-light-preview>
+                        <div class="admin__photo-placeholder">Логотип не загружен</div>
+                      </div>
+                      <div class="admin__photo-actions">
+                        <input
+                          type="file"
+                          id="logo-light-input"
+                          accept="image/jpeg,image/jpg,image/png,image/webp,image/svg+xml"
+                          data-logo-light-input
+                          style="display: none;"
+                        />
+                        <label for="logo-light-input" class="admin__btn admin__btn--primary">
+                          Загрузить логотип
+                        </label>
+                        <button class="admin__btn admin__btn--delete" data-delete-logo-light style="display: none;">
+                          Удалить
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div class="admin__logo-theme">
+                      <h4 class="admin__photo-subtitle">Логотип для темной темы</h4>
+                      <div class="admin__photo-preview admin__photo-preview--logo" data-logo-dark-preview>
+                        <div class="admin__photo-placeholder">Логотип не загружен</div>
+                      </div>
+                      <div class="admin__photo-actions">
+                        <input
+                          type="file"
+                          id="logo-dark-input"
+                          accept="image/jpeg,image/jpg,image/png,image/webp,image/svg+xml"
+                          data-logo-dark-input
+                          style="display: none;"
+                        />
+                        <label for="logo-dark-input" class="admin__btn admin__btn--primary">
+                          Загрузить логотип
+                        </label>
+                        <button class="admin__btn admin__btn--delete" data-delete-logo-dark style="display: none;">
+                          Удалить
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
@@ -1074,13 +1135,28 @@ class Admin {
 
   static renderPhotos(settings) {
     const logoPreview = document.querySelector('[data-logo-preview]');
+    const logoLightPreview = document.querySelector('[data-logo-light-preview]');
+    const logoDarkPreview = document.querySelector('[data-logo-dark-preview]');
     const heroPreview = document.querySelector('[data-hero-photo-preview]');
     const aboutPreview = document.querySelector('[data-about-photo-preview]');
     const deleteLogoBtn = document.querySelector('[data-delete-logo]');
+    const deleteLogoLightBtn = document.querySelector('[data-delete-logo-light]');
+    const deleteLogoDarkBtn = document.querySelector('[data-delete-logo-dark]');
     const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
     const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
+    const logoThemeSwitch = document.querySelector('[data-logo-theme-switch]');
+    const logoSingle = document.querySelector('[data-logo-single]');
+    const logoDual = document.querySelector('[data-logo-dual]');
 
-    // Logo
+    // Настройка переключения логотипа по темам
+    const themeSwitchEnabled = settings.logo_theme_switch || false;
+    if (logoThemeSwitch) {
+      logoThemeSwitch.checked = themeSwitchEnabled;
+    }
+    if (logoSingle) logoSingle.style.display = themeSwitchEnabled ? 'none' : 'block';
+    if (logoDual) logoDual.style.display = themeSwitchEnabled ? 'block' : 'none';
+
+    // Единый логотип
     if (settings.logo) {
       if (logoPreview) {
         logoPreview.innerHTML = `<img src="${this.escapeHtml(settings.logo)}" alt="Logo" />`;
@@ -1091,6 +1167,34 @@ class Admin {
         logoPreview.innerHTML = '<div class="admin__photo-placeholder">Логотип не загружен</div>';
       }
       if (deleteLogoBtn) deleteLogoBtn.style.display = 'none';
+    }
+
+    // Логотип для светлой темы
+    if (settings.logo_light) {
+      if (logoLightPreview) {
+        logoLightPreview.innerHTML = `<img src="${this.escapeHtml(settings.logo_light)}" alt="Logo Light" />`;
+      }
+      if (deleteLogoLightBtn) deleteLogoLightBtn.style.display = 'inline-block';
+    } else {
+      if (logoLightPreview) {
+        logoLightPreview.innerHTML =
+          '<div class="admin__photo-placeholder">Логотип не загружен</div>';
+      }
+      if (deleteLogoLightBtn) deleteLogoLightBtn.style.display = 'none';
+    }
+
+    // Логотип для темной темы
+    if (settings.logo_dark) {
+      if (logoDarkPreview) {
+        logoDarkPreview.innerHTML = `<img src="${this.escapeHtml(settings.logo_dark)}" alt="Logo Dark" />`;
+      }
+      if (deleteLogoDarkBtn) deleteLogoDarkBtn.style.display = 'inline-block';
+    } else {
+      if (logoDarkPreview) {
+        logoDarkPreview.innerHTML =
+          '<div class="admin__photo-placeholder">Логотип не загружен</div>';
+      }
+      if (deleteLogoDarkBtn) deleteLogoDarkBtn.style.display = 'none';
     }
 
     // Hero photo

@@ -56,8 +56,15 @@ class Header {
     if (themeToggle) {
       themeToggle.addEventListener('click', () => {
         ThemeManager.toggleTheme();
+        // Обновляем логотип при смене темы
+        this.updateLogoForTheme();
       });
     }
+
+    // Слушаем изменения темы
+    document.addEventListener('themeChanged', () => {
+      this.updateLogoForTheme();
+    });
   }
 
   static async loadLogo() {
@@ -65,26 +72,49 @@ class Header {
       const response = await fetch('/api/get-site-settings.php');
       const result = await response.json();
 
-      if (result.success && result.settings.logo) {
-        const logoImage = document.querySelector('[data-logo-image]');
-        const logoText = document.querySelector('.header__logo-text');
-        const logoLink = document.querySelector('[data-logo-link]');
-
-        if (logoImage) {
-          logoImage.src = result.settings.logo;
-          logoImage.style.display = 'block';
-        }
-
-        if (logoText) {
-          logoText.style.display = 'none';
-        }
-
-        if (logoLink) {
-          logoLink.classList.add('header__logo--image');
-        }
+      if (result.success) {
+        this.logoSettings = result.settings;
+        this.updateLogoForTheme();
       }
     } catch (error) {
       console.error('Error loading logo:', error);
+    }
+  }
+
+  static updateLogoForTheme() {
+    if (!this.logoSettings) return;
+
+    const logoImage = document.querySelector('[data-logo-image]');
+    const logoText = document.querySelector('.header__logo-text');
+    const logoLink = document.querySelector('[data-logo-link]');
+
+    if (!logoImage || !logoText || !logoLink) return;
+
+    const currentTheme = ThemeManager.getCurrentTheme();
+    const themeSwitchEnabled = this.logoSettings.logo_theme_switch || false;
+
+    let logoPath = null;
+
+    if (themeSwitchEnabled) {
+      // Используем разные логотипы для разных тем
+      logoPath =
+        currentTheme === 'dark'
+          ? this.logoSettings.logo_dark || this.logoSettings.logo_light
+          : this.logoSettings.logo_light || this.logoSettings.logo_dark;
+    } else {
+      // Используем единый логотип
+      logoPath = this.logoSettings.logo;
+    }
+
+    if (logoPath) {
+      logoImage.src = logoPath;
+      logoImage.style.display = 'block';
+      logoText.style.display = 'none';
+      logoLink.classList.add('header__logo--image');
+    } else {
+      logoImage.style.display = 'none';
+      logoText.style.display = 'inline-block';
+      logoLink.classList.remove('header__logo--image');
     }
   }
 }

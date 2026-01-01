@@ -70,14 +70,23 @@ if ($isFormData) {
 }
 
 // Валидация ключа настройки
-if (!$settingKey || !in_array($settingKey, ['hero_photo', 'about_photo', 'logo'], true)) {
+$allowedKeys = ['hero_photo', 'about_photo', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch'];
+if (!$settingKey || !in_array($settingKey, $allowedKeys, true)) {
     sendError('Некорректный ключ настройки', 400);
 }
 
 $settingValue = null;
 
-// Обработка загрузки фото или удаления
-if ($delete) {
+// Специальная обработка для logo_theme_switch (boolean)
+if ($settingKey === 'logo_theme_switch') {
+    if ($isFormData) {
+        $settingValue = isset($_POST['value']) && ($_POST['value'] === 'true' || $_POST['value'] === '1') ? '1' : '0';
+    } else {
+        $rawInput = file_get_contents('php://input');
+        $data = json_decode($rawInput, true);
+        $settingValue = isset($data['value']) && ($data['value'] === true || $data['value'] === 'true' || $data['value'] === '1') ? '1' : '0';
+    }
+} elseif ($delete) {
     // Удаление фото
     $settingValue = null;
 } elseif (isset($_FILES['photo'])) {
@@ -200,8 +209,8 @@ if ($delete) {
     
     // Сохраняем относительный путь
     $settingValue = '/uploads/site/' . $fileName;
-} else {
-    // Если это не удаление и нет файла - ошибка
+} elseif ($settingKey !== 'logo_theme_switch') {
+    // Если это не удаление, не файл и не logo_theme_switch - ошибка
     sendError('Не указан файл для загрузки', 400);
 }
 
