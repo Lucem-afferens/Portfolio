@@ -236,6 +236,16 @@ jobs:
           echo "📁 Checking config files:"
           test -f dist/database/config.php && echo "✅ database/config.php exists" || echo "❌ database/config.php missing"
           test -f dist/api/config.php && echo "✅ api/config.php exists" || echo "❌ api/config.php missing"
+          echo ""
+          echo "📁 Checking admin API files:"
+          test -f dist/api/admin/get-projects.php && echo "✅ api/admin/get-projects.php exists" || echo "❌ api/admin/get-projects.php missing"
+          test -f dist/api/admin/seed-initial-projects.php && echo "✅ api/admin/seed-initial-projects.php exists" || echo "❌ api/admin/seed-initial-projects.php missing"
+          test -f dist/api/admin/save-project.php && echo "✅ api/admin/save-project.php exists" || echo "❌ api/admin/save-project.php missing"
+          test -f dist/api/admin/delete-project.php && echo "✅ api/admin/delete-project.php exists" || echo "❌ api/admin/delete-project.php missing"
+          test -f dist/api/admin/save-site-setting.php && echo "✅ api/admin/save-site-setting.php exists" || echo "❌ api/admin/save-site-setting.php missing"
+          echo ""
+          echo "📁 Admin API files list:"
+          ls -la dist/api/admin/ 2>/dev/null || echo "⚠️ dist/api/admin/ directory not found"
 
       - name: Deploy to Beget via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
