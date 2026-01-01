@@ -212,10 +212,11 @@ try {
     }
     
     // Обновляем или создаем настройку
+    // Используем разные имена параметров для VALUES и UPDATE
     $stmt = $pdo->prepare("
         INSERT INTO site_settings (setting_key, setting_value)
         VALUES (:key, :value)
-        ON DUPLICATE KEY UPDATE setting_value = :value
+        ON DUPLICATE KEY UPDATE setting_value = :value_update
     ");
     
     if (!$stmt) {
@@ -226,6 +227,7 @@ try {
     $result = $stmt->execute([
         ':key' => $settingKey,
         ':value' => $settingValue,
+        ':value_update' => $settingValue,
     ]);
     
     if (!$result) {
