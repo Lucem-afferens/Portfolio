@@ -285,24 +285,25 @@ class Admin {
     }
 
     container.innerHTML = testimonials
-      .map(
-        testimonial => `
+      .map(testimonial => {
+        // Проверяем наличие фото (может быть null, пустой строкой или путем)
+        const hasPhoto = testimonial.photo && testimonial.photo.trim() !== '';
+        const photoPath = hasPhoto ? testimonial.photo.trim() : null;
+        const photoHtml = photoPath
+          ? `<div class="admin__testimonial-photo">
+              <img 
+                src="${this.escapeHtml(photoPath)}" 
+                alt="${this.escapeHtml(testimonial.name)}"
+                loading="lazy"
+              />
+            </div>`
+          : '<div class="admin__testimonial-photo admin__testimonial-photo--empty">Нет фото</div>';
+
+        return `
       <div class="admin__testimonial-card" data-testimonial-id="${testimonial.id}">
         <div class="admin__testimonial-header">
           <div class="admin__testimonial-info">
-            ${
-              testimonial.photo
-                ? `
-              <div class="admin__testimonial-photo">
-                <img 
-                  src="${this.escapeHtml(testimonial.photo)}" 
-                  alt="${this.escapeHtml(testimonial.name)}"
-                  onerror="this.style.display='none'"
-                />
-              </div>
-            `
-                : ''
-            }
+            ${photoHtml}
             <div class="admin__testimonial-text">
               <h3 class="admin__testimonial-name">${this.escapeHtml(testimonial.name)}</h3>
               ${testimonial.position ? `<p class="admin__testimonial-position">${this.escapeHtml(testimonial.position)}</p>` : ''}
@@ -354,8 +355,8 @@ class Admin {
             : ''
         }
       </div>
-    `
-      )
+    `;
+      })
       .join('');
 
     // Обработчики для кнопок
