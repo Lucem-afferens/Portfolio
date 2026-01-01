@@ -43,15 +43,22 @@ jobs:
         run: |
           echo "📦 Preparing files for deployment..."
           
-          # Копируем статические файлы из public
+          # Копируем статические файлы из public (исключая favicon, он будет скопирован отдельно)
           if [ -d "public" ] && [ "$(ls -A public)" ]; then
-            echo "📁 Copying public files..."
-            cp -r public/* dist/ || true
+            echo "📁 Copying public files (excluding favicon)..."
+            # Копируем все кроме favicon
+            for item in public/*; do
+              if [ -e "$item" ] && [ "$(basename "$item")" != "favicon" ]; then
+                cp -r "$item" dist/ || true
+              fi
+            done
           fi
           
           # Копируем каталог favicon в корень dist (чтобы был в корне на сервере)
           if [ -d "public/favicon" ]; then
             echo "📁 Copying favicon directory to root..."
+            # Удаляем старый favicon если есть, чтобы избежать вложенности
+            rm -rf dist/favicon || true
             cp -r public/favicon dist/favicon || true
             echo "✅ Favicon directory copied to dist/favicon"
             echo "📁 Favicon directory contents:"
