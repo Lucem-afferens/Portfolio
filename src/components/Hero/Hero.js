@@ -8,10 +8,7 @@ class Hero {
         <div class="container">
           <div class="hero__content">
             <h1 class="hero__name">${i18n.t('hero.name')}</h1>
-            <div class="hero__specialization-wrapper">
-              <p class="hero__specialization">${i18n.t('hero.specialization')}</p>
-              <span class="hero__cursor">|</span>
-            </div>
+            <p class="hero__specialization">${i18n.t('hero.specialization')}</p>
             <div class="hero__actions">
               <a href="#projects" class="hero__cta hero__cta--primary">
                 <span>${i18n.t('hero.cta')}</span>

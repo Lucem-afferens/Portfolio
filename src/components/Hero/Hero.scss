@@ -33,17 +33,8 @@
     }
   }
 
-  &__specialization-wrapper {
-    display: inline-flex;
-    align-items: center;
-    gap: map-get($spacings, 1);
-    margin-bottom: map-get($spacings, 5);
-    animation: fadeInUp 0.8s ease 0.4s both;
-  }
-
   &__specialization {
-    margin: 0;
-    position: relative;
+    margin: 0 0 map-get($spacings, 5);
     font-size: 2.5rem;
     font-weight: 800;
     line-height: 1.2;
@@ -52,6 +43,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: fadeInUp 0.8s ease 0.4s both;
 
     .dark-theme & {
       background: linear-gradient(135deg, $primary-color 0%, lighten($info-color, 20%) 100%);
@@ -67,16 +59,6 @@
     @include respond-to(lg) {
       font-size: 4.5rem;
     }
-  }
-
-  &__cursor {
-    display: inline-block;
-    width: 2px;
-    height: 1.2em;
-    background: $primary-color;
-    animation: blink 1s infinite;
-    margin-left: 4px;
-    vertical-align: baseline;
   }
 
   &__actions {
@@ -238,17 +220,6 @@
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
   }
 }
 
