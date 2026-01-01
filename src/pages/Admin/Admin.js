@@ -952,6 +952,51 @@ class Admin {
     }
   }
 
+  static async seedInitialProjects() {
+    // eslint-disable-next-line no-alert
+    if (
+      !window.confirm(
+        'Добавить начальные проекты (Точка GG, Приз Бокс, Welcome to Day)?\n\nЕсли проекты уже существуют, операция будет пропущена.'
+      )
+    ) {
+      return;
+    }
+
+    const seedBtn = document.querySelector('[data-seed-projects]');
+    const originalText = seedBtn.textContent;
+    seedBtn.disabled = true;
+    seedBtn.textContent = 'Добавление...';
+
+    try {
+      const response = await fetch('/api/admin/seed-initial-projects.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        if (result.skipped) {
+          // eslint-disable-next-line no-alert
+          alert(`Проекты уже существуют в базе данных (${result.count} проектов)`);
+        } else {
+          // eslint-disable-next-line no-alert
+          alert(`Успешно добавлено ${result.count} проектов:\n${result.projects.join('\n')}`);
+          this.loadProjects();
+        }
+      } else {
+        // eslint-disable-next-line no-alert
+        alert(`Ошибка: ${result.error || 'Неизвестная ошибка'}`);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert('Ошибка при добавлении проектов');
+    } finally {
+      seedBtn.disabled = false;
+      seedBtn.textContent = originalText;
+    }
+  }
+
   // ========== Управление фото ==========
   static setupPhotos() {
     const heroInput = document.querySelector('[data-hero-photo-input]');
