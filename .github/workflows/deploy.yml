@@ -97,12 +97,18 @@ jobs:
           EOF
           echo "✅ Database config created"
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+
       - name: Create API config from secrets
         run: |
           echo "🔐 Creating API config from secrets..."
           mkdir -p dist/api
           
-          # Генерируем hash пароля
+          # Генерируем hash пароля через PHP
           ADMIN_PASSWORD_HASH=$(php -r "echo password_hash('${{ secrets.FTP_ADMIN_PASSWORD }}', PASSWORD_DEFAULT);")
           
           cat > dist/api/config.php << EOF
