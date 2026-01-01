@@ -3,8 +3,29 @@
  * API для отправки отзыва
  */
 
-require_once __DIR__ . '/db.php';
-require_once __DIR__ . '/utils.php';
+// Устанавливаем заголовки JSON в начале
+header('Content-Type: application/json; charset=utf-8');
+
+// Обработка ошибок
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+
+// Функция для безопасного вывода ошибки
+function sendError($message, $code = 500) {
+    http_response_code($code);
+    echo json_encode([
+        'success' => false,
+        'error' => $message,
+    ]);
+    exit;
+}
+
+try {
+    require_once __DIR__ . '/db.php';
+    require_once __DIR__ . '/utils.php';
+} catch (Exception $e) {
+    sendError('Ошибка инициализации: ' . $e->getMessage());
+}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -76,10 +97,20 @@ try {
         'id' => $testimonialId,
     ]);
 } catch (PDOException $e) {
+    error_log('Database error in submit-testimonial.php: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         'success' => false,
         'error' => 'Ошибка при сохранении отзыва',
+        'debug' => ini_get('display_errors') ? $e->getMessage() : null,
+    ]);
+} catch (Exception $e) {
+    error_log('Error in submit-testimonial.php: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Произошла ошибка при обработке запроса',
+        'debug' => ini_get('display_errors') ? $e->getMessage() : null,
     ]);
 }
 
