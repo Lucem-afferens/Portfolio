@@ -1,3 +1,10 @@
+// Убеждаемся, что body имеет правильный фон для темной темы
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  @include transition(background-color, color);
+}
+
 .testimonial-form {
   padding: map-get($spacings, 6) 0;
   min-height: 80vh;
