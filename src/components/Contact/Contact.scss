@@ -32,6 +32,13 @@
     font-weight: 500;
   }
 
+  &__optional {
+    font-weight: 400;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
   &__input,
   &__textarea {
     width: 100%;

@@ -32,13 +32,27 @@ class Contact {
                 />
               </div>
               <div class="contact__form-group">
-                <label for="message" class="contact__label">${i18n.t('contact.form.message')}</label>
+                <label for="telegram" class="contact__label">
+                  ${i18n.t('contact.form.telegram')} <span class="contact__optional">(${i18n.t('contact.form.optional')})</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="telegram" 
+                  name="telegram" 
+                  class="contact__input" 
+                  placeholder="@username"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="contact__form-group">
+                <label for="message" class="contact__label">
+                  ${i18n.t('contact.form.message')} <span class="contact__optional">(${i18n.t('contact.form.optional')})</span>
+                </label>
                 <textarea 
                   id="message" 
                   name="message" 
                   class="contact__textarea" 
                   rows="5"
-                  required
                 ></textarea>
               </div>
               <button type="submit" class="contact__submit">

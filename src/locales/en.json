@@ -72,7 +72,9 @@
     "form": {
       "name": "Name",
       "email": "Email",
+      "telegram": "Telegram",
       "message": "Message",
+      "optional": "optional",
       "submit": "Send",
       "success": "Message sent! I'll get back to you soon.",
       "error": "An error occurred. Please try again later or contact me directly."

@@ -56,12 +56,21 @@ if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
     $errors[] = 'Некорректный email адрес';
 }
 
-if (empty($data['message']) || strlen(trim($data['message'])) < 10) {
-    $errors[] = 'Сообщение должно содержать минимум 10 символов';
+// Сообщение необязательно, но если указано - проверяем длину
+$message = isset($data['message']) ? trim($data['message']) : '';
+if (!empty($message) && strlen($message) > 2000) {
+    $errors[] = 'Сообщение слишком длинное (максимум 2000 символов)';
 }
 
-if (strlen($data['message']) > 2000) {
-    $errors[] = 'Сообщение слишком длинное (максимум 2000 символов)';
+// Telegram username необязателен, но если указан - проверяем формат
+$telegram = isset($data['telegram']) ? trim($data['telegram']) : '';
+if (!empty($telegram)) {
+    // Убираем @ если есть
+    $telegram = ltrim($telegram, '@');
+    // Проверяем формат (только буквы, цифры, подчеркивания, минимум 5 символов)
+    if (!preg_match('/^[a-zA-Z0-9_]{5,32}$/', $telegram)) {
+        $errors[] = 'Некорректный формат Telegram username';
+    }
 }
 
 if (!empty($errors)) {
@@ -71,15 +80,23 @@ if (!empty($errors)) {
 // Очистка данных
 $name = trim($data['name']);
 $email = trim($data['email']);
-$message = trim($data['message']);
 
 // Формирование уведомлений
 $telegramMessage = "📧 <b>Новое сообщение с сайта</b>\n\n";
 $telegramMessage .= "👤 <b>Имя:</b> " . htmlspecialchars($name) . "\n";
 $telegramMessage .= "✉️ <b>Email:</b> " . htmlspecialchars($email) . "\n";
-$telegramMessage .= "💬 <b>Сообщение:</b>\n" . htmlspecialchars(substr($message, 0, 1000));
-if (strlen($message) > 1000) {
-    $telegramMessage .= "\n\n<i>(Сообщение обрезано, полный текст в email)</i>";
+
+if (!empty($telegram)) {
+    $telegramMessage .= "💬 <b>Telegram:</b> @" . htmlspecialchars($telegram) . "\n";
+}
+
+if (!empty($message)) {
+    $telegramMessage .= "\n💬 <b>Сообщение:</b>\n" . htmlspecialchars(substr($message, 0, 1000));
+    if (strlen($message) > 1000) {
+        $telegramMessage .= "\n\n<i>(Сообщение обрезано, полный текст в email)</i>";
+    }
+} else {
+    $telegramMessage .= "\n💬 <b>Сообщение:</b> <i>не указано</i>";
 }
 
 $emailSubject = "Новое сообщение с сайта - {$name}";
@@ -87,11 +104,19 @@ $emailMessage = "
 <h2>Новое сообщение с сайта портфолио</h2>
 <p><strong>Имя:</strong> " . htmlspecialchars($name) . "</p>
 <p><strong>Email:</strong> <a href='mailto:" . htmlspecialchars($email) . "'>" . htmlspecialchars($email) . "</a></p>
-<p><strong>Сообщение:</strong></p>
-<p>" . nl2br(htmlspecialchars($message)) . "</p>
-<hr>
-<p><small>Дата: " . date('d.m.Y H:i:s') . "</small></p>
 ";
+
+if (!empty($telegram)) {
+    $emailMessage .= "<p><strong>Telegram:</strong> <a href='https://t.me/" . htmlspecialchars($telegram) . "'>@" . htmlspecialchars($telegram) . "</a></p>";
+}
+
+if (!empty($message)) {
+    $emailMessage .= "<p><strong>Сообщение:</strong></p><p>" . nl2br(htmlspecialchars($message)) . "</p>";
+} else {
+    $emailMessage .= "<p><strong>Сообщение:</strong> <em>не указано</em></p>";
+}
+
+$emailMessage .= "<hr><p><small>Дата: " . date('d.m.Y H:i:s') . "</small></p>";
 
 // Отправка уведомлений
 $telegramSent = sendTelegramNotification($telegramMessage);
