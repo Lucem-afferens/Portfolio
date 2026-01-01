@@ -85,7 +85,25 @@ jobs:
         run: |
           echo "🔐 Creating database config from secrets..."
           mkdir -p dist/database
-          cat > dist/database/config.php << 'EOF'
+          
+          # Используем секреты, если они заданы, иначе значения по умолчанию
+          DB_USERNAME="${{ secrets.FTP_DB_USERNAME }}"
+          DB_PASSWORD="${{ secrets.FTP_DB_PASSWORD }}"
+          
+          # Если секреты не заданы, используем значения по умолчанию
+          if [ -z "$DB_USERNAME" ]; then
+            DB_USERNAME="nikolr4t"
+            echo "⚠️ Using default username: nikolr4t"
+            echo "💡 Tip: Set FTP_DB_USERNAME secret if username differs"
+          fi
+          
+          if [ -z "$DB_PASSWORD" ]; then
+            DB_PASSWORD="4I3%8gC2QF86"
+            echo "⚠️ Using default password"
+            echo "💡 Tip: Set FTP_DB_PASSWORD secret for security"
+          fi
+          
+          cat > dist/database/config.php << EOF
           <?php
           /**
            * Конфигурация базы данных
@@ -95,12 +113,13 @@ jobs:
           return [
               'host' => 'localhost',
               'dbname' => 'nikolr4t_portfol',
-              'username' => 'nikolr4t',
-              'password' => '4I3%8gC2QF86',
+              'username' => '$DB_USERNAME',
+              'password' => '$DB_PASSWORD',
               'charset' => 'utf8mb4',
           ];
           EOF
           echo "✅ Database config created"
+          echo "📝 Username: $DB_USERNAME"
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
