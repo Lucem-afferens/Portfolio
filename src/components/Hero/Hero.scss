@@ -17,12 +17,8 @@
     font-size: 1.5rem;
     font-weight: 400;
     line-height: 1.4;
-    color: $secondary-color;
+    color: var(--text-secondary);
     animation: fadeInUp 0.8s ease 0.2s both;
-
-    .dark-theme & {
-      color: rgba($text-dark, 0.7);
-    }
 
     @include respond-to(md) {
       font-size: 1.75rem;
@@ -38,19 +34,12 @@
     font-size: 2.5rem;
     font-weight: 800;
     line-height: 1.2;
-    color: $text-light;
-    background: linear-gradient(135deg, $primary-color 0%, $info-color 100%);
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: fadeInUp 0.8s ease 0.4s both;
-
-    .dark-theme & {
-      background: linear-gradient(135deg, $primary-color 0%, lighten($info-color, 20%) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
 
     @include respond-to(md) {
       font-size: 3.5rem;
@@ -91,8 +80,8 @@
     overflow: hidden;
 
     &--primary {
-      background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 10%) 100%);
-      color: white;
+      background: var(--color-accent);
+      color: var(--text-primary);
       @include box-shadow(2);
 
       &::before {
@@ -124,24 +113,15 @@
 
     &--secondary {
       background: transparent;
-      color: $text-light;
-      border: 2px solid $border-light;
-
-      .dark-theme & {
-        color: $text-dark;
-        border-color: $border-dark;
-      }
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
 
       &:hover {
-        background: $bg-secondary-light;
-        border-color: $primary-color;
-        color: $primary-color;
+        background: var(--bg-muted);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
         text-decoration: none;
         transform: translateY(-2px);
-
-        .dark-theme & {
-          background: $bg-secondary-dark;
-        }
       }
     }
 
@@ -165,40 +145,28 @@
   &__scroll-mouse {
     width: 30px;
     height: 50px;
-    border: 2px solid $secondary-color;
+    border: 2px solid var(--text-muted);
     border-radius: 15px;
     position: relative;
-
-    .dark-theme & {
-      border-color: rgba($text-dark, 0.5);
-    }
   }
 
   &__scroll-wheel {
     width: 4px;
     height: 8px;
-    background: $secondary-color;
+    background: var(--text-muted);
     border-radius: 2px;
     position: absolute;
     bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
     animation: scroll 2s infinite;
-
-    .dark-theme & {
-      background: rgba($text-dark, 0.7);
-    }
   }
 
   &__scroll-text {
     font-size: 0.85rem;
-    color: $secondary-color;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
-
-    .dark-theme & {
-      color: rgba($text-dark, 0.6);
-    }
   }
 }
 

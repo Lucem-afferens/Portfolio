@@ -36,21 +36,17 @@
   &__textarea {
     width: 100%;
     padding: map-get($spacings, 2);
-    border: 1px solid $border-light;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-family: $font-family-base;
     font-size: $font-size-base;
+    color: var(--text-primary);
     @include transition(border-color);
-
-    .dark-theme & {
-      background-color: $bg-secondary-dark;
-      border-color: $border-dark;
-      color: $text-dark;
-    }
 
     &:focus {
       outline: none;
-      border-color: $primary-color;
+      border-color: var(--color-primary);
     }
   }
 
@@ -61,11 +57,12 @@
   &__submit {
     @include button-base;
     width: 100%;
-    background-color: $primary-color;
-    color: white;
+    background-color: var(--color-primary);
+    color: var(--bg-surface);
 
     &:hover {
-      background-color: darken($primary-color, 10%);
+      background-color: var(--color-accent);
+      color: var(--text-primary);
     }
   }
 
@@ -84,11 +81,11 @@
   }
 
   &__social-link {
-    color: $primary-color;
+    color: var(--color-primary);
     @include transition(color);
 
     &:hover {
-      color: darken($primary-color, 10%);
+      color: var(--color-accent);
       text-decoration: underline;
     }
   }

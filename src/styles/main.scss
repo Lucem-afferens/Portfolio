@@ -15,15 +15,9 @@ body {
   font-family: $font-family-base;
   font-size: $font-size-base;
   line-height: $line-height-base;
-  color: $text-light;
-  background-color: $bg-light;
+  color: var(--text-primary);
+  background-color: var(--bg-main);
   @include transition(background-color, color);
-
-  // Dark theme
-  &.dark-theme {
-    color: $text-dark;
-    background-color: $bg-dark;
-  }
 }
 
 // Семантические элементы
@@ -67,7 +61,7 @@ p {
 }
 
 a {
-  color: $primary-color;
+  color: var(--color-primary);
   text-decoration: none;
   @include transition(color);
 

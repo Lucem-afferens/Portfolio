@@ -1,22 +1,72 @@
-// Цвета
-$primary-color: #007bff;
-$secondary-color: #6c757d;
+// CSS Custom Properties (CSS Variables) для тем
+:root {
+  /* Backgrounds - Light Theme */
+  --bg-main: #f5f6f4;
+  --bg-surface: #ffffff;
+  --bg-muted: #eef0ed;
+
+  /* Text - Light Theme */
+  --text-primary: #2f3a4a;
+  --text-secondary: #5c6675;
+  --text-muted: #8a93a3;
+
+  /* Brand / Accent */
+  --color-primary: #1fa6a0;
+  --color-accent: #ffd23f;
+
+  /* UI */
+  --border-color: #e1e4de;
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='dark'] {
+  /* Backgrounds - Dark Theme */
+  --bg-main: #0e1416;
+  --bg-surface: #141c1f;
+  --bg-muted: #1b2529;
+
+  /* Text - Dark Theme */
+  --text-primary: #e7eceb;
+  --text-secondary: #b5c1be;
+  --text-muted: #8a9a96;
+
+  /* Brand / Accent (same for both themes) */
+  --color-primary: #1fa6a0;
+  --color-accent: #ffd23f;
+
+  /* UI */
+  --border-color: #243236;
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+// SCSS Variables (for use in SCSS, mapped from CSS variables)
+$primary-color: var(--color-primary);
+$accent-color: var(--color-accent);
+
+// Light theme (default) - mapped to CSS variables
+$bg-light: var(--bg-main);
+$bg-surface-light: var(--bg-surface);
+$bg-muted-light: var(--bg-muted);
+$text-light: var(--text-primary);
+$text-secondary-light: var(--text-secondary);
+$text-muted-light: var(--text-muted);
+$border-light: var(--border-color);
+
+// Dark theme - mapped to CSS variables
+$bg-dark: var(--bg-main);
+$bg-surface-dark: var(--bg-surface);
+$bg-muted-dark: var(--bg-muted);
+$text-dark: var(--text-primary);
+$text-secondary-dark: var(--text-secondary);
+$text-muted-dark: var(--text-muted);
+$border-dark: var(--border-color);
+
+// Legacy support (for existing code)
+$secondary-color: var(--text-secondary);
 $success-color: #28a745;
 $danger-color: #dc3545;
 $warning-color: #ffc107;
 $info-color: #17a2b8;
-
-// Light theme
-$bg-light: #ffffff;
-$text-light: #212529;
-$bg-secondary-light: #f8f9fa;
-$border-light: #dee2e6;
-
-// Dark theme
-$bg-dark: #121212;
-$text-dark: #ffffff;
-$bg-secondary-dark: #1e1e1e;
-$border-dark: #333333;
 
 // Типографика
 $font-family-base:
@@ -61,3 +111,6 @@ $z-index: (
   popover: 1060,
   tooltip: 1070,
 );
+
+// Shadows
+$shadow-soft: var(--shadow-soft);

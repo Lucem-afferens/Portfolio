@@ -49,13 +49,9 @@
 
     li {
       padding: map-get($spacings, 1) map-get($spacings, 3);
-      background-color: $bg-secondary-light;
+      background-color: var(--bg-muted);
       border-radius: 20px;
       @include transition(background-color);
-
-      .dark-theme & {
-        background-color: $bg-secondary-dark;
-      }
     }
   }
 }

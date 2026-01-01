@@ -48,12 +48,8 @@
   }
 
   &__position {
-    color: $secondary-color;
+    color: var(--text-secondary);
     font-size: 0.9rem;
-
-    .dark-theme & {
-      color: rgba($text-dark, 0.7);
-    }
   }
 
   &__prev,
@@ -61,8 +57,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: $bg-light;
-    border: 1px solid $border-light;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -72,17 +68,8 @@
     @include transition(background-color, border-color);
     z-index: 1;
 
-    .dark-theme & {
-      background-color: $bg-dark;
-      border-color: $border-dark;
-    }
-
     &:hover {
-      background-color: $bg-secondary-light;
-
-      .dark-theme & {
-        background-color: $bg-secondary-dark;
-      }
+      background-color: var(--bg-muted);
     }
   }
 

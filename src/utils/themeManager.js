@@ -16,9 +16,11 @@ class ThemeManager {
 
   static setTheme(theme) {
     if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
       document.body.classList.add('dark-theme');
       document.body.classList.remove('light-theme');
     } else {
+      document.documentElement.setAttribute('data-theme', 'light');
       document.body.classList.add('light-theme');
       document.body.classList.remove('dark-theme');
     }
@@ -33,7 +35,7 @@ class ThemeManager {
   }
 
   static getCurrentTheme() {
-    return document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   }
 }
 

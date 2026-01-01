@@ -2,14 +2,9 @@
   position: sticky;
   top: 0;
   z-index: map-get($z-index, sticky);
-  background-color: $bg-light;
-  border-bottom: 1px solid $border-light;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
   @include transition(background-color, border-color);
-
-  .dark-theme & {
-    background-color: $bg-dark;
-    border-bottom-color: $border-dark;
-  }
 
   &__content {
     display: flex;
@@ -22,7 +17,7 @@
   &__logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: $primary-color;
+    color: var(--color-primary);
     text-decoration: none;
 
     &:hover {
@@ -39,16 +34,12 @@
     }
 
     &-link {
-      color: $text-light;
+      color: var(--text-primary);
       text-decoration: none;
       @include transition(color);
 
-      .dark-theme & {
-        color: $text-dark;
-      }
-
       &:hover {
-        color: $primary-color;
+        color: var(--color-primary);
         text-decoration: none;
       }
     }
@@ -68,41 +59,25 @@
     justify-content: center;
     gap: map-get($spacings, 1);
     background: none;
-    border: 1px solid $border-light;
+    border: 1px solid var(--border-color);
     padding: map-get($spacings, 1) map-get($spacings, 2);
     border-radius: 4px;
     cursor: pointer;
     @include transition(background-color, border-color);
 
-    .dark-theme & {
-      border-color: $border-dark;
-    }
-
     &:hover {
-      background-color: $bg-secondary-light;
-
-      .dark-theme & {
-        background-color: $bg-secondary-dark;
-      }
+      background-color: var(--bg-muted);
     }
   }
 
   &__lang-icon {
     flex-shrink: 0;
-    color: $text-light;
-
-    .dark-theme & {
-      color: $text-dark;
-    }
+    color: var(--text-primary);
   }
 
   &__lang-text {
     font-size: 0.875rem;
     font-weight: 500;
-    color: $text-light;
-
-    .dark-theme & {
-      color: $text-dark;
-    }
+    color: var(--text-primary);
   }
 }
