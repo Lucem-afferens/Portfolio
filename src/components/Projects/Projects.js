@@ -10,8 +10,8 @@ class Projects {
         role: 'Full-stack Developer',
         category: 'web',
         image: {
-          src: '/images/project-1.webp',
-          srcset: '/images/project-1-400.webp 400w, /images/project-1-800.webp 800w',
+          src: '/images/project-placeholder.svg',
+          srcset: '/images/project-placeholder.svg 400w, /images/project-placeholder.svg 800w',
           width: 800,
           height: 600,
           alt: 'Превью проекта: Сайт компьютерного клуба Точка GG',
@@ -27,8 +27,8 @@ class Projects {
         role: 'Full-stack Developer',
         category: 'web',
         image: {
-          src: '/images/project-2.webp',
-          srcset: '/images/project-2-400.webp 400w, /images/project-2-800.webp 800w',
+          src: '/images/project-placeholder.svg',
+          srcset: '/images/project-placeholder.svg 400w, /images/project-placeholder.svg 800w',
           width: 800,
           height: 600,
           alt: 'Превью проекта: Telegram-бот Приз Бокс',
@@ -43,8 +43,8 @@ class Projects {
         role: 'Full-stack Developer',
         category: 'web',
         image: {
-          src: '/images/project-3.webp',
-          srcset: '/images/project-3-400.webp 400w, /images/project-3-800.webp 800w',
+          src: '/images/project-placeholder.svg',
+          srcset: '/images/project-placeholder.svg 400w, /images/project-placeholder.svg 800w',
           width: 800,
           height: 600,
           alt: 'Превью проекта: Сайт электронных приглашений Welcome to Day',

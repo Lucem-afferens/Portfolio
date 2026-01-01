@@ -25,7 +25,7 @@ class About {
           <div class="about__content">
             <div class="about__image-wrapper">
               <img 
-                src="/images/about-placeholder.jpg" 
+                src="/images/about-placeholder.svg" 
                 alt="Николай Дудин - Web-разработчик" 
                 class="about__image"
                 loading="lazy"
