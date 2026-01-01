@@ -13,6 +13,11 @@ class Testimonials {
             <button class="testimonials__next" aria-label="${i18n.t('testimonials.next')}" data-testimonials-next>›</button>
           </div>
           <div class="testimonials__dots" data-testimonials-dots></div>
+          <div class="testimonials__action">
+            <a href="/testimonial-form.html" class="testimonials__button">
+              ${i18n.t('testimonials.leaveFeedback')}
+            </a>
+          </div>
         </div>
       </section>
     `;

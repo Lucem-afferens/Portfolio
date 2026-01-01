@@ -65,7 +65,8 @@
     "error": "Error loading testimonials",
     "prev": "Previous testimonial",
     "next": "Next testimonial",
-    "goTo": "Go to testimonial"
+    "goTo": "Go to testimonial",
+    "leaveFeedback": "Leave a Review"
   },
   "contact": {
     "title": "Get In Touch",
