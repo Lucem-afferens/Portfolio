@@ -19,6 +19,18 @@ export default defineConfig({
         'testimonial-form': resolve(__dirname, 'src/pages/testimonial-form.html'),
         admin: resolve(__dirname, 'src/pages/admin.html'),
       },
+      output: {
+        // Сохраняем структуру папок для страниц
+        entryFileNames: chunk => {
+          if (chunk.name === 'testimonial-form') {
+            return 'pages/testimonial-form.js';
+          }
+          if (chunk.name === 'admin') {
+            return 'pages/admin.js';
+          }
+          return 'assets/[name]-[hash].js';
+        },
+      },
     },
     // Оптимизация для производительности
     minify: 'terser',
@@ -69,6 +81,12 @@ export default defineConfig({
               return '../../styles/';
             }
 
+            // Check if file is in pages/ (e.g., "pages/TestimonialForm/TestimonialForm.scss")
+            if (relativePath.startsWith('pages/')) {
+              // File is in pages/ - go up two levels to reach styles/
+              return '../../styles/';
+            }
+
             // Calculate depth for other locations
             const depth = (relativePath.match(/\//g) || []).length;
             return depth > 0 ? `${'../'.repeat(depth)}styles/` : './styles/';
@@ -100,14 +118,21 @@ export default defineConfig({
               '.contact',
             ];
 
+            // Check for page-specific patterns
+            const pageIndicators = ['.testimonial-form', '.admin'];
+
             const hasComponentIndicators = componentIndicators.some(indicator =>
               fileContent.includes(indicator)
             );
 
-            if (hasStylesIndicators && !hasComponentIndicators) {
+            const hasPageIndicators = pageIndicators.some(indicator =>
+              fileContent.includes(indicator)
+            );
+
+            if (hasStylesIndicators && !hasComponentIndicators && !hasPageIndicators) {
               return './';
             }
-            if (hasComponentIndicators) {
+            if (hasPageIndicators || hasComponentIndicators) {
               return '../../styles/';
             }
             // Default: assume component

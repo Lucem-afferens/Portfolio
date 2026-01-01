@@ -5,22 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Оставить отзыв - Портфолио Николая Дудина" />
     <title>Оставить отзыв | Портфолио</title>
-    <link rel="stylesheet" href="/styles/main.css" />
   </head>
   <body>
     <div id="app"></div>
     <script type="module">
-      import TestimonialForm from './pages/TestimonialForm/TestimonialForm.js';
-      import { i18n } from './utils/i18n.js';
+      import TestimonialForm from '../pages/TestimonialForm/TestimonialForm.js';
+      import { i18n } from '../utils/i18n.js';
       
       // Инициализация i18n
-      await i18n.init();
-      
-      // Рендер формы
-      const app = document.getElementById('app');
-      app.innerHTML = TestimonialForm.render();
-      TestimonialForm.init();
+      i18n.init().then(() => {
+        // Рендер формы
+        const app = document.getElementById('app');
+        app.innerHTML = TestimonialForm.render();
+        TestimonialForm.init();
+      });
     </script>
   </body>
 </html>
-
