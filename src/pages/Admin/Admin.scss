@@ -61,7 +61,7 @@
     &:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.15);
     }
   }
 
@@ -82,7 +82,7 @@
 
     &--error {
       display: block;
-      background-color: rgba(220, 53, 69, 0.1);
+      background-color: rgba(220, 53, 69, 0.15);
       color: #dc3545;
       border: 1px solid #dc3545;
     }
@@ -344,7 +344,7 @@
 
   &__rejection-reason {
     padding: map-get($spacings, 2);
-    background-color: rgba(220, 53, 69, 0.1);
+    background-color: rgba(220, 53, 69, 0.15);
     border-left: 3px solid #dc3545;
     border-radius: 4px;
     color: #dc3545;
@@ -384,13 +384,13 @@
       color: #dc3545;
 
       &:hover {
-        background-color: rgba(220, 53, 69, 0.1);
+        background-color: rgba(220, 53, 69, 0.15);
       }
     }
 
     &--confirm-reject {
       background-color: #dc3545;
-      color: white;
+      color: var(--bg-surface);
     }
 
     &--cancel-reject {
@@ -405,7 +405,7 @@
       color: #dc3545;
 
       &:hover {
-        background-color: rgba(220, 53, 69, 0.1);
+        background-color: rgba(220, 53, 69, 0.15);
       }
     }
 
@@ -507,7 +507,7 @@
     &:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.15);
     }
   }
 
@@ -727,7 +727,7 @@
     color: var(--color-primary);
 
     &:hover {
-      background-color: rgba(31, 166, 160, 0.1);
+      background-color: rgba(31, 166, 160, 0.15);
     }
   }
 
@@ -879,7 +879,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -890,6 +890,10 @@
     @include respond-to(sm) {
       align-items: center;
       padding: map-get($spacings, 2);
+    }
+
+    [data-theme='dark'] & {
+      background-color: rgba(0, 0, 0, 0.75);
     }
   }
 
@@ -976,7 +980,7 @@
     &:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.15);
     }
   }
 
@@ -1020,7 +1024,7 @@
     &:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.15);
     }
 
     &::file-selector-button {

@@ -87,7 +87,7 @@
     &:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.15);
     }
 
     &:invalid {
@@ -118,7 +118,7 @@
     font-weight: 600;
 
     &:hover {
-      box-shadow: 0 4px 12px rgba(31, 166, 160, 0.3);
+      box-shadow: 0 4px 12px rgba(31, 166, 160, 0.4);
     }
 
     &:disabled {
@@ -142,7 +142,7 @@
     &:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.15);
     }
 
     &::file-selector-button {
@@ -195,7 +195,7 @@
     font-size: 0.875rem;
 
     &:hover {
-      background-color: rgba(220, 53, 69, 0.1);
+      background-color: rgba(220, 53, 69, 0.15);
     }
   }
 
@@ -207,14 +207,14 @@
 
     &--success {
       display: block;
-      background-color: rgba(31, 166, 160, 0.1);
+      background-color: rgba(31, 166, 160, 0.15);
       color: var(--color-primary);
       border: 1px solid var(--color-primary);
     }
 
     &--error {
       display: block;
-      background-color: rgba(220, 53, 69, 0.1);
+      background-color: rgba(220, 53, 69, 0.15);
       color: #dc3545;
       border: 1px solid #dc3545;
     }
