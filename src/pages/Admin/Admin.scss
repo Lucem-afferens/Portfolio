@@ -178,16 +178,29 @@
     margin-bottom: map-get($spacings, 3);
   }
 
+  &__testimonial-info {
+    display: flex;
+    align-items: flex-start;
+    gap: map-get($spacings, 3);
+    flex: 1;
+  }
+
   &__testimonial-photo {
-    margin-bottom: map-get($spacings, 2);
+    flex-shrink: 0;
 
     img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
       object-fit: cover;
       border: 2px solid var(--border-color);
+      display: block;
+      @include box-shadow(1);
     }
+  }
+
+  &__testimonial-text {
+    flex: 1;
   }
 
   &__testimonial-name {

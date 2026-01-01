@@ -289,19 +289,25 @@ class Admin {
         testimonial => `
       <div class="admin__testimonial-card" data-testimonial-id="${testimonial.id}">
         <div class="admin__testimonial-header">
-          <div>
+          <div class="admin__testimonial-info">
             ${
               testimonial.photo
                 ? `
               <div class="admin__testimonial-photo">
-                <img src="${this.escapeHtml(testimonial.photo)}" alt="${this.escapeHtml(testimonial.name)}" />
+                <img 
+                  src="${this.escapeHtml(testimonial.photo)}" 
+                  alt="${this.escapeHtml(testimonial.name)}"
+                  onerror="this.style.display='none'"
+                />
               </div>
             `
                 : ''
             }
-            <h3 class="admin__testimonial-name">${this.escapeHtml(testimonial.name)}</h3>
-            ${testimonial.position ? `<p class="admin__testimonial-position">${this.escapeHtml(testimonial.position)}</p>` : ''}
-            ${testimonial.company ? `<p class="admin__testimonial-company">${this.escapeHtml(testimonial.company)}</p>` : ''}
+            <div class="admin__testimonial-text">
+              <h3 class="admin__testimonial-name">${this.escapeHtml(testimonial.name)}</h3>
+              ${testimonial.position ? `<p class="admin__testimonial-position">${this.escapeHtml(testimonial.position)}</p>` : ''}
+              ${testimonial.company ? `<p class="admin__testimonial-company">${this.escapeHtml(testimonial.company)}</p>` : ''}
+            </div>
           </div>
           <div class="admin__testimonial-date">
             ${new Date(testimonial.created_at).toLocaleDateString('ru-RU')}
