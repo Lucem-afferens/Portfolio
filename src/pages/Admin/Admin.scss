@@ -178,6 +178,18 @@
     margin-bottom: map-get($spacings, 3);
   }
 
+  &__testimonial-photo {
+    margin-bottom: map-get($spacings, 2);
+
+    img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border-color);
+    }
+  }
+
   &__testimonial-name {
     font-size: 1.25rem;
     font-weight: 600;

@@ -42,6 +42,20 @@
     }
   }
 
+  &__photo {
+    margin-bottom: map-get($spacings, 3);
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--color-primary);
+    }
+  }
+
   &__author {
     font-weight: 600;
     font-style: normal;

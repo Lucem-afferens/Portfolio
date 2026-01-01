@@ -28,6 +28,21 @@ class Testimonials {
         testimonial => `
       <div class="testimonials__slide">
         <blockquote class="testimonials__quote">
+          ${
+            testimonial.photo
+              ? `
+            <div class="testimonials__photo">
+              <img 
+                src="${this.escapeHtml(testimonial.photo)}" 
+                alt="${this.escapeHtml(testimonial.name)}"
+                loading="lazy"
+                width="80"
+                height="80"
+              />
+            </div>
+          `
+              : ''
+          }
           <p>${this.escapeHtml(testimonial.message)}</p>
           <footer>
             <div class="testimonials__author">${this.escapeHtml(testimonial.name)}</div>

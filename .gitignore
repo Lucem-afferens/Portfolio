@@ -39,3 +39,6 @@ coverage
 
 database/config.php
 api/config.php
+
+# Uploads
+uploads/

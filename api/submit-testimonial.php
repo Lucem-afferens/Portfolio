@@ -37,18 +37,70 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Получение данных
-$rawInput = file_get_contents('php://input');
-$data = json_decode($rawInput, true);
+// Получение данных (поддержка FormData и JSON)
+$data = [];
 
-// Проверка корректности JSON
-if (json_last_error() !== JSON_ERROR_NONE) {
-    sendError('Некорректный JSON: ' . json_last_error_msg(), 400);
-}
-
-// Проверка наличия данных
-if (!is_array($data)) {
-    sendError('Данные не получены или имеют неверный формат', 400);
+// Проверяем, отправлены ли данные как FormData
+if (!empty($_POST)) {
+    $data = $_POST;
+    
+    // Обработка загрузки фото
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['photo'];
+        
+        // Валидация размера (5 МБ)
+        $maxSize = 5 * 1024 * 1024;
+        if ($file['size'] > $maxSize) {
+            sendError('Размер файла не должен превышать 5 МБ', 400);
+        }
+        
+        // Валидация типа файла
+        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+        
+        if (!in_array($mimeType, $allowedTypes, true)) {
+            sendError('Разрешены только изображения (JPG, PNG, WebP)', 400);
+        }
+        
+        // Создаем директорию для загрузок
+        $uploadDir = __DIR__ . '/../uploads/testimonials/';
+        if (!is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true)) {
+                sendError('Ошибка создания директории для загрузок', 500);
+            }
+        }
+        
+        // Генерируем безопасное имя файла
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $safeExtension = in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'webp'], true)
+            ? strtolower($extension)
+            : 'jpg';
+        
+        $fileName = uniqid('testimonial_', true) . '_' . time() . '.' . $safeExtension;
+        $filePath = $uploadDir . $fileName;
+        
+        // Перемещаем файл
+        if (!move_uploaded_file($file['tmp_name'], $filePath)) {
+            sendError('Ошибка при сохранении файла', 500);
+        }
+        
+        // Сохраняем относительный путь
+        $data['photo'] = '/uploads/testimonials/' . $fileName;
+    }
+} else {
+    // Fallback для JSON (старый способ)
+    $rawInput = file_get_contents('php://input');
+    $data = json_decode($rawInput, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        sendError('Некорректный JSON: ' . json_last_error_msg(), 400);
+    }
+    
+    if (!is_array($data)) {
+        sendError('Данные не получены или имеют неверный формат', 400);
+    }
 }
 
 // Валидация

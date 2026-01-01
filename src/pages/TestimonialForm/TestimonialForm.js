@@ -12,7 +12,7 @@ class TestimonialForm {
             </p>
           </header>
           
-          <form class="testimonial-form__form" data-testimonial-form>
+          <form class="testimonial-form__form" data-testimonial-form enctype="multipart/form-data">
             <div class="testimonial-form__group">
               <label for="name" class="testimonial-form__label">
                 Ваше имя <span class="required">*</span>
@@ -76,6 +76,29 @@ class TestimonialForm {
               </span>
             </div>
             
+            <div class="testimonial-form__group">
+              <label for="photo" class="testimonial-form__label">
+                Ваша фотография (опционально)
+              </label>
+              <input
+                type="file"
+                id="photo"
+                name="photo"
+                class="testimonial-form__file-input"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                data-photo-input
+              />
+              <div class="testimonial-form__photo-preview" data-photo-preview style="display: none;">
+                <img src="" alt="Превью фото" data-preview-image />
+                <button type="button" class="testimonial-form__remove-photo" data-remove-photo>
+                  Удалить фото
+                </button>
+              </div>
+              <p class="testimonial-form__file-hint">
+                Форматы: JPG, PNG, WebP. Максимальный размер: 5 МБ
+              </p>
+            </div>
+            
             <button type="submit" class="testimonial-form__submit">
               Отправить отзыв
             </button>
@@ -92,6 +115,10 @@ class TestimonialForm {
     const messageEl = document.querySelector('[data-form-message]');
     const charCountEl = document.querySelector('[data-char-count]');
     const textarea = document.querySelector('#message');
+    const photoInput = document.querySelector('[data-photo-input]');
+    const photoPreview = document.querySelector('[data-photo-preview]');
+    const previewImage = document.querySelector('[data-preview-image]');
+    const removePhotoBtn = document.querySelector('[data-remove-photo]');
 
     if (!form) return;
 
@@ -102,11 +129,47 @@ class TestimonialForm {
       });
     }
 
+    // Обработка загрузки фото
+    if (photoInput) {
+      photoInput.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (file) {
+          // Валидация размера (5 МБ)
+          if (file.size > 5 * 1024 * 1024) {
+            this.showMessage(messageEl, 'Размер файла не должен превышать 5 МБ', 'error');
+            photoInput.value = '';
+            return;
+          }
+
+          // Валидация типа
+          if (!file.type.match(/^image\/(jpeg|jpg|png|webp)$/)) {
+            this.showMessage(messageEl, 'Разрешены только изображения (JPG, PNG, WebP)', 'error');
+            photoInput.value = '';
+            return;
+          }
+
+          // Показываем превью
+          const reader = new FileReader();
+          reader.onload = event => {
+            if (previewImage) previewImage.src = event.target.result;
+            if (photoPreview) photoPreview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // Удаление фото
+    if (removePhotoBtn) {
+      removePhotoBtn.addEventListener('click', () => {
+        if (photoInput) photoInput.value = '';
+        if (photoPreview) photoPreview.style.display = 'none';
+        if (previewImage) previewImage.src = '';
+      });
+    }
+
     form.addEventListener('submit', async e => {
       e.preventDefault();
-
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData);
 
       // Очистка предыдущих сообщений
       if (messageEl) {
@@ -115,12 +178,15 @@ class TestimonialForm {
       }
 
       // Валидация на клиенте
-      if (data.name.trim().length < 2) {
+      const nameInput = form.querySelector('#name');
+      const messageValue = textarea.value.trim();
+
+      if (nameInput.value.trim().length < 2) {
         this.showMessage(messageEl, 'Имя должно содержать минимум 2 символа', 'error');
         return;
       }
 
-      if (data.message.trim().length < 10) {
+      if (messageValue.length < 10) {
         this.showMessage(messageEl, 'Отзыв должен содержать минимум 10 символов', 'error');
         return;
       }
@@ -132,12 +198,12 @@ class TestimonialForm {
       submitBtn.textContent = 'Отправка...';
 
       try {
+        // Используем FormData для поддержки файлов
+        const formData = new FormData(form);
+
         const response = await fetch('/api/submit-testimonial.php', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
+          body: formData,
         });
 
         const result = await response.json();
@@ -150,6 +216,8 @@ class TestimonialForm {
           );
           form.reset();
           if (charCountEl) charCountEl.textContent = '0';
+          if (photoPreview) photoPreview.style.display = 'none';
+          if (previewImage) previewImage.src = '';
         } else {
           const errorMsg = result.errors
             ? result.errors.join(', ')
