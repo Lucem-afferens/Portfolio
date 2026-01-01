@@ -119,6 +119,14 @@ class Contact {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
 
+        // Очищаем пустые поля
+        if (!data.message || !data.message.trim()) {
+          delete data.message;
+        }
+        if (!data.telegram || !data.telegram.trim()) {
+          delete data.telegram;
+        }
+
         // Показываем состояние загрузки
         const submitBtn = form.querySelector('.contact__submit');
         const originalText = submitBtn.textContent;
