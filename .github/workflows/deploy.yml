@@ -61,13 +61,12 @@ jobs:
           mkdir -p dist/api/admin
           if [ -d "api/admin" ] && [ "$(ls -A api/admin 2>/dev/null)" ]; then
             cp -r api/admin/*.php dist/api/admin/ || true
+            # Исключаем временные файлы
+            rm -f dist/api/admin/seed-projects.php || true
             echo "✅ Admin API files copied"
           else
             echo "⚠️ No admin API files found"
           fi
-          
-          # Копируем check-permissions.php для проверки прав доступа
-          # (можно удалить после проверки)
           
           # Копируем database файлы (без config.php)
           echo "📁 Copying database files..."
