@@ -101,6 +101,9 @@ class Admin {
                 <button class="admin__btn admin__btn--primary" data-add-project>
                   + Добавить проект
                 </button>
+                <button class="admin__btn admin__btn--secondary" data-seed-projects>
+                  📦 Добавить начальные проекты
+                </button>
               </div>
               <div class="admin__projects-list" data-projects-list></div>
             </div>

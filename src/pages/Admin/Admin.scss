@@ -436,6 +436,8 @@
     margin-bottom: map-get($spacings, 4);
     display: flex;
     justify-content: flex-end;
+    gap: map-get($spacings, 2);
+    flex-wrap: wrap;
   }
 
   &__projects-list {
@@ -526,6 +528,16 @@
   &__btn--primary {
     background-color: var(--color-primary);
     color: var(--bg-surface);
+  }
+
+  &__btn--secondary {
+    background-color: transparent;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+
+    &:hover {
+      background-color: rgba(31, 166, 160, 0.1);
+    }
   }
 
   &__btn--edit {
