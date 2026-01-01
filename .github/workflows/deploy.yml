@@ -1,0 +1,175 @@
+name: Deploy Portfolio to Beget
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - '.gitignore'
+      - '*.md'
+      - '.github/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+        continue-on-error: false
+
+      - name: Prepare files for deployment
+        run: |
+          echo "📦 Preparing files for deployment..."
+          
+          # Копируем статические файлы из public
+          if [ -d "public" ] && [ "$(ls -A public)" ]; then
+            echo "📁 Copying public files..."
+            cp -r public/* dist/ || true
+          fi
+          
+          # Копируем PHP API файлы
+          echo "📄 Copying PHP API files..."
+          mkdir -p dist/api
+          cp -r api/*.php dist/api/ || true
+          # Удаляем config.php из dist, он будет создан из секретов
+          rm -f dist/api/config.php || true
+          
+          # Копируем database файлы (без config.php)
+          echo "📁 Copying database files..."
+          mkdir -p dist/database
+          cp database/schema.sql dist/database/ || true
+          cp database/install.sql dist/database/ || true
+          cp database/.gitignore dist/database/ || true
+          cp database/README.md dist/database/ || true
+          # config.php будет создан из секретов
+          
+          # Копируем HTML страницы (если есть)
+          if [ -d "src/pages" ]; then
+            echo "📄 Copying page files..."
+            mkdir -p dist/pages
+            cp src/pages/*.html dist/pages/ || true
+          fi
+          
+          echo "✅ Files prepared for deployment"
+          echo "📁 Contents of dist:"
+          ls -la dist/ || true
+          echo "📁 Contents of dist/api:"
+          ls -la dist/api/ || true
+          echo "📁 Contents of dist/database:"
+          ls -la dist/database/ || true
+
+      - name: Create database config from secrets
+        run: |
+          echo "🔐 Creating database config from secrets..."
+          mkdir -p dist/database
+          cat > dist/database/config.php << 'EOF'
+          <?php
+          /**
+           * Конфигурация базы данных
+           * ⚠️ ВАЖНО: Этот файл создан автоматически при деплое
+           */
+          
+          return [
+              'host' => 'localhost',
+              'dbname' => 'nikolr4t_portfol',
+              'username' => 'nikolr4t',
+              'password' => '4I3%8gC2QF86',
+              'charset' => 'utf8mb4',
+          ];
+          EOF
+          echo "✅ Database config created"
+
+      - name: Create API config from secrets
+        run: |
+          echo "🔐 Creating API config from secrets..."
+          mkdir -p dist/api
+          
+          # Генерируем hash пароля
+          ADMIN_PASSWORD_HASH=$(php -r "echo password_hash('${{ secrets.FTP_ADMIN_PASSWORD }}', PASSWORD_DEFAULT);")
+          
+          cat > dist/api/config.php << EOF
+          <?php
+          /**
+           * Конфигурация API
+           * ⚠️ ВАЖНО: Этот файл создан автоматически при деплое из GitHub Secrets
+           */
+          
+          // Загрузка конфигурации БД
+          \$dbConfig = require __DIR__ . '/../database/config.php';
+          
+          // Telegram Bot настройки
+          define('TELEGRAM_BOT_TOKEN', '${{ secrets.FTP_BOT_TOKEN }}');
+          define('TELEGRAM_CHAT_ID', '${{ secrets.FTP_CHAT_ID }}');
+          
+          // Email настройки
+          define('ADMIN_EMAIL', 'nikwebdev.2025@gmail.com');
+          
+          // Настройки безопасности
+          define('ADMIN_PASSWORD_HASH', '$ADMIN_PASSWORD_HASH');
+          
+          // CORS настройки
+          header('Access-Control-Allow-Origin: *');
+          header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+          header('Access-Control-Allow-Headers: Content-Type');
+          header('Content-Type: application/json; charset=utf-8');
+          
+          // Обработка preflight запросов
+          if (\$_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+              http_response_code(200);
+              exit;
+          }
+          EOF
+          echo "✅ API config created with secrets"
+
+      - name: Deploy to Beget via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ${{ secrets.FTP_SERVER_DIR || '/public_html/' }}
+          protocol: ftp
+          dangerous-clean-slate: false
+          dry-run: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+            **/Thumbs.db
+            **/*.md
+            **/.github/**
+            **/.vscode/**
+            **/.idea/**
+          log-level: verbose
+          state-name: .ftp-deploy-sync-state.json
+
+      - name: Verify deployment
+        if: success()
+        run: |
+          echo "✅ Deployment completed successfully!"
+          echo "🌐 Your portfolio should be available at https://develonik.ru"
+          echo "📝 Files deployed:"
+          echo "  - Frontend: dist/*"
+          echo "  - API: dist/api/*.php"
+          echo "  - Database config: dist/database/config.php"
+          echo "  - API config: dist/api/config.php (with secrets)"

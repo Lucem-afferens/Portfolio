@@ -16,6 +16,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'src/index.html'),
+        'testimonial-form': resolve(__dirname, 'src/pages/testimonial-form.html'),
+        admin: resolve(__dirname, 'src/pages/admin.html'),
       },
     },
     // Оптимизация для производительности
