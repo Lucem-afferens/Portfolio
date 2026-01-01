@@ -32,18 +32,35 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendError('Method not allowed', 405);
 }
 
-$rawInput = file_get_contents('php://input');
-$data = json_decode($rawInput, true);
+// Определяем, отправлены ли данные как FormData (с файлом) или JSON
+$isFormData = isset($_FILES['photo']) || isset($_POST['setting_key']);
 
-if (!isset($data['setting_key']) || !in_array($data['setting_key'], ['hero_photo', 'about_photo', 'logo'], true)) {
+if ($isFormData) {
+    // Данные отправлены как FormData
+    $settingKey = $_POST['setting_key'] ?? null;
+    $delete = isset($_POST['delete']) && $_POST['delete'] === 'true';
+} else {
+    // Данные отправлены как JSON
+    $rawInput = file_get_contents('php://input');
+    $data = json_decode($rawInput, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        sendError('Некорректный JSON', 400);
+    }
+    
+    $settingKey = $data['setting_key'] ?? null;
+    $delete = isset($data['delete']) && $data['delete'] === true;
+}
+
+// Валидация ключа настройки
+if (!$settingKey || !in_array($settingKey, ['hero_photo', 'about_photo', 'logo'], true)) {
     sendError('Некорректный ключ настройки', 400);
 }
 
-$settingKey = $data['setting_key'];
 $settingValue = null;
 
 // Обработка загрузки фото или удаления
-if (isset($data['delete']) && $data['delete'] === true) {
+if ($delete) {
     // Удаление фото
     $settingValue = null;
 } elseif (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
@@ -56,13 +73,13 @@ if (isset($data['delete']) && $data['delete'] === true) {
     }
     
     // Валидация типа файла
-    $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml'];
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimeType = finfo_file($finfo, $file['tmp_name']);
     finfo_close($finfo);
     
     if (!in_array($mimeType, $allowedTypes, true)) {
-        sendError('Разрешены только изображения (JPG, PNG, WebP)', 400);
+        sendError('Разрешены только изображения (JPG, PNG, WebP, SVG)', 400);
     }
     
     // Создаем директорию для загрузок
