@@ -3,7 +3,17 @@
  * Подключение к базе данных
  */
 
-require_once __DIR__ . '/config.php';
+// Загружаем конфигурацию БД
+$dbConfigPath = __DIR__ . '/../database/config.php';
+if (!file_exists($dbConfigPath)) {
+    throw new Exception('Database config file not found at: ' . $dbConfigPath);
+}
+
+$dbConfig = require $dbConfigPath;
+
+if (!is_array($dbConfig)) {
+    throw new Exception('Invalid database config format');
+}
 
 try {
     $dsn = sprintf(
@@ -19,11 +29,7 @@ try {
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
 } catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Database connection failed',
-    ]);
-    exit;
+    // Не выводим ошибку здесь, пусть вызывающий код обработает
+    throw $e;
 }
 
