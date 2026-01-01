@@ -21,10 +21,14 @@
 
   &__title,
   &__panel-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: map-get($spacings, 2);
+
+    @include respond-to(sm) {
+      font-size: 2rem;
+    }
   }
 
   &__subtitle {
@@ -67,6 +71,7 @@
     background-color: var(--color-primary);
     color: var(--bg-surface);
     padding: map-get($spacings, 2) map-get($spacings, 4);
+    font-size: 1rem;
   }
 
   &__message {
@@ -87,15 +92,26 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 map-get($spacings, 2);
+
+    @include respond-to(sm) {
+      padding: 0 map-get($spacings, 3);
+    }
   }
 
   &__header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: map-get($spacings, 5);
+    flex-direction: column;
+    gap: map-get($spacings, 2);
+    margin-bottom: map-get($spacings, 4);
     padding-bottom: map-get($spacings, 3);
     border-bottom: 1px solid var(--border-color);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: map-get($spacings, 5);
+    }
   }
 
   &__logout {
@@ -103,7 +119,13 @@
     background-color: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    padding: map-get($spacings, 2) map-get($spacings, 4);
+    padding: map-get($spacings, 2) map-get($spacings, 3);
+    width: 100%;
+
+    @include respond-to(sm) {
+      width: auto;
+      padding: map-get($spacings, 2) map-get($spacings, 4);
+    }
 
     &:hover {
       background-color: var(--bg-muted);
@@ -112,9 +134,25 @@
 
   &__tabs {
     display: flex;
-    gap: map-get($spacings, 2);
+    gap: map-get($spacings, 1);
     margin-bottom: map-get($spacings, 4);
     border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+
+    @include respond-to(sm) {
+      gap: map-get($spacings, 2);
+    }
+
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--border-color);
+      border-radius: 2px;
+    }
   }
 
   &__tab {
@@ -123,10 +161,17 @@
     border: none;
     border-bottom: 2px solid transparent;
     border-radius: 0;
-    padding: map-get($spacings, 2) map-get($spacings, 3);
+    padding: map-get($spacings, 2) map-get($spacings, 2);
     color: var(--text-secondary);
     cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.875rem;
     @include transition(color, border-color);
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 2) map-get($spacings, 3);
+      font-size: 1rem;
+    }
 
     &.active {
       color: var(--color-primary);
@@ -167,28 +212,42 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: map-get($spacings, 4);
+    padding: map-get($spacings, 3);
     @include box-shadow(1);
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 4);
+    }
   }
 
   &__testimonial-header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: column;
+    gap: map-get($spacings, 2);
     margin-bottom: map-get($spacings, 3);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
   }
 
   &__testimonial-info {
     display: flex;
     align-items: flex-start;
-    gap: map-get($spacings, 3);
+    gap: map-get($spacings, 2);
     flex: 1;
+
+    @include respond-to(sm) {
+      gap: map-get($spacings, 3);
+    }
   }
 
   &__testimonial-photo {
     flex-shrink: 0;
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 8px;
     border: 2px solid var(--border-color);
     display: flex;
@@ -196,6 +255,11 @@
     justify-content: center;
     background-color: var(--bg-muted);
     @include box-shadow(1);
+
+    @include respond-to(sm) {
+      width: 80px;
+      height: 80px;
+    }
 
     img {
       width: 100%;
@@ -218,10 +282,14 @@
   }
 
   &__testimonial-name {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: map-get($spacings, 1);
+
+    @include respond-to(sm) {
+      font-size: 1.25rem;
+    }
   }
 
   &__testimonial-position,
@@ -254,13 +322,24 @@
 
   &__testimonial-actions {
     display: flex;
+    flex-direction: column;
     gap: map-get($spacings, 2);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+    }
   }
 
   &__btn {
     @include button-base;
-    padding: map-get($spacings, 2) map-get($spacings, 4);
+    padding: map-get($spacings, 2) map-get($spacings, 3);
     font-size: 0.875rem;
+    width: 100%;
+
+    @include respond-to(sm) {
+      width: auto;
+      padding: map-get($spacings, 2) map-get($spacings, 4);
+    }
 
     &--approve {
       background-color: var(--color-primary);
@@ -337,7 +416,12 @@
 
   &__reject-actions {
     display: flex;
+    flex-direction: column;
     gap: map-get($spacings, 2);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+    }
   }
 
   &__loading,
@@ -352,9 +436,13 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: map-get($spacings, 4);
+    padding: map-get($spacings, 3);
     margin-bottom: map-get($spacings, 4);
     @include box-shadow(1);
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 4);
+    }
   }
 
   &__search-group {
@@ -391,11 +479,48 @@
     }
   }
 
+  &__search-form {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacings, 2);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+  }
+
+  &__search-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacings, 2);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+    }
+  }
+
   &__main-tabs {
     display: flex;
-    gap: map-get($spacings, 2);
+    gap: map-get($spacings, 1);
     margin-bottom: map-get($spacings, 4);
     border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+
+    @include respond-to(sm) {
+      gap: map-get($spacings, 2);
+    }
+
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--border-color);
+      border-radius: 2px;
+    }
   }
 
   &__main-tab {
@@ -404,11 +529,17 @@
     border: none;
     border-bottom: 2px solid transparent;
     border-radius: 0;
-    padding: map-get($spacings, 2) map-get($spacings, 4);
+    padding: map-get($spacings, 2) map-get($spacings, 2);
     color: var(--text-secondary);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
     @include transition(color, border-color);
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 2) map-get($spacings, 4);
+      font-size: 1rem;
+    }
 
     &.active {
       color: var(--color-primary);
@@ -435,9 +566,13 @@
   &__projects-header {
     margin-bottom: map-get($spacings, 4);
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     gap: map-get($spacings, 2);
-    flex-wrap: wrap;
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
   }
 
   &__projects-list {
@@ -450,23 +585,38 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: map-get($spacings, 4);
+    padding: map-get($spacings, 3);
     @include box-shadow(1);
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 4);
+    }
   }
 
   &__project-header {
     display: flex;
-    gap: map-get($spacings, 4);
+    flex-direction: column;
+    gap: map-get($spacings, 3);
     margin-bottom: map-get($spacings, 3);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      gap: map-get($spacings, 4);
+    }
   }
 
   &__project-image {
-    width: 200px;
-    height: 150px;
+    width: 100%;
+    height: 200px;
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid var(--border-color);
     flex-shrink: 0;
+
+    @include respond-to(sm) {
+      width: 200px;
+      height: 150px;
+    }
   }
 
   &__project-info {
@@ -474,10 +624,14 @@
   }
 
   &__project-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: map-get($spacings, 1);
+
+    @include respond-to(sm) {
+      font-size: 1.5rem;
+    }
   }
 
   &__project-role {
@@ -520,9 +674,14 @@
 
   &__project-actions {
     display: flex;
+    flex-direction: column;
     gap: map-get($spacings, 2);
     padding-top: map-get($spacings, 3);
     border-top: 1px solid var(--border-color);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+    }
   }
 
   &__btn--primary {
@@ -555,21 +714,29 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: map-get($spacings, 4);
+    padding: map-get($spacings, 3);
     @include box-shadow(1);
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 4);
+    }
   }
 
   &__photo-title {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: map-get($spacings, 3);
+
+    @include respond-to(sm) {
+      font-size: 1.25rem;
+    }
   }
 
   &__photo-preview {
     width: 100%;
-    max-width: 400px;
-    height: 300px;
+    max-width: 100%;
+    height: 200px;
     border: 2px solid var(--border-color);
     border-radius: 8px;
     display: flex;
@@ -578,6 +745,11 @@
     background-color: var(--bg-muted);
     margin-bottom: map-get($spacings, 3);
     overflow: hidden;
+
+    @include respond-to(sm) {
+      max-width: 400px;
+      height: 300px;
+    }
 
     img {
       width: 100%;
@@ -593,7 +765,12 @@
 
   &__photo-actions {
     display: flex;
+    flex-direction: column;
     gap: map-get($spacings, 2);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+    }
   }
 
   &__modal-overlay {
@@ -604,35 +781,56 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     z-index: 1000;
     padding: map-get($spacings, 2);
+    overflow-y: auto;
+
+    @include respond-to(sm) {
+      align-items: center;
+      padding: map-get($spacings, 2);
+    }
   }
 
   &__modal {
     background-color: var(--bg-surface);
     border-radius: 8px;
-    max-width: 600px;
+    max-width: 100%;
     width: 100%;
-    max-height: 90vh;
+    margin: map-get($spacings, 2) 0;
+    max-height: calc(100vh - #{map-get($spacings, 4)});
     overflow-y: auto;
     @include box-shadow(3);
+
+    @include respond-to(sm) {
+      max-width: 600px;
+      margin: 0;
+      max-height: 90vh;
+    }
   }
 
   &__modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: map-get($spacings, 4);
+    padding: map-get($spacings, 3);
     border-bottom: 1px solid var(--border-color);
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 4);
+    }
   }
 
   &__modal-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;
+
+    @include respond-to(sm) {
+      font-size: 1.5rem;
+    }
   }
 
   &__modal-close {
@@ -655,7 +853,11 @@
   }
 
   &__project-form {
-    padding: map-get($spacings, 4);
+    padding: map-get($spacings, 3);
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 4);
+    }
   }
 
   &__textarea {
@@ -739,14 +941,52 @@
 
   &__modal-actions {
     display: flex;
+    flex-direction: column-reverse;
     gap: map-get($spacings, 2);
     margin-top: map-get($spacings, 4);
-    justify-content: flex-end;
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
   }
 
   &__btn--cancel {
     background-color: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-primary);
+  }
+
+  // Мобильные улучшения
+  @media (max-width: 575px) {
+    padding: map-get($spacings, 2) 0;
+
+    &__panel {
+      padding: 0 map-get($spacings, 2);
+    }
+
+    &__login-container {
+      margin: map-get($spacings, 2);
+      padding: map-get($spacings, 3);
+    }
+
+    &__testimonial-date {
+      margin-top: map-get($spacings, 2);
+    }
+
+    &__project-link {
+      word-break: break-all;
+      font-size: 0.75rem;
+    }
+
+    &__modal {
+      border-radius: 0;
+      margin: 0;
+      max-height: 100vh;
+    }
+
+    &__modal-overlay {
+      padding: 0;
+    }
   }
 }
