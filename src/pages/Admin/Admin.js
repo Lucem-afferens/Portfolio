@@ -877,54 +877,40 @@ class Admin {
         display_order: parseInt(formData.get('display_order') || '0', 10),
       };
 
-      // Если есть новое изображение, добавляем его
-      if (formData.get('image') && formData.get('image').size > 0) {
-        // Отправляем как FormData для поддержки файла
-        const fileFormData = new FormData();
-        fileFormData.append('id', projectId || '');
-        fileFormData.append('title', projectData.title);
-        fileFormData.append('role', projectData.role);
-        fileFormData.append('description', projectData.description);
-        fileFormData.append('tools', JSON.stringify(projectData.tools));
-        fileFormData.append('link', projectData.link);
-        fileFormData.append('display_order', projectData.display_order);
-        fileFormData.append('image', formData.get('image'));
+      // Всегда отправляем как FormData (поддерживает и файлы, и обычные данные)
+      const fileFormData = new FormData();
+      fileFormData.append('id', projectId || '');
+      fileFormData.append('title', projectData.title);
+      fileFormData.append('role', projectData.role);
+      fileFormData.append('description', projectData.description);
+      fileFormData.append('tools', JSON.stringify(projectData.tools));
+      fileFormData.append('link', projectData.link);
+      fileFormData.append('display_order', projectData.display_order);
 
-        const response = await fetch('/api/admin/save-project.php', {
-          method: 'POST',
-          body: fileFormData,
-        });
+      // Добавляем изображение только если оно выбрано
+      const imageFile = formData.get('image');
+      if (imageFile && imageFile.size > 0) {
+        fileFormData.append('image', imageFile);
+      }
 
-        const result = await response.json();
+      const response = await fetch('/api/admin/save-project.php', {
+        method: 'POST',
+        body: fileFormData,
+      });
 
-        if (result.success) {
-          this.showMessage(messageEl, 'Проект сохранен', 'success');
-          setTimeout(() => {
-            document.querySelector('[data-project-modal-overlay]')?.remove();
-            this.loadProjects();
-          }, 1000);
-        } else {
-          this.showMessage(messageEl, result.error || 'Ошибка при сохранении', 'error');
-        }
+      const result = await response.json();
+
+      if (result.success) {
+        this.showMessage(messageEl, 'Проект сохранен', 'success');
+        setTimeout(() => {
+          document.querySelector('[data-project-modal-overlay]')?.remove();
+          this.loadProjects();
+        }, 1000);
       } else {
-        // Отправляем как JSON без файла
-        const response = await fetch('/api/admin/save-project.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(projectData),
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          this.showMessage(messageEl, 'Проект сохранен', 'success');
-          setTimeout(() => {
-            document.querySelector('[data-project-modal-overlay]')?.remove();
-            this.loadProjects();
-          }, 1000);
-        } else {
-          this.showMessage(messageEl, result.error || 'Ошибка при сохранении', 'error');
-        }
+        const errorMsg = result.errors
+          ? result.errors.join(', ')
+          : result.error || 'Ошибка при сохранении';
+        this.showMessage(messageEl, errorMsg, 'error');
       }
     } catch (error) {
       this.showMessage(messageEl, 'Ошибка при сохранении проекта', 'error');
