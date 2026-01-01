@@ -3,6 +3,21 @@ import './About.scss';
 
 class About {
   static render() {
+    const skills = [
+      'HTML5',
+      'CSS3 / SCSS',
+      'JavaScript',
+      'TypeScript',
+      'React',
+      'Vite',
+      'PHP',
+      'WordPress',
+      'Git',
+      'Figma',
+      'Docker',
+      'CI/CD',
+    ];
+
     return `
       <section id="about" class="about">
         <div class="container">
@@ -10,8 +25,8 @@ class About {
           <div class="about__content">
             <div class="about__image-wrapper">
               <img 
-                src="/images/about.jpg" 
-                alt="About me" 
+                src="/images/about-placeholder.jpg" 
+                alt="Николай Дудин - Web-разработчик" 
                 class="about__image"
                 loading="lazy"
                 width="400"
@@ -22,10 +37,7 @@ class About {
               <p>${i18n.t('about.description')}</p>
               <h3>${i18n.t('about.skills')}</h3>
               <ul class="about__skills">
-                <li>HTML</li>
-                <li>CSS/SCSS</li>
-                <li>JavaScript</li>
-                <li>Vite</li>
+                ${skills.map(skill => `<li>${skill}</li>`).join('')}
               </ul>
             </div>
           </div>

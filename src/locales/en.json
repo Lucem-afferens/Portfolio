@@ -18,7 +18,7 @@
   },
   "about": {
     "title": "About Me",
-    "description": "Description about yourself and work experience",
+    "description": "Full-cycle web developer with experience in creating adaptive web applications and turnkey websites. I specialize in Frontend development, performance optimization, and SEO. I use modern tools and AI assistants to improve development efficiency.",
     "skills": "Skills"
   },
   "projects": {
@@ -46,8 +46,12 @@
       "name": "Name",
       "email": "Email",
       "message": "Message",
-      "submit": "Send"
+      "submit": "Send",
+      "success": "Message sent! I'll get back to you soon.",
+      "error": "An error occurred. Please try again later or contact me directly."
     },
-    "social": "Social Media"
+    "social": "Social Media",
+    "phone": "Phone",
+    "email": "Email"
   }
 }

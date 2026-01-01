@@ -57,15 +57,47 @@ export function addStructuredData(data) {
  * Инициализация базовых структурированных данных
  */
 export function initStructuredData() {
+  // Person schema
   addStructuredData({
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Web Developer',
+    name: 'Николай Дудин',
+    alternateName: 'Nikolay Dudin',
     url: 'https://develonik.ru',
     jobTitle: 'Web Developer',
     worksFor: {
       '@type': 'Organization',
       name: 'Freelance',
     },
+    email: 'nikwebdev.2025@gmail.com',
+    telephone: '+79226447689',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Москва',
+      addressRegion: 'Москва',
+      addressCountry: 'RU',
+    },
+    sameAs: [
+      'https://github.com/Lucem-afferens',
+      'https://t.me/lucem_afferens',
+      'https://vk.com/lucem.afferens',
+    ],
+    description:
+      'Web-разработчик полного цикла с опытом создания адаптивных веб-приложений и сайтов «под ключ». Специализация: Frontend, оптимизация производительности, SEO.',
+  });
+
+  // WebSite schema
+  addStructuredData({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Портфолио Николая Дудина',
+    url: 'https://develonik.ru',
+    author: {
+      '@type': 'Person',
+      name: 'Николай Дудин',
+    },
+    description:
+      'Портфолио Web-разработчика. Создание адаптивных веб-приложений, оптимизация производительности, SEO.',
+    inLanguage: ['ru', 'en'],
   });
 }

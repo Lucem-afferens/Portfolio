@@ -17,6 +17,7 @@ class Contact {
                   name="name" 
                   class="contact__input" 
                   required
+                  autocomplete="name"
                 />
               </div>
               <div class="contact__form-group">
@@ -27,6 +28,7 @@ class Contact {
                   name="email" 
                   class="contact__input" 
                   required
+                  autocomplete="email"
                 />
               </div>
               <div class="contact__form-group">
@@ -42,13 +44,48 @@ class Contact {
               <button type="submit" class="contact__submit">
                 ${i18n.t('contact.form.submit')}
               </button>
+              <div class="contact__form-message" data-form-message role="alert" aria-live="polite"></div>
             </form>
             <div class="contact__social">
               <h3>${i18n.t('contact.social')}</h3>
               <div class="contact__social-links">
-                <a href="#" class="contact__social-link" aria-label="GitHub">GitHub</a>
-                <a href="#" class="contact__social-link" aria-label="LinkedIn">LinkedIn</a>
-                <a href="#" class="contact__social-link" aria-label="Twitter">Twitter</a>
+                <a 
+                  href="https://github.com/Lucem-afferens" 
+                  class="contact__social-link" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                >
+                  GitHub
+                </a>
+                <a 
+                  href="https://t.me/lucem_afferens" 
+                  class="contact__social-link" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Telegram"
+                >
+                  Telegram
+                </a>
+                <a 
+                  href="https://vk.com/lucem.afferens" 
+                  class="contact__social-link" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="VKontakte"
+                >
+                  VKontakte
+                </a>
+              </div>
+              <div class="contact__info">
+                <p class="contact__info-item">
+                  <strong>${i18n.t('contact.email')}:</strong>
+                  <a href="mailto:nikwebdev.2025@gmail.com">nikwebdev.2025@gmail.com</a>
+                </p>
+                <p class="contact__info-item">
+                  <strong>${i18n.t('contact.phone')}:</strong>
+                  <a href="tel:+79226447689">+7 (922) 644-76-89</a>
+                </p>
               </div>
             </div>
           </div>
@@ -59,21 +96,68 @@ class Contact {
 
   static init() {
     const form = document.querySelector('[data-contact-form]');
+    const messageEl = document.querySelector('[data-form-message]');
 
     if (form) {
-      form.addEventListener('submit', e => {
+      form.addEventListener('submit', async e => {
         e.preventDefault();
 
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
 
-        // Здесь будет отправка формы (например, через API)
-        console.log('Form data:', data);
+        // Показываем состояние загрузки
+        const submitBtn = form.querySelector('.contact__submit');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправка...';
 
-        // Показываем сообщение об успехе
-        // eslint-disable-next-line no-alert
-        alert('Сообщение отправлено!');
-        form.reset();
+        // Очищаем предыдущие сообщения
+        if (messageEl) {
+          messageEl.textContent = '';
+          messageEl.className = 'contact__form-message';
+        }
+
+        try {
+          // Отправка на email через mailto (fallback)
+          const emailSubject = encodeURIComponent(`Сообщение с портфолио от ${data.name}`);
+          const emailBody = encodeURIComponent(
+            `Имя: ${data.name}\nEmail: ${data.email}\n\nСообщение:\n${data.message}`
+          );
+          const emailLink = `mailto:nikwebdev.2025@gmail.com?subject=${emailSubject}&body=${emailBody}`;
+
+          // Открываем email клиент
+          window.location.href = emailLink;
+
+          // Также отправляем уведомление в Telegram (через Telegram Bot API, если настроен)
+          // Пока используем простой способ - открытие Telegram с сообщением
+          const telegramMessage = encodeURIComponent(
+            `Новое сообщение с портфолио:\n\nИмя: ${data.name}\nEmail: ${data.email}\n\nСообщение:\n${data.message}`
+          );
+          const telegramLink = `https://t.me/lucem_afferens?text=${telegramMessage}`;
+
+          // Показываем успешное сообщение
+          if (messageEl) {
+            messageEl.textContent = i18n.t('contact.form.success');
+            messageEl.className = 'contact__form-message contact__form-message--success';
+          }
+
+          // Очищаем форму
+          form.reset();
+
+          // Через небольшую задержку открываем Telegram (опционально)
+          setTimeout(() => {
+            window.open(telegramLink, '_blank');
+          }, 500);
+        } catch (error) {
+          console.error('Form submission error:', error);
+          if (messageEl) {
+            messageEl.textContent = i18n.t('contact.form.error');
+            messageEl.className = 'contact__form-message contact__form-message--error';
+          }
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
       });
     }
   }

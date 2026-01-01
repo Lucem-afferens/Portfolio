@@ -89,4 +89,45 @@
       opacity: 0.8;
     }
   }
+
+  &__info {
+    margin-top: map-get($spacings, 4);
+    padding-top: map-get($spacings, 4);
+    border-top: 1px solid var(--border-color);
+  }
+
+  &__info-item {
+    margin-bottom: map-get($spacings, 2);
+    color: var(--text-primary);
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__form-message {
+    margin-top: map-get($spacings, 2);
+    padding: map-get($spacings, 2);
+    border-radius: 4px;
+    display: none;
+
+    &--success {
+      display: block;
+      background-color: rgba(31, 166, 160, 0.1);
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary);
+    }
+
+    &--error {
+      display: block;
+      background-color: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+      border: 1px solid #dc3545;
+    }
+  }
 }

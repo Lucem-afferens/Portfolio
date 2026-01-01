@@ -6,48 +6,53 @@ class Projects {
     const projects = [
       {
         id: 1,
-        title: 'E-commerce Platform',
-        role: 'Front-end Developer',
+        title: 'Точка GG',
+        role: 'Full-stack Developer',
         category: 'web',
         image: {
           src: '/images/project-1.webp',
           srcset: '/images/project-1-400.webp 400w, /images/project-1-800.webp 800w',
           width: 800,
           height: 600,
-          alt: 'Превью проекта: E-commerce Platform',
+          alt: 'Превью проекта: Сайт компьютерного клуба Точка GG',
         },
-        tags: ['React', 'TypeScript', 'SCSS'],
-        link: '#project-1',
+        tags: ['WordPress', 'PHP', 'SEO', 'PageSpeed'],
+        link: 'https://kungur-tochkagg.ru',
+        description:
+          'Разработка WordPress-темы с нуля, SEO-оптимизация и улучшение производительности',
       },
       {
         id: 2,
-        title: 'Mobile App UI',
-        role: 'UI/UX Designer',
-        category: 'ui',
+        title: 'Приз Бокс',
+        role: 'Full-stack Developer',
+        category: 'web',
         image: {
           src: '/images/project-2.webp',
           srcset: '/images/project-2-400.webp 400w, /images/project-2-800.webp 800w',
           width: 800,
           height: 600,
-          alt: 'Превью проекта: Mobile App UI',
+          alt: 'Превью проекта: Telegram-бот Приз Бокс',
         },
-        tags: ['Figma', 'Design System', 'Prototyping'],
-        link: '#project-2',
+        tags: ['Telegram API', 'PHP', 'MySQL', 'AI'],
+        link: 'https://t.me/wheel_prize_test_bot',
+        description: 'Telegram-бот с личным кабинетом, рейтингом и админ-панелью',
       },
       {
         id: 3,
-        title: 'Brand Identity',
-        role: 'Brand Designer',
-        category: 'branding',
+        title: 'Welcome to Day',
+        role: 'Full-stack Developer',
+        category: 'web',
         image: {
           src: '/images/project-3.webp',
           srcset: '/images/project-3-400.webp 400w, /images/project-3-800.webp 800w',
           width: 800,
           height: 600,
-          alt: 'Превью проекта: Brand Identity',
+          alt: 'Превью проекта: Сайт электронных приглашений Welcome to Day',
         },
-        tags: ['Logo Design', 'Branding', 'Visual Identity'],
-        link: '#project-3',
+        tags: ['Frontend', 'SEO', 'Analytics', 'Optimization'],
+        link: 'https://welcome-to-day.ru',
+        description:
+          'Каталог интерактивных приглашений с формами заявок, промокодами и уведомлениями',
       },
     ];
 
@@ -114,6 +119,8 @@ class Projects {
         <a 
           href="${project.link}" 
           class="projects__card-link" 
+          target="_blank"
+          rel="noopener noreferrer"
           aria-label="${i18n.t('projects.viewProject')}: ${project.title}"
         >
           <div class="projects__card-image-wrapper">
@@ -133,6 +140,7 @@ class Projects {
           <div class="projects__card-content">
             <h3 class="projects__card-title">${project.title}</h3>
             <p class="projects__card-role">${i18n.t('projects.role')}: ${project.role}</p>
+            <p class="projects__card-description">${project.description}</p>
             <div class="projects__card-tags" aria-label="${i18n.t('projects.technologies')}">
               ${project.tags.map(tag => `<span class="projects__tag">${tag}</span>`).join('')}
             </div>
