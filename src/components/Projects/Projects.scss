@@ -95,8 +95,11 @@
       transform: translateY(-8px);
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
 
-      .projects__card-image {
-        transform: scale(1.05);
+      // Убираем blur при hover только на десктопе
+      @include respond-to(md) {
+        .projects__card-image {
+          filter: blur(0);
+        }
       }
 
       .projects__card-overlay {
@@ -140,13 +143,18 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      @include transition(transform);
-      will-change: transform;
+      @include transition(transform, filter);
+      will-change: transform, filter;
       opacity: 0;
 
       &.loaded {
         opacity: 1;
-        @include transition(opacity, transform);
+        @include transition(opacity, transform, filter);
+      }
+
+      // Blur эффект только на десктопе
+      @include respond-to(md) {
+        filter: blur(4px);
       }
     }
 
@@ -210,6 +218,7 @@
 
         .projects__card-image {
           transform: none;
+          filter: none;
         }
 
         .projects__card-content {
