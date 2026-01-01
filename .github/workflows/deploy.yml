@@ -7,8 +7,8 @@ on:
     paths-ignore:
       - 'README.md'
       - '.gitignore'
-      - '*.md'
-      - '.github/**'
+      - '**/*.md'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 jobs:
@@ -106,17 +106,28 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: composer
 
       - name: Create API config from secrets
         run: |
           echo "🔐 Creating API config from secrets..."
           mkdir -p dist/api
           
+          # Проверяем наличие секретов
+          if [ -z "${{ secrets.FTP_ADMIN_PASSWORD }}" ]; then
+            echo "⚠️ WARNING: FTP_ADMIN_PASSWORD secret is not set"
+          fi
+          if [ -z "${{ secrets.FTP_BOT_TOKEN }}" ]; then
+            echo "⚠️ WARNING: FTP_BOT_TOKEN secret is not set"
+          fi
+          if [ -z "${{ secrets.FTP_CHAT_ID }}" ]; then
+            echo "⚠️ WARNING: FTP_CHAT_ID secret is not set"
+          fi
+          
           # Генерируем hash пароля через PHP
           ADMIN_PASSWORD_HASH=$(php -r "echo password_hash('${{ secrets.FTP_ADMIN_PASSWORD }}', PASSWORD_DEFAULT);")
           
-          cat > dist/api/config.php << EOF
+          # Создаем config.php с подстановкой секретов
+          cat > dist/api/config.php << 'ENDOFFILE'
           <?php
           /**
            * Конфигурация API
@@ -124,7 +135,7 @@ jobs:
            */
           
           // Загрузка конфигурации БД
-          \$dbConfig = require __DIR__ . '/../database/config.php';
+          $dbConfig = require __DIR__ . '/../database/config.php';
           
           // Telegram Bot настройки
           define('TELEGRAM_BOT_TOKEN', '${{ secrets.FTP_BOT_TOKEN }}');
@@ -143,12 +154,31 @@ jobs:
           header('Content-Type: application/json; charset=utf-8');
           
           // Обработка preflight запросов
-          if (\$_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+          if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
               http_response_code(200);
               exit;
           }
-          EOF
+          ENDOFFILE
+          
+          # Заменяем переменные в файле
+          sed -i "s|\${{ secrets.FTP_BOT_TOKEN }}|${{ secrets.FTP_BOT_TOKEN }}|g" dist/api/config.php
+          sed -i "s|\${{ secrets.FTP_CHAT_ID }}|${{ secrets.FTP_CHAT_ID }}|g" dist/api/config.php
+          sed -i "s|\$ADMIN_PASSWORD_HASH|$ADMIN_PASSWORD_HASH|g" dist/api/config.php
+          
           echo "✅ API config created with secrets"
+
+      - name: Verify files before deployment
+        run: |
+          echo "🔍 Verifying files before deployment..."
+          echo "📁 Checking dist structure:"
+          find dist -type f -name "*.php" | head -10
+          echo ""
+          echo "📁 Checking HTML files:"
+          find dist -type f -name "*.html"
+          echo ""
+          echo "📁 Checking config files:"
+          test -f dist/database/config.php && echo "✅ database/config.php exists" || echo "❌ database/config.php missing"
+          test -f dist/api/config.php && echo "✅ api/config.php exists" || echo "❌ api/config.php missing"
 
       - name: Deploy to Beget via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -157,7 +187,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_SERVER_DIR || '/public_html/' }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
           protocol: ftp
           dangerous-clean-slate: false
           dry-run: false
@@ -184,3 +214,8 @@ jobs:
           echo "  - API: dist/api/*.php"
           echo "  - Database config: dist/database/config.php"
           echo "  - API config: dist/api/config.php (with secrets)"
+          echo ""
+          echo "🔍 Next steps:"
+          echo "  1. Check https://develonik.ru/"
+          echo "  2. Check https://develonik.ru/admin.html"
+          echo "  3. Check https://develonik.ru/api/test-db.php"
