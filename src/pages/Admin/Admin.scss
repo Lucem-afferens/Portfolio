@@ -1,0 +1,289 @@
+.admin {
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  padding: map-get($spacings, 4) 0;
+
+  &__login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+  }
+
+  &__login-container {
+    max-width: 400px;
+    width: 100%;
+    padding: map-get($spacings, 5);
+    background-color: var(--bg-surface);
+    border-radius: 8px;
+    @include box-shadow(2);
+  }
+
+  &__title,
+  &__panel-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: map-get($spacings, 2);
+  }
+
+  &__subtitle {
+    color: var(--text-secondary);
+    margin-bottom: map-get($spacings, 4);
+  }
+
+  &__form-group {
+    margin-bottom: map-get($spacings, 4);
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: map-get($spacings, 1);
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  &__input {
+    width: 100%;
+    padding: map-get($spacings, 2) map-get($spacings, 3);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: var(--text-primary);
+    @include transition(border-color);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+    }
+  }
+
+  &__submit {
+    @include button-base;
+    width: 100%;
+    background-color: var(--color-primary);
+    color: var(--bg-surface);
+    padding: map-get($spacings, 2) map-get($spacings, 4);
+  }
+
+  &__message {
+    margin-top: map-get($spacings, 2);
+    padding: map-get($spacings, 2);
+    border-radius: 4px;
+    display: none;
+
+    &--error {
+      display: block;
+      background-color: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+      border: 1px solid #dc3545;
+    }
+  }
+
+  &__panel {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 map-get($spacings, 2);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: map-get($spacings, 5);
+    padding-bottom: map-get($spacings, 3);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  &__logout {
+    @include button-base;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: map-get($spacings, 2) map-get($spacings, 4);
+
+    &:hover {
+      background-color: var(--bg-muted);
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    gap: map-get($spacings, 2);
+    margin-bottom: map-get($spacings, 4);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  &__tab {
+    @include button-base;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: map-get($spacings, 2) map-get($spacings, 3);
+    color: var(--text-secondary);
+    cursor: pointer;
+    @include transition(color, border-color);
+
+    &.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    &:hover {
+      color: var(--text-primary);
+    }
+  }
+
+  &__badge {
+    display: inline-block;
+    margin-left: map-get($spacings, 1);
+    padding: 0.125rem 0.5rem;
+    background-color: var(--color-primary);
+    color: var(--bg-surface);
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  &__tab-content {
+    display: none;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  &__testimonials {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacings, 3);
+  }
+
+  &__testimonial-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: map-get($spacings, 4);
+    @include box-shadow(1);
+  }
+
+  &__testimonial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: map-get($spacings, 3);
+  }
+
+  &__testimonial-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: map-get($spacings, 1);
+  }
+
+  &__testimonial-position,
+  &__testimonial-company {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: map-get($spacings, 1);
+  }
+
+  &__testimonial-date {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  &__testimonial-message {
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: map-get($spacings, 3);
+  }
+
+  &__rejection-reason {
+    padding: map-get($spacings, 2);
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 3px solid #dc3545;
+    border-radius: 4px;
+    color: #dc3545;
+    margin-bottom: map-get($spacings, 3);
+    font-size: 0.875rem;
+  }
+
+  &__testimonial-actions {
+    display: flex;
+    gap: map-get($spacings, 2);
+  }
+
+  &__btn {
+    @include button-base;
+    padding: map-get($spacings, 2) map-get($spacings, 4);
+    font-size: 0.875rem;
+
+    &--approve {
+      background-color: var(--color-primary);
+      color: var(--bg-surface);
+    }
+
+    &--reject {
+      background-color: transparent;
+      border: 1px solid #dc3545;
+      color: #dc3545;
+
+      &:hover {
+        background-color: rgba(220, 53, 69, 0.1);
+      }
+    }
+
+    &--confirm-reject {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    &--cancel-reject {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+  }
+
+  &__reject-form {
+    margin-top: map-get($spacings, 3);
+    padding-top: map-get($spacings, 3);
+    border-top: 1px solid var(--border-color);
+  }
+
+  &__reject-reason-input {
+    width: 100%;
+    padding: map-get($spacings, 2);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: var(--text-primary);
+    margin-bottom: map-get($spacings, 2);
+    min-height: 80px;
+    resize: vertical;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+  }
+
+  &__reject-actions {
+    display: flex;
+    gap: map-get($spacings, 2);
+  }
+
+  &__loading,
+  &__empty,
+  &__error {
+    text-align: center;
+    padding: map-get($spacings, 6);
+    color: var(--text-secondary);
+  }
+}

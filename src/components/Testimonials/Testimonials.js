@@ -3,47 +3,36 @@ import './Testimonials.scss';
 
 class Testimonials {
   static render() {
-    const testimonials = [
-      {
-        id: 1,
-        text: 'Great work!',
-        author: 'Client 1',
-        position: 'CEO',
-      },
-      {
-        id: 2,
-        text: 'Excellent developer!',
-        author: 'Client 2',
-        position: 'CTO',
-      },
-    ];
-
     return `
       <section id="testimonials" class="testimonials">
         <div class="container">
           <h2 class="testimonials__title">${i18n.t('testimonials.title')}</h2>
-          <div class="testimonials__slider">
-            <div class="testimonials__track" data-testimonials-track>
-              ${Testimonials.renderTestimonials(testimonials)}
-            </div>
-            <button class="testimonials__prev" aria-label="Previous testimonial">‹</button>
-            <button class="testimonials__next" aria-label="Next testimonial">›</button>
+          <div class="testimonials__slider" data-testimonials-slider>
+            <div class="testimonials__track" data-testimonials-track></div>
+            <button class="testimonials__prev" aria-label="Предыдущий отзыв" data-testimonials-prev>‹</button>
+            <button class="testimonials__next" aria-label="Следующий отзыв" data-testimonials-next>›</button>
           </div>
+          <div class="testimonials__dots" data-testimonials-dots></div>
         </div>
       </section>
     `;
   }
 
   static renderTestimonials(testimonials) {
+    if (!testimonials || testimonials.length === 0) {
+      return '<p class="testimonials__empty">Отзывов пока нет</p>';
+    }
+
     return testimonials
       .map(
         testimonial => `
       <div class="testimonials__slide">
         <blockquote class="testimonials__quote">
-          <p>${testimonial.text}</p>
+          <p>${this.escapeHtml(testimonial.message)}</p>
           <footer>
-            <cite class="testimonials__author">${testimonial.author}</cite>
-            <span class="testimonials__position">${testimonial.position}</span>
+            <div class="testimonials__author">${this.escapeHtml(testimonial.name)}</div>
+            ${testimonial.position ? `<div class="testimonials__position">${this.escapeHtml(testimonial.position)}</div>` : ''}
+            ${testimonial.company ? `<div class="testimonials__company">${this.escapeHtml(testimonial.company)}</div>` : ''}
           </footer>
         </blockquote>
       </div>
@@ -53,33 +42,111 @@ class Testimonials {
   }
 
   static init() {
+    this.loadTestimonials();
+  }
+
+  static async loadTestimonials() {
     const track = document.querySelector('[data-testimonials-track]');
-    const prevBtn = document.querySelector('.testimonials__prev');
-    const nextBtn = document.querySelector('.testimonials__next');
+    if (!track) return;
 
-    if (!track || !prevBtn || !nextBtn) return;
+    track.innerHTML = '<div class="testimonials__loading">Загрузка отзывов...</div>';
 
+    try {
+      const response = await fetch('/api/get-testimonials.php');
+      const result = await response.json();
+
+      if (result.success && result.testimonials.length > 0) {
+        track.innerHTML = this.renderTestimonials(result.testimonials);
+        this.initSlider();
+      } else {
+        track.innerHTML = '<p class="testimonials__empty">Отзывов пока нет</p>';
+      }
+    } catch (error) {
+      console.error('Error loading testimonials:', error);
+      track.innerHTML = '<p class="testimonials__empty">Ошибка загрузки отзывов</p>';
+    }
+  }
+
+  static initSlider() {
+    const track = document.querySelector('[data-testimonials-track]');
     const slides = track.querySelectorAll('.testimonials__slide');
-    const totalSlides = slides.length;
+    const prevBtn = document.querySelector('[data-testimonials-prev]');
+    const nextBtn = document.querySelector('[data-testimonials-next]');
+    const dotsContainer = document.querySelector('[data-testimonials-dots]');
 
-    if (totalSlides === 0) return;
+    if (slides.length === 0) return;
 
     let currentIndex = 0;
 
     const updateSlider = () => {
-      const translateX = -currentIndex * 100;
-      track.style.transform = `translateX(${translateX}%)`;
+      const offset = -currentIndex * 100;
+      track.style.transform = `translateX(${offset}%)`;
+
+      // Обновление точек
+      if (dotsContainer) {
+        dotsContainer.querySelectorAll('.testimonials__dot').forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentIndex);
+        });
+      }
+
+      // Обновление кнопок
+      if (prevBtn) prevBtn.disabled = currentIndex === 0;
+      if (nextBtn) nextBtn.disabled = currentIndex === slides.length - 1;
     };
 
-    prevBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-      updateSlider();
-    });
+    // Создание точек навигации
+    if (dotsContainer && slides.length > 1) {
+      dotsContainer.innerHTML = slides
+        .map(
+          (_, index) => `
+        <button 
+          class="testimonials__dot ${index === 0 ? 'active' : ''}" 
+          data-slide-index="${index}"
+          aria-label="Перейти к отзыву ${index + 1}"
+        ></button>
+      `
+        )
+        .join('');
 
-    nextBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % totalSlides;
-      updateSlider();
-    });
+      dotsContainer.querySelectorAll('.testimonials__dot').forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          currentIndex = index;
+          updateSlider();
+        });
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex -= 1;
+          updateSlider();
+        }
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (currentIndex < slides.length - 1) {
+          currentIndex += 1;
+          updateSlider();
+        }
+      });
+    }
+
+    // Автопрокрутка (опционально)
+    // let autoSlideInterval = setInterval(() => {
+    //   currentIndex = (currentIndex + 1) % slides.length;
+    //   updateSlider();
+    // }, 5000);
+
+    updateSlider();
+  }
+
+  static escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 }
 
