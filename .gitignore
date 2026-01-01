@@ -37,3 +37,5 @@ coverage
 # Husky
 .husky/_
 
+database/config.php
+api/config.php
