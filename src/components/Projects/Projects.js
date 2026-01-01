@@ -29,18 +29,7 @@ class Projects {
         const imageSrc = project.image || '/images/project-placeholder.svg';
 
         // Получаем переводы для проекта, если они есть
-        const translationsKey = 'projects.translations';
-        const keys = translationsKey.split('.');
-        let translations = i18n.locales[i18n.currentLang];
-        for (const k of keys) {
-          if (translations && typeof translations === 'object') {
-            translations = translations[k];
-          } else {
-            translations = null;
-            break;
-          }
-        }
-
+        const translations = i18n.getObject('projects.translations');
         const projectTranslation =
           translations && typeof translations === 'object' ? translations[project.title] : null;
 
