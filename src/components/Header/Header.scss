@@ -34,8 +34,8 @@
 
       .header__logo-image {
         display: block !important;
-        height: 40px;
-        width: auto;
+        width: 40px;
+        height: auto;
         object-fit: contain;
       }
     }
@@ -47,8 +47,9 @@
 
   &__logo-image {
     display: none;
-    max-height: 40px;
-    width: auto;
+    width: 40px;
+    height: auto;
+    max-width: 40px;
     object-fit: contain;
   }
 
