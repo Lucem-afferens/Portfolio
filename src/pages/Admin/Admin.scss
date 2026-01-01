@@ -248,6 +248,28 @@
       border: 1px solid var(--border-color);
       color: var(--text-primary);
     }
+
+    &--delete {
+      background-color: transparent;
+      border: 1px solid #dc3545;
+      color: #dc3545;
+
+      &:hover {
+        background-color: rgba(220, 53, 69, 0.1);
+      }
+    }
+
+    &--search,
+    &--reset {
+      background-color: var(--color-primary);
+      color: var(--bg-surface);
+    }
+
+    &--reset {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
   }
 
   &__reject-form {
@@ -285,5 +307,48 @@
     text-align: center;
     padding: map-get($spacings, 6);
     color: var(--text-secondary);
+  }
+
+  &__search {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: map-get($spacings, 4);
+    margin-bottom: map-get($spacings, 4);
+    @include box-shadow(1);
+  }
+
+  &__search-group {
+    margin-bottom: map-get($spacings, 3);
+
+    &:last-of-type {
+      margin-bottom: map-get($spacings, 4);
+    }
+  }
+
+  &__search-label {
+    display: block;
+    margin-bottom: map-get($spacings, 1);
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+  }
+
+  &__search-input {
+    width: 100%;
+    padding: map-get($spacings, 2) map-get($spacings, 3);
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: var(--text-primary);
+    @include transition(border-color);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.1);
+    }
   }
 }

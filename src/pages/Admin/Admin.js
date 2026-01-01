@@ -52,6 +52,29 @@ class Admin {
               <div class="admin__testimonials" data-approved-list></div>
             </div>
             <div class="admin__tab-content" data-tab-content="rejected">
+              <div class="admin__search" data-archive-search>
+                <div class="admin__search-group">
+                  <label for="search-name" class="admin__search-label">Поиск по имени:</label>
+                  <input
+                    type="text"
+                    id="search-name"
+                    class="admin__search-input"
+                    placeholder="Имя, должность или компания..."
+                    data-search-name
+                  />
+                </div>
+                <div class="admin__search-group">
+                  <label for="search-date" class="admin__search-label">Поиск по дате:</label>
+                  <input
+                    type="date"
+                    id="search-date"
+                    class="admin__search-input"
+                    data-search-date
+                  />
+                </div>
+                <button class="admin__btn admin__btn--search" data-search-btn>Поиск</button>
+                <button class="admin__btn admin__btn--reset" data-reset-search style="display: none;">Сбросить</button>
+              </div>
               <div class="admin__testimonials" data-rejected-list></div>
             </div>
           </div>
@@ -65,6 +88,7 @@ class Admin {
     this.setupLogin();
     this.setupTabs();
     this.setupLogout();
+    this.setupArchiveSearch();
     this.loadTestimonials('pending');
   }
 
@@ -147,8 +171,49 @@ class Admin {
         document.querySelector(`[data-tab-content="${tabName}"]`).classList.add('active');
 
         // Загружаем данные
-        this.loadTestimonials(tabName);
+        if (tabName === 'rejected') {
+          // Сохраняем параметры поиска при переключении на архив
+          const searchName = document.querySelector('[data-search-name]')?.value || '';
+          const searchDate = document.querySelector('[data-search-date]')?.value || '';
+          this.loadTestimonials(tabName, { name: searchName, date: searchDate });
+        } else {
+          this.loadTestimonials(tabName);
+        }
       });
+    });
+  }
+
+  static setupArchiveSearch() {
+    const searchBtn = document.querySelector('[data-search-btn]');
+    const resetBtn = document.querySelector('[data-reset-search]');
+    const searchNameInput = document.querySelector('[data-search-name]');
+    const searchDateInput = document.querySelector('[data-search-date]');
+
+    // Поиск
+    searchBtn?.addEventListener('click', () => {
+      const name = searchNameInput?.value.trim() || '';
+      const date = searchDateInput?.value || '';
+
+      if (name || date) {
+        this.loadTestimonials('rejected', { name, date });
+        resetBtn.style.display = 'inline-block';
+      }
+    });
+
+    // Сброс поиска
+    resetBtn?.addEventListener('click', () => {
+      if (searchNameInput) searchNameInput.value = '';
+      if (searchDateInput) searchDateInput.value = '';
+      resetBtn.style.display = 'none';
+      this.loadTestimonials('rejected');
+    });
+
+    // Поиск по Enter
+    searchNameInput?.addEventListener('keypress', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        searchBtn.click();
+      }
     });
   }
 
@@ -159,7 +224,7 @@ class Admin {
     });
   }
 
-  static async loadTestimonials(status) {
+  static async loadTestimonials(status, searchParams = {}) {
     let endpoint = '';
     let listEl = null;
 
@@ -172,10 +237,17 @@ class Admin {
         endpoint = '/api/get-testimonials.php';
         listEl = document.querySelector('[data-approved-list]');
         break;
-      case 'rejected':
-        endpoint = '/api/get-rejected-testimonials.php';
+      case 'rejected': {
+        // Добавляем параметры поиска для архива
+        const searchQuery = new URLSearchParams();
+        if (searchParams.name) searchQuery.append('name', searchParams.name);
+        if (searchParams.date) searchQuery.append('date', searchParams.date);
+        endpoint = `/api/get-rejected-testimonials.php${
+          searchQuery.toString() ? `?${searchQuery.toString()}` : ''
+        }`;
         listEl = document.querySelector('[data-rejected-list]');
         break;
+      }
       default:
         return;
     }
@@ -228,17 +300,30 @@ class Admin {
         </div>
         <p class="admin__testimonial-message">${this.escapeHtml(testimonial.message)}</p>
         ${testimonial.rejection_reason ? `<p class="admin__rejection-reason"><strong>Причина отклонения:</strong> ${this.escapeHtml(testimonial.rejection_reason)}</p>` : ''}
-        ${
-          status === 'pending'
-            ? `
-          <div class="admin__testimonial-actions">
+        <div class="admin__testimonial-actions">
+          ${
+            status === 'pending'
+              ? `
             <button class="admin__btn admin__btn--approve" data-approve="${testimonial.id}">
               Одобрить
             </button>
             <button class="admin__btn admin__btn--reject" data-reject="${testimonial.id}">
               Отклонить
             </button>
-          </div>
+            <button class="admin__btn admin__btn--delete" data-delete="${testimonial.id}">
+              Удалить
+            </button>
+          `
+              : `
+            <button class="admin__btn admin__btn--delete" data-delete="${testimonial.id}">
+              Удалить
+            </button>
+          `
+          }
+        </div>
+        ${
+          status === 'pending'
+            ? `
           <div class="admin__reject-form" data-reject-form="${testimonial.id}" style="display: none;">
             <textarea class="admin__reject-reason-input" placeholder="Укажите причину отклонения (опционально)"></textarea>
             <div class="admin__reject-actions">
@@ -288,6 +373,19 @@ class Admin {
         });
       });
     }
+
+    // Обработчики для кнопок удаления (для всех статусов)
+    container.querySelectorAll('[data-delete]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.delete;
+        // eslint-disable-next-line no-alert
+        if (
+          window.confirm('Вы уверены, что хотите удалить этот отзыв? Это действие нельзя отменить.')
+        ) {
+          this.deleteTestimonial(id, status);
+        }
+      });
+    });
   }
 
   static async moderateTestimonial(id, action, reason = null) {
@@ -315,6 +413,38 @@ class Admin {
     } catch (error) {
       // eslint-disable-next-line no-alert
       alert('Ошибка при модерации отзыва');
+    }
+  }
+
+  static async deleteTestimonial(id, status) {
+    try {
+      const response = await fetch('/api/delete-testimonial.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10) }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Перезагружаем список отзывов
+        if (status === 'rejected') {
+          // Сохраняем параметры поиска
+          const searchName = document.querySelector('[data-search-name]')?.value || '';
+          const searchDate = document.querySelector('[data-search-date]')?.value || '';
+          this.loadTestimonials(status, { name: searchName, date: searchDate });
+        } else {
+          this.loadTestimonials(status);
+        }
+        // eslint-disable-next-line no-alert
+        alert(result.message || 'Отзыв успешно удален');
+      } else {
+        // eslint-disable-next-line no-alert
+        alert(`Ошибка: ${result.error || 'Неизвестная ошибка'}`);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert('Ошибка при удалении отзыва');
     }
   }
 
