@@ -74,6 +74,14 @@
     }
   }
 
+  &__loading,
+  &__empty {
+    text-align: center;
+    padding: map-get($spacings, 6);
+    color: var(--text-secondary);
+    grid-column: 1 / -1;
+  }
+
   &__card {
     background-color: var(--bg-surface);
     border-radius: 8px;

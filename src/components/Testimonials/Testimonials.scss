@@ -94,4 +94,11 @@
   &__next {
     right: map-get($spacings, 2);
   }
+
+  &__loading,
+  &__empty {
+    text-align: center;
+    padding: map-get($spacings, 6);
+    color: var(--text-secondary);
+  }
 }

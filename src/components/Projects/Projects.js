@@ -12,7 +12,7 @@ class Projects {
           </header>
           
           <div class="projects__grid" role="list" aria-label="${i18n.t('projects.gridLabel')}" data-projects-grid>
-            <div class="projects__loading">Загрузка проектов...</div>
+            <div class="projects__loading">${i18n.t('projects.loading')}</div>
           </div>
         </div>
       </section>
@@ -21,13 +21,35 @@ class Projects {
 
   static renderProjects(projects) {
     if (!projects || projects.length === 0) {
-      return '<p class="projects__empty">Проектов пока нет</p>';
+      return `<p class="projects__empty">${i18n.t('projects.empty')}</p>`;
     }
 
     return projects
       .map(project => {
         const imageSrc = project.image || '/images/project-placeholder.svg';
-        const imageAlt = `Превью проекта: ${project.title}`;
+
+        // Получаем переводы для проекта, если они есть
+        const translationsKey = 'projects.translations';
+        const keys = translationsKey.split('.');
+        let translations = i18n.locales[i18n.currentLang];
+        for (const k of keys) {
+          if (translations && typeof translations === 'object') {
+            translations = translations[k];
+          } else {
+            translations = null;
+            break;
+          }
+        }
+
+        const projectTranslation =
+          translations && typeof translations === 'object' ? translations[project.title] : null;
+
+        // Используем переводы, если они есть, иначе оригинальные данные
+        const title = projectTranslation?.title || project.title;
+        const role = projectTranslation?.role || project.role;
+        const description = projectTranslation?.description || project.description;
+
+        const imageAlt = `${i18n.t('projects.preview')}: ${title}`;
         const tools = Array.isArray(project.tools) ? project.tools : [];
 
         return `
@@ -41,7 +63,7 @@ class Projects {
           class="projects__card-link" 
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="${i18n.t('projects.viewProject')}: ${this.escapeHtml(project.title)}"
+          aria-label="${i18n.t('projects.viewProject')}: ${this.escapeHtml(title)}"
         >
           <div class="projects__card-image-wrapper">
             <img 
@@ -56,9 +78,9 @@ class Projects {
             <div class="projects__card-overlay" aria-hidden="true"></div>
           </div>
           <div class="projects__card-content">
-            <h3 class="projects__card-title">${this.escapeHtml(project.title)}</h3>
-            <p class="projects__card-role">${i18n.t('projects.role')}: ${this.escapeHtml(project.role)}</p>
-            <p class="projects__card-description">${this.escapeHtml(project.description)}</p>
+            <h3 class="projects__card-title">${this.escapeHtml(title)}</h3>
+            <p class="projects__card-role">${i18n.t('projects.role')}: ${this.escapeHtml(role)}</p>
+            <p class="projects__card-description">${this.escapeHtml(description)}</p>
             <div class="projects__card-tags" aria-label="${i18n.t('projects.technologies')}">
               ${tools.map(tool => `<span class="projects__tag">${this.escapeHtml(tool)}</span>`).join('')}
             </div>
@@ -78,6 +100,10 @@ class Projects {
 
   static init() {
     this.loadProjects();
+    // Перезагружаем проекты при смене языка
+    document.addEventListener('languageChanged', () => {
+      this.loadProjects();
+    });
   }
 
   static async loadProjects() {
@@ -92,11 +118,11 @@ class Projects {
         grid.innerHTML = this.renderProjects(result.projects);
         this.initLazyLoading();
       } else {
-        grid.innerHTML = '<p class="projects__empty">Проектов пока нет</p>';
+        grid.innerHTML = `<p class="projects__empty">${i18n.t('projects.empty')}</p>`;
       }
     } catch (error) {
       console.error('Error loading projects:', error);
-      grid.innerHTML = '<p class="projects__empty">Ошибка загрузки проектов</p>';
+      grid.innerHTML = `<p class="projects__empty">${i18n.t('projects.error')}</p>`;
     }
   }
 

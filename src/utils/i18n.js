@@ -69,6 +69,22 @@ class I18n {
   getAvailableLanguages() {
     return Object.keys(this.locales);
   }
+
+  // Получить объект перевода (не строку)
+  getObject(key) {
+    const keys = key.split('.');
+    let value = this.locales[this.currentLang];
+
+    for (const k of keys) {
+      if (value && typeof value === 'object') {
+        value = value[k];
+      } else {
+        return null;
+      }
+    }
+
+    return value;
+  }
 }
 
 export const i18n = new I18n();

@@ -9,8 +9,8 @@ class Testimonials {
           <h2 class="testimonials__title">${i18n.t('testimonials.title')}</h2>
           <div class="testimonials__slider" data-testimonials-slider>
             <div class="testimonials__track" data-testimonials-track></div>
-            <button class="testimonials__prev" aria-label="Предыдущий отзыв" data-testimonials-prev>‹</button>
-            <button class="testimonials__next" aria-label="Следующий отзыв" data-testimonials-next>›</button>
+            <button class="testimonials__prev" aria-label="${i18n.t('testimonials.prev')}" data-testimonials-prev>‹</button>
+            <button class="testimonials__next" aria-label="${i18n.t('testimonials.next')}" data-testimonials-next>›</button>
           </div>
           <div class="testimonials__dots" data-testimonials-dots></div>
         </div>
@@ -20,7 +20,7 @@ class Testimonials {
 
   static renderTestimonials(testimonials) {
     if (!testimonials || testimonials.length === 0) {
-      return '<p class="testimonials__empty">Отзывов пока нет</p>';
+      return `<p class="testimonials__empty">${i18n.t('testimonials.empty')}</p>`;
     }
 
     return testimonials
@@ -59,13 +59,17 @@ class Testimonials {
 
   static init() {
     this.loadTestimonials();
+    // Перезагружаем отзывы при смене языка
+    document.addEventListener('languageChanged', () => {
+      this.loadTestimonials();
+    });
   }
 
   static async loadTestimonials() {
     const track = document.querySelector('[data-testimonials-track]');
     if (!track) return;
 
-    track.innerHTML = '<div class="testimonials__loading">Загрузка отзывов...</div>';
+    track.innerHTML = `<div class="testimonials__loading">${i18n.t('testimonials.loading')}</div>`;
 
     try {
       const response = await fetch('/api/get-testimonials.php');
@@ -75,11 +79,11 @@ class Testimonials {
         track.innerHTML = this.renderTestimonials(result.testimonials);
         this.initSlider();
       } else {
-        track.innerHTML = '<p class="testimonials__empty">Отзывов пока нет</p>';
+        track.innerHTML = `<p class="testimonials__empty">${i18n.t('testimonials.empty')}</p>`;
       }
     } catch (error) {
       console.error('Error loading testimonials:', error);
-      track.innerHTML = '<p class="testimonials__empty">Ошибка загрузки отзывов</p>';
+      track.innerHTML = `<p class="testimonials__empty">${i18n.t('testimonials.error')}</p>`;
     }
   }
 
@@ -118,7 +122,7 @@ class Testimonials {
         <button 
           class="testimonials__dot ${index === 0 ? 'active' : ''}" 
           data-slide-index="${index}"
-          aria-label="Перейти к отзыву ${index + 1}"
+          aria-label="${i18n.t('testimonials.goTo')} ${index + 1}"
         ></button>
       `
         )

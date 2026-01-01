@@ -35,10 +35,37 @@
       "web": "Web",
       "branding": "Branding"
     },
-    "viewProject": "View Project"
+    "viewProject": "View Project",
+    "loading": "Loading projects...",
+    "empty": "No projects yet",
+    "error": "Error loading projects",
+    "preview": "Project preview",
+    "translations": {
+      "Точка GG": {
+        "title": "Point GG",
+        "role": "Full-stack Developer",
+        "description": "WordPress theme development from scratch, SEO optimization and performance improvement"
+      },
+      "Приз Бокс": {
+        "title": "Prize Box",
+        "role": "Full-stack Developer",
+        "description": "Telegram bot with personal account, rating system and admin panel"
+      },
+      "Welcome to Day": {
+        "title": "Welcome to Day",
+        "role": "Full-stack Developer",
+        "description": "Interactive invitations catalog with application forms, promo codes and notifications"
+      }
+    }
   },
   "testimonials": {
-    "title": "Testimonials"
+    "title": "Testimonials",
+    "loading": "Loading testimonials...",
+    "empty": "No testimonials yet",
+    "error": "Error loading testimonials",
+    "prev": "Previous testimonial",
+    "next": "Next testimonial",
+    "goTo": "Go to testimonial"
   },
   "contact": {
     "title": "Get In Touch",
