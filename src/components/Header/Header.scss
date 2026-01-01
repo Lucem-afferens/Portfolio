@@ -63,6 +63,10 @@
 
   &__lang-toggle,
   &__theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: map-get($spacings, 1);
     background: none;
     border: 1px solid $border-light;
     padding: map-get($spacings, 1) map-get($spacings, 2);
@@ -80,6 +84,25 @@
       .dark-theme & {
         background-color: $bg-secondary-dark;
       }
+    }
+  }
+
+  &__lang-icon {
+    flex-shrink: 0;
+    color: $text-light;
+
+    .dark-theme & {
+      color: $text-dark;
+    }
+  }
+
+  &__lang-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $text-light;
+
+    .dark-theme & {
+      color: $text-dark;
     }
   }
 }
