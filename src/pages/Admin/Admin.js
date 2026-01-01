@@ -149,7 +149,7 @@ class Admin {
                   
                   <div class="admin__logo-dual" data-logo-dual style="display: none;">
                     <div class="admin__logo-theme">
-                      <h4 class="admin__photo-subtitle">Логотип для светлой темы</h4>
+                      <h4 class="admin__photo-subtitle">Логотип для светлой темы (белый фон)</h4>
                       <div class="admin__photo-preview admin__photo-preview--logo" data-logo-light-preview>
                         <div class="admin__photo-placeholder">Логотип не загружен</div>
                       </div>
@@ -171,7 +171,7 @@ class Admin {
                     </div>
                     
                     <div class="admin__logo-theme">
-                      <h4 class="admin__photo-subtitle">Логотип для темной темы</h4>
+                      <h4 class="admin__photo-subtitle">Логотип для темной темы (темный фон)</h4>
                       <div class="admin__photo-preview admin__photo-preview--logo" data-logo-dark-preview>
                         <div class="admin__photo-placeholder">Логотип не загружен</div>
                       </div>
@@ -1083,15 +1083,45 @@ class Admin {
   // ========== Управление фото ==========
   static setupPhotos() {
     const logoInput = document.querySelector('[data-logo-input]');
+    const logoLightInput = document.querySelector('[data-logo-light-input]');
+    const logoDarkInput = document.querySelector('[data-logo-dark-input]');
     const heroInput = document.querySelector('[data-hero-photo-input]');
     const aboutInput = document.querySelector('[data-about-photo-input]');
     const deleteLogoBtn = document.querySelector('[data-delete-logo]');
+    const deleteLogoLightBtn = document.querySelector('[data-delete-logo-light]');
+    const deleteLogoDarkBtn = document.querySelector('[data-delete-logo-dark]');
     const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
     const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
+    const logoThemeSwitch = document.querySelector('[data-logo-theme-switch]');
+
+    // Переключение режима логотипа (единый/по темам)
+    logoThemeSwitch?.addEventListener('change', e => {
+      const isDual = e.target.checked;
+      const logoSingle = document.querySelector('[data-logo-single]');
+      const logoDual = document.querySelector('[data-logo-dual]');
+
+      if (logoSingle) logoSingle.style.display = isDual ? 'none' : 'block';
+      if (logoDual) logoDual.style.display = isDual ? 'block' : 'none';
+
+      // Сохраняем настройку
+      this.saveLogoThemeSwitch(isDual);
+    });
 
     logoInput?.addEventListener('change', e => {
       if (e.target.files[0]) {
         this.uploadPhoto('logo', e.target.files[0]);
+      }
+    });
+
+    logoLightInput?.addEventListener('change', e => {
+      if (e.target.files[0]) {
+        this.uploadPhoto('logo_light', e.target.files[0]);
+      }
+    });
+
+    logoDarkInput?.addEventListener('change', e => {
+      if (e.target.files[0]) {
+        this.uploadPhoto('logo_dark', e.target.files[0]);
       }
     });
 
@@ -1111,6 +1141,14 @@ class Admin {
       this.deletePhoto('logo');
     });
 
+    deleteLogoLightBtn?.addEventListener('click', () => {
+      this.deletePhoto('logo_light');
+    });
+
+    deleteLogoDarkBtn?.addEventListener('click', () => {
+      this.deletePhoto('logo_dark');
+    });
+
     deleteHeroBtn?.addEventListener('click', () => {
       this.deletePhoto('hero_photo');
     });
@@ -1118,6 +1156,29 @@ class Admin {
     deleteAboutBtn?.addEventListener('click', () => {
       this.deletePhoto('about_photo');
     });
+  }
+
+  static async saveLogoThemeSwitch(enabled) {
+    try {
+      const response = await fetch('/api/admin/save-site-setting.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          setting_key: 'logo_theme_switch',
+          value: enabled,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        // eslint-disable-next-line no-alert
+        alert(`Ошибка: ${result.error || 'Неизвестная ошибка'}`);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert('Ошибка при сохранении настройки');
+    }
   }
 
   static async loadPhotos() {
