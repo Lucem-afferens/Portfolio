@@ -48,6 +48,17 @@ jobs:
             echo "📁 Copying public files..."
             cp -r public/* dist/ || true
           fi
+          
+          # Копируем каталог favicon в корень dist (чтобы был в корне на сервере)
+          if [ -d "public/favicon" ]; then
+            echo "📁 Copying favicon directory to root..."
+            cp -r public/favicon dist/favicon || true
+            echo "✅ Favicon directory copied to dist/favicon"
+            echo "📁 Favicon directory contents:"
+            ls -la dist/favicon/ || true
+          else
+            echo "⚠️ public/favicon directory not found"
+          fi
 
           # Копируем PHP API файлы
           echo "📄 Copying PHP API files..."
