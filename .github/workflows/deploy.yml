@@ -8,6 +8,10 @@ on:
       - 'README.md'
       - '.gitignore'
       - '**/*.md'
+      - '!**/INSTALLATION_GUIDE.md'
+      - '!**/NEXT_STEPS.md'
+      - '!**/TROUBLESHOOTING.md'
+      - '!**/CHECK_WORKFLOW_STATUS.md'
       - '.github/workflows/**'
   workflow_dispatch:
 
@@ -145,8 +149,12 @@ jobs:
           # Генерируем hash пароля через PHP
           ADMIN_PASSWORD_HASH=$(php -r "echo password_hash('${{ secrets.FTP_ADMIN_PASSWORD }}', PASSWORD_DEFAULT);")
           
-          # Создаем config.php с подстановкой секретов
-          cat > dist/api/config.php << 'ENDOFFILE'
+          # Экранируем специальные символы для безопасной подстановки
+          BOT_TOKEN="${{ secrets.FTP_BOT_TOKEN }}"
+          CHAT_ID="${{ secrets.FTP_CHAT_ID }}"
+          
+          # Создаем config.php с прямой подстановкой переменных
+          cat > dist/api/config.php << EOF
           <?php
           /**
            * Конфигурация API
@@ -154,17 +162,17 @@ jobs:
            */
           
           // Загрузка конфигурации БД
-          $dbConfig = require __DIR__ . '/../database/config.php';
+          \$dbConfig = require __DIR__ . '/../database/config.php';
           
           // Telegram Bot настройки
-          define('TELEGRAM_BOT_TOKEN', '${{ secrets.FTP_BOT_TOKEN }}');
-          define('TELEGRAM_CHAT_ID', '${{ secrets.FTP_CHAT_ID }}');
+          define('TELEGRAM_BOT_TOKEN', '${BOT_TOKEN}');
+          define('TELEGRAM_CHAT_ID', '${CHAT_ID}');
           
           // Email настройки
           define('ADMIN_EMAIL', 'nikwebdev.2025@gmail.com');
           
           // Настройки безопасности
-          define('ADMIN_PASSWORD_HASH', '$ADMIN_PASSWORD_HASH');
+          define('ADMIN_PASSWORD_HASH', '${ADMIN_PASSWORD_HASH}');
           
           // CORS настройки
           header('Access-Control-Allow-Origin: *');
@@ -173,16 +181,11 @@ jobs:
           header('Content-Type: application/json; charset=utf-8');
           
           // Обработка preflight запросов
-          if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+          if (\$_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
               http_response_code(200);
               exit;
           }
-          ENDOFFILE
-          
-          # Заменяем переменные в файле
-          sed -i "s|\${{ secrets.FTP_BOT_TOKEN }}|${{ secrets.FTP_BOT_TOKEN }}|g" dist/api/config.php
-          sed -i "s|\${{ secrets.FTP_CHAT_ID }}|${{ secrets.FTP_CHAT_ID }}|g" dist/api/config.php
-          sed -i "s|\$ADMIN_PASSWORD_HASH|$ADMIN_PASSWORD_HASH|g" dist/api/config.php
+          EOF
           
           echo "✅ API config created with secrets"
 
