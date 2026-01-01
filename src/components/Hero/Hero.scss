@@ -34,11 +34,7 @@
     font-size: 2.5rem;
     font-weight: 800;
     line-height: 1.2;
-    color: var(--text-primary);
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-primary);
     animation: fadeInUp 0.8s ease 0.4s both;
 
     @include respond-to(md) {
@@ -80,30 +76,14 @@
     overflow: hidden;
 
     &--primary {
-      background: var(--color-accent);
-      color: var(--text-primary);
+      background: var(--color-primary);
+      color: var(--bg-surface);
       @include box-shadow(2);
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-        @include transition(left);
-      }
 
       &:hover {
         transform: translateY(-2px);
-        @include box-shadow(4);
+        box-shadow: 0 4px 12px rgba(31, 166, 160, 0.3);
         text-decoration: none;
-
-        &::before {
-          left: 100%;
-          transition: left 0.5s;
-        }
       }
 
       &:active {

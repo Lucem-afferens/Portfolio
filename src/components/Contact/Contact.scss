@@ -61,8 +61,7 @@
     color: var(--bg-surface);
 
     &:hover {
-      background-color: var(--color-accent);
-      color: var(--text-primary);
+      box-shadow: 0 4px 12px rgba(31, 166, 160, 0.3);
     }
   }
 
@@ -85,8 +84,9 @@
     @include transition(color);
 
     &:hover {
-      color: var(--color-accent);
+      color: var(--color-primary);
       text-decoration: underline;
+      opacity: 0.8;
     }
   }
 }
