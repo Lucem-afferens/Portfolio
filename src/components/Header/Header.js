@@ -8,7 +8,10 @@ class Header {
       <header class="header">
         <div class="container">
           <div class="header__content">
-            <a href="#home" class="header__logo">${i18n.t('header.logo')}</a>
+            <a href="#home" class="header__logo" data-logo-link>
+              <span class="header__logo-text">${i18n.t('header.logo')}</span>
+              <img class="header__logo-image" data-logo-image style="display: none;" alt="${i18n.t('header.logo')}" />
+            </a>
             <nav class="header__nav">
               <a href="#home" class="header__nav-link">${i18n.t('header.nav.home')}</a>
               <a href="#about" class="header__nav-link">${i18n.t('header.nav.about')}</a>
@@ -36,6 +39,8 @@ class Header {
   }
 
   static init() {
+    this.loadLogo();
+
     const langToggle = document.querySelector('.header__lang-toggle');
     const themeToggle = document.querySelector('.header__theme-toggle');
 
@@ -52,6 +57,34 @@ class Header {
       themeToggle.addEventListener('click', () => {
         ThemeManager.toggleTheme();
       });
+    }
+  }
+
+  static async loadLogo() {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success && result.settings.logo) {
+        const logoImage = document.querySelector('[data-logo-image]');
+        const logoText = document.querySelector('.header__logo-text');
+        const logoLink = document.querySelector('[data-logo-link]');
+
+        if (logoImage) {
+          logoImage.src = result.settings.logo;
+          logoImage.style.display = 'block';
+        }
+
+        if (logoText) {
+          logoText.style.display = 'none';
+        }
+
+        if (logoLink) {
+          logoLink.classList.add('header__logo--image');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading logo:', error);
     }
   }
 }

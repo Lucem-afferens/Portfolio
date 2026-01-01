@@ -19,10 +19,37 @@
     font-weight: 700;
     color: var(--color-primary);
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: map-get($spacings, 1);
 
     &:hover {
       text-decoration: none;
     }
+
+    &--image {
+      .header__logo-text {
+        display: none;
+      }
+
+      .header__logo-image {
+        display: block !important;
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+      }
+    }
+  }
+
+  &__logo-text {
+    display: inline-block;
+  }
+
+  &__logo-image {
+    display: none;
+    max-height: 40px;
+    width: auto;
+    object-fit: contain;
   }
 
   &__nav {

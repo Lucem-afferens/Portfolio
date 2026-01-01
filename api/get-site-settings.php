@@ -9,7 +9,7 @@ try {
     $stmt = $pdo->prepare("
         SELECT setting_key, setting_value
         FROM site_settings
-        WHERE setting_key IN ('hero_photo', 'about_photo')
+        WHERE setting_key IN ('hero_photo', 'about_photo', 'logo')
     ");
     
     $stmt->execute();
@@ -21,6 +21,7 @@ try {
         'settings' => [
             'hero_photo' => $settings['hero_photo'] ?? null,
             'about_photo' => $settings['about_photo'] ?? null,
+            'logo' => $settings['logo'] ?? null,
         ],
     ]);
 } catch (PDOException $e) {

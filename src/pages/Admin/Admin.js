@@ -112,6 +112,28 @@ class Admin {
             <div class="admin__main-tab-content" data-main-tab-content="photos">
               <div class="admin__photos">
                 <div class="admin__photo-section">
+                  <h3 class="admin__photo-title">Логотип</h3>
+                  <div class="admin__photo-preview admin__photo-preview--logo" data-logo-preview>
+                    <div class="admin__photo-placeholder">Логотип не загружен</div>
+                  </div>
+                  <div class="admin__photo-actions">
+                    <input
+                      type="file"
+                      id="logo-input"
+                      accept="image/jpeg,image/jpg,image/png,image/webp,image/svg+xml"
+                      data-logo-input
+                      style="display: none;"
+                    />
+                    <label for="logo-input" class="admin__btn admin__btn--primary">
+                      Загрузить логотип
+                    </label>
+                    <button class="admin__btn admin__btn--delete" data-delete-logo style="display: none;">
+                      Удалить логотип
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="admin__photo-section">
                   <h3 class="admin__photo-title">Фото на главном экране (Hero)</h3>
                   <div class="admin__photo-preview" data-hero-photo-preview>
                     <div class="admin__photo-placeholder">Нет фото</div>
@@ -999,10 +1021,18 @@ class Admin {
 
   // ========== Управление фото ==========
   static setupPhotos() {
+    const logoInput = document.querySelector('[data-logo-input]');
     const heroInput = document.querySelector('[data-hero-photo-input]');
     const aboutInput = document.querySelector('[data-about-photo-input]');
+    const deleteLogoBtn = document.querySelector('[data-delete-logo]');
     const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
     const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
+
+    logoInput?.addEventListener('change', e => {
+      if (e.target.files[0]) {
+        this.uploadPhoto('logo', e.target.files[0]);
+      }
+    });
 
     heroInput?.addEventListener('change', e => {
       if (e.target.files[0]) {
@@ -1014,6 +1044,10 @@ class Admin {
       if (e.target.files[0]) {
         this.uploadPhoto('about_photo', e.target.files[0]);
       }
+    });
+
+    deleteLogoBtn?.addEventListener('click', () => {
+      this.deletePhoto('logo');
     });
 
     deleteHeroBtn?.addEventListener('click', () => {
@@ -1039,10 +1073,25 @@ class Admin {
   }
 
   static renderPhotos(settings) {
+    const logoPreview = document.querySelector('[data-logo-preview]');
     const heroPreview = document.querySelector('[data-hero-photo-preview]');
     const aboutPreview = document.querySelector('[data-about-photo-preview]');
+    const deleteLogoBtn = document.querySelector('[data-delete-logo]');
     const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
     const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
+
+    // Logo
+    if (settings.logo) {
+      if (logoPreview) {
+        logoPreview.innerHTML = `<img src="${this.escapeHtml(settings.logo)}" alt="Logo" />`;
+      }
+      if (deleteLogoBtn) deleteLogoBtn.style.display = 'inline-block';
+    } else {
+      if (logoPreview) {
+        logoPreview.innerHTML = '<div class="admin__photo-placeholder">Логотип не загружен</div>';
+      }
+      if (deleteLogoBtn) deleteLogoBtn.style.display = 'none';
+    }
 
     // Hero photo
     if (settings.hero_photo) {

@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $rawInput = file_get_contents('php://input');
 $data = json_decode($rawInput, true);
 
-if (!isset($data['setting_key']) || !in_array($data['setting_key'], ['hero_photo', 'about_photo'], true)) {
+if (!isset($data['setting_key']) || !in_array($data['setting_key'], ['hero_photo', 'about_photo', 'logo'], true)) {
     sendError('Некорректный ключ настройки', 400);
 }
 
@@ -88,7 +88,7 @@ if (isset($data['delete']) && $data['delete'] === true) {
     
     // Генерируем безопасное имя файла
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $safeExtension = in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'webp'], true)
+    $safeExtension = in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'webp', 'svg'], true)
         ? strtolower($extension)
         : 'jpg';
     
