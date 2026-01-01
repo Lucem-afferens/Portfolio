@@ -63,6 +63,7 @@ jobs:
           mkdir -p dist/database
           cp database/schema.sql dist/database/ || true
           cp database/install.sql dist/database/ || true
+          cp database/seed-projects.sql dist/database/ || true
           cp database/.gitignore dist/database/ || true
           cp database/README.md dist/database/ || true
           # config.php будет создан из секретов
