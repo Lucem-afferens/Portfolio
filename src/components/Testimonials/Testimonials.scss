@@ -16,6 +16,13 @@
   &__track {
     display: flex;
     @include transition(transform);
+
+    // Когда внутри только empty/loading сообщение, выравниваем по центру
+    &:has(.testimonials__empty),
+    &:has(.testimonials__loading) {
+      justify-content: center;
+      align-items: center;
+    }
   }
 
   &__slide {
@@ -100,5 +107,8 @@
     text-align: center;
     padding: map-get($spacings, 6);
     color: var(--text-secondary);
+    width: 100%;
+    display: block;
+    margin: 0 auto;
   }
 }
