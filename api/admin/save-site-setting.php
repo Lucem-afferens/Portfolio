@@ -23,8 +23,15 @@ function sendError($message, $code = 500, $details = null) {
 try {
     require_once __DIR__ . '/../config.php';
     require_once __DIR__ . '/../db.php';
+    
+    // Проверяем, что $pdo создан
+    if (!isset($pdo)) {
+        throw new Exception('Database connection not established');
+    }
 } catch (Exception $e) {
-    sendError('Ошибка инициализации: ' . $e->getMessage());
+    error_log('Initialization error: ' . $e->getMessage());
+    error_log('Stack trace: ' . $e->getTraceAsString());
+    sendError('Ошибка инициализации: ' . $e->getMessage(), 500);
 }
 
 // Проверка авторизации
@@ -37,23 +44,29 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Определяем, отправлены ли данные как FormData (с файлом) или JSON
-$isFormData = isset($_FILES['photo']) || isset($_POST['setting_key']);
+$isFormData = isset($_FILES['photo']) || (isset($_POST['setting_key']) && !empty($_POST['setting_key']));
 
 if ($isFormData) {
     // Данные отправлены как FormData
     $settingKey = $_POST['setting_key'] ?? null;
-    $delete = isset($_POST['delete']) && $_POST['delete'] === 'true';
+    $delete = isset($_POST['delete']) && ($_POST['delete'] === 'true' || $_POST['delete'] === true);
+    
+    // Логируем для отладки
+    error_log('FormData request - setting_key: ' . ($settingKey ?? 'null') . ', delete: ' . ($delete ? 'true' : 'false'));
 } else {
     // Данные отправлены как JSON
     $rawInput = file_get_contents('php://input');
     $data = json_decode($rawInput, true);
     
     if (json_last_error() !== JSON_ERROR_NONE) {
-        sendError('Некорректный JSON', 400);
+        sendError('Некорректный JSON: ' . json_last_error_msg(), 400);
     }
     
     $settingKey = $data['setting_key'] ?? null;
     $delete = isset($data['delete']) && $data['delete'] === true;
+    
+    // Логируем для отладки
+    error_log('JSON request - setting_key: ' . ($settingKey ?? 'null') . ', delete: ' . ($delete ? 'true' : 'false'));
 }
 
 // Валидация ключа настройки
