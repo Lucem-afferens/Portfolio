@@ -159,7 +159,7 @@ class Header {
 
     const checkAndUpdateHeader = () => {
       const { scrollY } = window;
-      const scrollThreshold = 70;
+      const scrollThreshold = 100;
 
       // Убираем фон, если мы близко к верху страницы
       if (scrollY <= scrollThreshold) {
