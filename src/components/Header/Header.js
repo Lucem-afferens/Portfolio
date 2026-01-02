@@ -4,13 +4,44 @@ import './Header.scss';
 
 class Header {
   static render() {
+    // Получаем сохраненные настройки логотипа из localStorage
+    const savedLogoSettings = this.getSavedLogoSettings();
+    const hasLogo =
+      savedLogoSettings &&
+      (savedLogoSettings.logo || savedLogoSettings.logo_light || savedLogoSettings.logo_dark);
+    const logoDisplay = hasLogo ? 'block' : 'none';
+    const textDisplay = hasLogo ? 'none' : 'inline-block';
+    const logoClass = hasLogo ? 'header__logo--image' : '';
+
+    // Определяем, какой логотип показывать
+    let logoSrc = '';
+    if (savedLogoSettings) {
+      const currentTheme = ThemeManager.getCurrentTheme();
+      const themeSwitchEnabled = savedLogoSettings.logo_theme_switch || false;
+
+      if (themeSwitchEnabled) {
+        logoSrc =
+          currentTheme === 'dark'
+            ? savedLogoSettings.logo_dark ||
+              savedLogoSettings.logo_light ||
+              savedLogoSettings.logo ||
+              ''
+            : savedLogoSettings.logo_light ||
+              savedLogoSettings.logo_dark ||
+              savedLogoSettings.logo ||
+              '';
+      } else {
+        logoSrc = savedLogoSettings.logo || '';
+      }
+    }
+
     return `
       <header class="header">
         <div class="container">
           <div class="header__content">
-            <a href="#home" class="header__logo" data-logo-link>
-              <span class="header__logo-text">${i18n.t('header.logo')}</span>
-              <img class="header__logo-image" data-logo-image style="display: none;" alt="${i18n.t('header.logo')}" />
+            <a href="#home" class="header__logo ${logoClass}" data-logo-link>
+              <span class="header__logo-text" style="display: ${textDisplay};">${i18n.t('header.logo')}</span>
+              <img class="header__logo-image" data-logo-image src="${logoSrc}" style="display: ${logoDisplay};" alt="${i18n.t('header.logo')}" />
             </a>
             <nav class="header__nav">
               <a href="#home" class="header__nav-link">${i18n.t('header.nav.home')}</a>
@@ -80,6 +111,24 @@ class Header {
     });
   }
 
+  static getSavedLogoSettings() {
+    try {
+      const saved = localStorage.getItem('header_logo_settings');
+      return saved ? JSON.parse(saved) : null;
+    } catch (error) {
+      console.error('Error reading saved logo settings:', error);
+      return null;
+    }
+  }
+
+  static saveLogoSettings(settings) {
+    try {
+      localStorage.setItem('header_logo_settings', JSON.stringify(settings));
+    } catch (error) {
+      console.error('Error saving logo settings:', error);
+    }
+  }
+
   static async loadLogo() {
     try {
       const response = await fetch('/api/get-site-settings.php');
@@ -87,10 +136,18 @@ class Header {
 
       if (result.success) {
         this.logoSettings = result.settings;
+        // Сохраняем настройки в localStorage для быстрого доступа при перезагрузке
+        this.saveLogoSettings(result.settings);
         this.updateLogoForTheme();
       }
     } catch (error) {
       console.error('Error loading logo:', error);
+      // В случае ошибки используем сохраненные настройки
+      const saved = this.getSavedLogoSettings();
+      if (saved) {
+        this.logoSettings = saved;
+        this.updateLogoForTheme();
+      }
     }
   }
 
