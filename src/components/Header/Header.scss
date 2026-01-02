@@ -2,9 +2,21 @@
   position: sticky;
   top: 0;
   z-index: map-get($z-index, sticky);
-  background-color: var(--bg-surface);
-  border-bottom: 1px solid var(--border-color);
-  @include transition(background-color, border-color);
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  @include transition(background-color, border-color, backdrop-filter);
+
+  // Эффект стекла при скролле
+  &--scrolled {
+    background-color: rgba(245, 246, 244, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom-color: var(--border-color);
+
+    [data-theme='dark'] & {
+      background-color: rgba(14, 20, 22, 0.7);
+    }
+  }
 
   &__content {
     display: flex;
