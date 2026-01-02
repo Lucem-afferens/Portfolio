@@ -119,22 +119,11 @@ class Header {
 
     let ticking = false;
 
-    const getHomeSectionBottom = () => {
-      const homeSection = document.querySelector('#home');
-      if (!homeSection) return 0;
-      const rect = homeSection.getBoundingClientRect();
-      return rect.bottom + window.scrollY;
-    };
-
     const updateHeader = () => {
       const { scrollY } = window;
-      const scrollThreshold = 200; // Увеличенный порог скролла для появления фона
-      const homeSectionBottom = getHomeSectionBottom();
+      const scrollThreshold = 50; // Порог скролла для появления фона (50px от начала страницы)
 
-      // Не показываем фон, если мы все еще в пределах секции #home
-      const isInHomeSection = scrollY < homeSectionBottom;
-
-      if (scrollY > scrollThreshold && !isInHomeSection) {
+      if (scrollY > scrollThreshold) {
         header.classList.add('header--scrolled');
       } else {
         header.classList.remove('header--scrolled');
@@ -162,21 +151,12 @@ class Header {
     const homeLink = document.querySelector('.header__nav-link[href="#home"]');
     const header = document.querySelector('.header');
 
-    const getHomeSectionBottom = () => {
-      const homeSection = document.querySelector('#home');
-      if (!homeSection) return 0;
-      const rect = homeSection.getBoundingClientRect();
-      return rect.bottom + window.scrollY;
-    };
-
     const checkAndUpdateHeader = () => {
       const { scrollY } = window;
-      const homeSectionBottom = getHomeSectionBottom();
-      const isInHomeSection = scrollY < homeSectionBottom;
-      const scrollThreshold = 200;
+      const scrollThreshold = 50;
 
-      // Убираем фон, если мы в секции #home или близко к верху
-      if (isInHomeSection || scrollY < scrollThreshold) {
+      // Убираем фон, если мы близко к верху страницы
+      if (scrollY <= scrollThreshold) {
         header?.classList.remove('header--scrolled');
       }
     };
