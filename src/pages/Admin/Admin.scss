@@ -1282,4 +1282,61 @@
     padding: map-get($spacings, 1) map-get($spacings, 2);
     font-size: 0.875rem;
   }
+
+  // ========== Контент ==========
+  &__content-editor {
+    padding: map-get($spacings, 4) 0;
+  }
+
+  &__content-form {
+    max-width: 800px;
+  }
+
+  &__content-section {
+    margin-bottom: map-get($spacings, 5);
+
+    &:last-of-type {
+      margin-bottom: map-get($spacings, 4);
+    }
+  }
+
+  &__content-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: map-get($spacings, 3);
+    color: var(--text-primary);
+  }
+
+  &__textarea {
+    width: 100%;
+    padding: map-get($spacings, 2) map-get($spacings, 3);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-family: $font-family-base;
+    font-size: 1rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+    resize: vertical;
+    min-height: 120px;
+    @include transition(border-color, box-shadow);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.15);
+    }
+  }
+
+  &__content-actions {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacings, 2);
+    margin-top: map-get($spacings, 4);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
 }

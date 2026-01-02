@@ -12,7 +12,7 @@ try {
         WHERE setting_key IN (
             'hero_photo', 'about_photo', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
             'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone',
-            'contact_socials'
+            'contact_socials', 'about_text_ru', 'about_text_en'
         )
     ");
     
@@ -36,6 +36,8 @@ try {
             'contact_email' => $settings['contact_email'] ?? null,
             'contact_phone' => $settings['contact_phone'] ?? null,
             'contact_socials' => $settings['contact_socials'] ?? null,
+            'about_text_ru' => $settings['about_text_ru'] ?? null,
+            'about_text_en' => $settings['about_text_en'] ?? null,
         ],
     ]);
 } catch (PDOException $e) {

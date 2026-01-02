@@ -33,7 +33,7 @@ class About {
               />
             </div>
             <div class="about__text">
-              <p>${i18n.t('about.description')}</p>
+              <p data-about-description>${i18n.t('about.description')}</p>
               <h3>${i18n.t('about.skills')}</h3>
               <ul class="about__skills">
                 ${skills.map(skill => `<li>${skill}</li>`).join('')}
@@ -47,6 +47,7 @@ class About {
 
   static init() {
     this.loadAboutPhoto();
+    this.loadAboutText();
 
     const images = document.querySelectorAll('.about img[loading="lazy"]');
     images.forEach(img => {
@@ -57,6 +58,11 @@ class About {
           img.classList.add('loaded');
         });
       }
+    });
+
+    // Обновляем текст при смене языка
+    document.addEventListener('languageChanged', () => {
+      this.loadAboutText();
     });
   }
 
@@ -73,6 +79,32 @@ class About {
       }
     } catch (error) {
       console.error('Error loading about photo:', error);
+    }
+  }
+
+  static async loadAboutText() {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success && result.settings) {
+        const descriptionEl = document.querySelector('[data-about-description]');
+        if (descriptionEl) {
+          const currentLang = i18n.getCurrentLanguage();
+          const text =
+            currentLang === 'ru'
+              ? result.settings.about_text_ru || i18n.t('about.description')
+              : result.settings.about_text_en || i18n.t('about.description');
+          descriptionEl.textContent = text;
+        }
+      }
+    } catch (error) {
+      console.error('Error loading about text:', error);
+      // В случае ошибки используем перевод из i18n
+      const descriptionEl = document.querySelector('[data-about-description]');
+      if (descriptionEl) {
+        descriptionEl.textContent = i18n.t('about.description');
+      }
     }
   }
 }

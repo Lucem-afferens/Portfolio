@@ -2,14 +2,16 @@
   position: relative;
   min-height: 100vh;
   @include flex-center;
-  padding: map-get($spacings, 6) 0;
+  padding: 0 0 map-get($spacings, 6);
   text-align: center;
+  margin-top: 0;
 
   &__content {
     max-width: 700px;
     width: 100%;
     margin: 0 auto;
-    padding: 0 map-get($spacings, 2);
+    padding: map-get($spacings, 6) map-get($spacings, 2) 0;
+    position: relative;
   }
 
   &__name {

@@ -64,6 +64,9 @@ class Admin {
             <button class="admin__main-tab" data-main-tab="contacts">
               Контакты
             </button>
+            <button class="admin__main-tab" data-main-tab="content">
+              Контент
+            </button>
           </nav>
           
           <div class="admin__main-content">
@@ -345,6 +348,51 @@ class Admin {
                 </form>
               </div>
             </div>
+            
+            <!-- Вкладка Контент -->
+            <div class="admin__main-tab-content" data-main-tab-content="content">
+              <div class="admin__content-editor">
+                <h2 class="admin__section-title">Редактирование контента</h2>
+                <p class="admin__section-description">
+                  Управляйте текстовым содержимым секций сайта
+                </p>
+                
+                <form class="admin__content-form" data-content-form>
+                  <div class="admin__content-section">
+                    <h3 class="admin__content-subtitle">Секция "О себе"</h3>
+                    
+                    <div class="admin__form-group">
+                      <label for="about-text-ru" class="admin__label">Текст на русском языке</label>
+                      <textarea
+                        id="about-text-ru"
+                        class="admin__textarea"
+                        rows="6"
+                        placeholder="Введите описание на русском языке..."
+                        data-about-text-ru
+                      ></textarea>
+                    </div>
+                    
+                    <div class="admin__form-group">
+                      <label for="about-text-en" class="admin__label">Текст на английском языке</label>
+                      <textarea
+                        id="about-text-en"
+                        class="admin__textarea"
+                        rows="6"
+                        placeholder="Enter description in English..."
+                        data-about-text-en
+                      ></textarea>
+                    </div>
+                  </div>
+                  
+                  <div class="admin__content-actions">
+                    <button type="submit" class="admin__btn admin__btn--primary">
+                      Сохранить контент
+                    </button>
+                    <div class="admin__message" data-content-message role="alert"></div>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -364,6 +412,7 @@ class Admin {
     this.setupProjects();
     this.setupPhotos();
     this.setupContacts();
+    this.setupContent();
     this.loadTestimonials('pending');
   }
 
@@ -794,6 +843,8 @@ class Admin {
           this.loadPhotos();
         } else if (tabName === 'contacts') {
           this.loadContacts();
+        } else if (tabName === 'content') {
+          this.loadContent();
         }
       });
     });
@@ -1785,6 +1836,112 @@ class Admin {
       console.error('Error saving contacts:', error);
       if (messageEl) {
         messageEl.textContent = 'Ошибка при сохранении контактов';
+        messageEl.className = 'admin__message admin__message--error';
+      }
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
+  }
+
+  // ========== Управление контентом ==========
+  static setupContent() {
+    const form = document.querySelector('[data-content-form]');
+    if (!form) return;
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      await this.saveContent();
+    });
+  }
+
+  static async loadContent() {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success && result.settings) {
+        const { settings } = result;
+
+        const aboutTextRuInput = document.querySelector('[data-about-text-ru]');
+        const aboutTextEnInput = document.querySelector('[data-about-text-en]');
+
+        if (aboutTextRuInput) {
+          aboutTextRuInput.value = settings.about_text_ru || '';
+        }
+        if (aboutTextEnInput) {
+          aboutTextEnInput.value = settings.about_text_en || '';
+        }
+      }
+    } catch (error) {
+      console.error('Error loading content:', error);
+    }
+  }
+
+  static async saveContent() {
+    const form = document.querySelector('[data-content-form]');
+    const messageEl = document.querySelector('[data-content-message]');
+    if (!form) return;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+
+    const content = {
+      about_text_ru: document.querySelector('[data-about-text-ru]')?.value.trim() || '',
+      about_text_en: document.querySelector('[data-about-text-en]')?.value.trim() || '',
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Сохранение...';
+
+    if (messageEl) {
+      messageEl.textContent = '';
+      messageEl.className = 'admin__message';
+    }
+
+    try {
+      const savePromises = Object.entries(content).map(([key, value]) =>
+        fetch('/api/admin/save-site-setting.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            setting_key: key,
+            value: value || null,
+          }),
+        })
+      );
+
+      const responses = await Promise.all(savePromises);
+      const results = await Promise.all(
+        responses.map(async r => {
+          if (r instanceof Response) {
+            return r.json();
+          }
+          return { success: true };
+        })
+      );
+
+      const allSuccess = results.every(r => r.success);
+
+      if (allSuccess) {
+        if (messageEl) {
+          messageEl.textContent = 'Контент успешно сохранен';
+          messageEl.className = 'admin__message admin__message--success';
+        }
+      } else {
+        const errors = results
+          .filter(r => !r.success)
+          .map(r => r.error)
+          .join(', ');
+        if (messageEl) {
+          messageEl.textContent = `Ошибка при сохранении: ${errors}`;
+          messageEl.className = 'admin__message admin__message--error';
+        }
+      }
+    } catch (error) {
+      console.error('Error saving content:', error);
+      if (messageEl) {
+        messageEl.textContent = 'Ошибка при сохранении контента';
         messageEl.className = 'admin__message admin__message--error';
       }
     } finally {

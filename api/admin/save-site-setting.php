@@ -73,7 +73,7 @@ if ($isFormData) {
 $allowedKeys = [
     'hero_photo', 'about_photo', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
     'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone',
-    'contact_socials'
+    'contact_socials', 'about_text_ru', 'about_text_en'
 ];
 if (!$settingKey || !in_array($settingKey, $allowedKeys, true)) {
     sendError('Некорректный ключ настройки', 400);
@@ -90,7 +90,7 @@ if ($settingKey === 'logo_theme_switch') {
         $data = json_decode($rawInput, true);
         $settingValue = isset($data['value']) && ($data['value'] === true || $data['value'] === 'true' || $data['value'] === '1') ? '1' : '0';
     }
-} elseif (in_array($settingKey, ['contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone', 'contact_socials'], true)) {
+} elseif (in_array($settingKey, ['contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone', 'contact_socials', 'about_text_ru', 'about_text_en'], true)) {
     // Обработка контактов (строковые значения или JSON для contact_socials)
     if ($isFormData) {
         $settingValue = isset($_POST['value']) ? trim($_POST['value']) : null;
@@ -236,7 +236,7 @@ if ($settingKey === 'logo_theme_switch') {
     
     // Сохраняем относительный путь
     $settingValue = '/uploads/site/' . $fileName;
-} elseif (!in_array($settingKey, ['logo_theme_switch', 'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone', 'contact_socials'], true)) {
+} elseif (!in_array($settingKey, ['logo_theme_switch', 'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone', 'contact_socials', 'about_text_ru', 'about_text_en'], true)) {
     // Если это не удаление, не файл, не logo_theme_switch и не контакт - ошибка
     sendError('Не указан файл для загрузки', 400);
 }
