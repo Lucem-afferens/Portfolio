@@ -93,6 +93,22 @@
   &__checkbox-text {
     flex: 1;
     user-select: none;
+
+    a {
+      color: var(--color-primary);
+      text-decoration: underline;
+      @include transition(color);
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+    }
   }
 
   &__submit {

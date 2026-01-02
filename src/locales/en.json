@@ -76,7 +76,7 @@
       "telegram": "Telegram",
       "message": "Message",
       "optional": "optional",
-      "consent": "I agree to the processing of personal data and confirm that I can be contacted via the specified communication channels",
+      "consent": "I agree to the <a href=\"/privacy-policy.html\">privacy policy</a> and give <a href=\"/personal-data-consent.html\">consent to the processing of personal data</a>",
       "consentRequired": "You must agree to the processing of personal data",
       "submit": "Send",
       "success": "Message sent! I'll get back to you soon.",
@@ -85,5 +85,59 @@
     "social": "Social Media",
     "phone": "Phone",
     "email": "Email"
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated",
+    "backToHome": "Back to home",
+    "section1": {
+      "title": "1. General Provisions",
+      "content": "This Privacy Policy defines the procedure for processing and protecting personal data of users of the portfolio website (hereinafter referred to as the Website). By using the Website, you agree to the terms of this Privacy Policy."
+    },
+    "section2": {
+      "title": "2. Information Collected",
+      "content": "When using the Website, we may collect the following information: name, email address, phone number, Telegram username (if provided), as well as any other information you voluntarily provide through the contact form."
+    },
+    "section3": {
+      "title": "3. Use of Information",
+      "content": "The collected information is used solely to contact you via the specified communication channels (email, Telegram) in response to your requests and messages. We do not share your personal data with third parties without your consent."
+    },
+    "section4": {
+      "title": "4. Data Protection",
+      "content": "We take necessary measures to protect your personal data from unauthorized access, alteration, disclosure, or destruction. However, no method of transmitting data over the Internet is absolutely secure."
+    },
+    "section5": {
+      "title": "5. Cookies",
+      "content": "The Website may use cookies to improve user experience. You can configure your browser to refuse cookies, but this may affect the website's functionality."
+    },
+    "section6": {
+      "title": "6. Changes to Privacy Policy",
+      "content": "We reserve the right to make changes to this Privacy Policy. We recommend periodically reviewing this page to stay informed of current information."
+    }
+  },
+  "personalDataConsent": {
+    "title": "Consent to Personal Data Processing",
+    "lastUpdated": "Last updated",
+    "backToHome": "Back to home",
+    "section1": {
+      "title": "1. Consent to Personal Data Processing",
+      "content": "I hereby give my consent to the processing of my personal data specified in the contact form on the portfolio website, including collection, systematization, accumulation, storage, clarification (update, modification), use, transfer (provision, access), depersonalization, blocking, deletion, destruction of personal data."
+    },
+    "section2": {
+      "title": "2. Purpose of Personal Data Processing",
+      "content": "Personal data processing is carried out for the purpose of contacting me via the specified communication channels (email, Telegram) to respond to my requests and messages, as well as to provide information about the services offered."
+    },
+    "section3": {
+      "title": "3. List of Processed Personal Data",
+      "content": "The following personal data are processed: name, email address, phone number (if provided), Telegram username (if provided), message text (if provided)."
+    },
+    "section4": {
+      "title": "4. Consent Validity Period",
+      "content": "The consent is valid until it is withdrawn by sending a corresponding notification to the email address specified on the website."
+    },
+    "section5": {
+      "title": "5. Rights of Personal Data Subject",
+      "content": "I am aware that I have the right to withdraw consent to the processing of personal data, as well as the right to access, correct, delete, and restrict the processing of my personal data."
+    }
   }
 }

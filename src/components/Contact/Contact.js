@@ -124,6 +124,20 @@ class Contact {
     const form = document.querySelector('[data-contact-form]');
     const messageEl = document.querySelector('[data-form-message]');
 
+    // Функция для обновления текста чекбокса
+    const updateCheckboxText = () => {
+      const checkboxText = document.querySelector('.contact__checkbox-text');
+      if (checkboxText) {
+        checkboxText.innerHTML = i18n.t('contact.form.consent');
+      }
+    };
+
+    // Устанавливаем HTML для чекбокса с ссылками после рендера
+    updateCheckboxText();
+
+    // Обновляем текст чекбокса при смене языка
+    document.addEventListener('languageChanged', updateCheckboxText);
+
     if (form) {
       form.addEventListener('submit', async e => {
         e.preventDefault();
