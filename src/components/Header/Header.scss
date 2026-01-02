@@ -18,6 +18,10 @@
     }
   }
 
+  .container {
+    @include container;
+  }
+
   &__content {
     display: flex;
     align-items: center;
