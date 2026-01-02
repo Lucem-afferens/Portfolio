@@ -274,48 +274,39 @@ class Admin {
                   <div class="admin__contacts-section">
                     <h3 class="admin__contacts-subtitle">Социальные сети</h3>
                     
-                    <div class="admin__form-group">
-                      <label for="contact-github" class="admin__label">GitHub</label>
-                      <input
-                        type="url"
-                        id="contact-github"
-                        class="admin__input"
-                        placeholder="https://github.com/username"
-                        data-contact-github
-                      />
+                    <div class="admin__socials-list" data-socials-list>
+                      <!-- Список соцсетей будет загружен динамически -->
                     </div>
                     
-                    <div class="admin__form-group">
-                      <label for="contact-telegram" class="admin__label">Telegram</label>
-                      <input
-                        type="url"
-                        id="contact-telegram"
-                        class="admin__input"
-                        placeholder="https://t.me/username"
-                        data-contact-telegram
-                      />
-                    </div>
-                    
-                    <div class="admin__form-group">
-                      <label for="contact-vk" class="admin__label">VKontakte</label>
-                      <input
-                        type="url"
-                        id="contact-vk"
-                        class="admin__input"
-                        placeholder="https://vk.com/username"
-                        data-contact-vk
-                      />
-                    </div>
-                    
-                    <div class="admin__form-group">
-                      <label for="contact-linkedin" class="admin__label">LinkedIn</label>
-                      <input
-                        type="url"
-                        id="contact-linkedin"
-                        class="admin__input"
-                        placeholder="https://linkedin.com/in/username"
-                        data-contact-linkedin
-                      />
+                    <div class="admin__add-social">
+                      <h4 class="admin__add-social-title">Добавить новую социальную сеть</h4>
+                      <div class="admin__add-social-form">
+                        <div class="admin__form-group">
+                          <label for="new-social-name" class="admin__label">Название</label>
+                          <input
+                            type="text"
+                            id="new-social-name"
+                            class="admin__input"
+                            placeholder="Например: Instagram, Twitter, Facebook"
+                            data-new-social-name
+                            required
+                          />
+                        </div>
+                        <div class="admin__form-group">
+                          <label for="new-social-url" class="admin__label">Ссылка</label>
+                          <input
+                            type="url"
+                            id="new-social-url"
+                            class="admin__input"
+                            placeholder="https://example.com/username"
+                            data-new-social-url
+                            required
+                          />
+                        </div>
+                        <button type="button" class="admin__btn admin__btn--primary" data-add-social-btn>
+                          Добавить
+                        </button>
+                      </div>
                     </div>
                   </div>
                   
@@ -1483,7 +1474,36 @@ class Admin {
       e.preventDefault();
       await this.saveContacts();
     });
+
+    // Обработчик добавления новой соцсети
+    const addSocialBtn = document.querySelector('[data-add-social-btn]');
+    if (addSocialBtn) {
+      addSocialBtn.addEventListener('click', () => {
+        const { editingIndex } = addSocialBtn.dataset;
+        if (editingIndex !== undefined) {
+          this.saveSocialEdit(parseInt(editingIndex, 10));
+        } else {
+          this.addSocial();
+        }
+      });
+    }
+
+    // Обработчики для редактирования и удаления (делегирование событий)
+    const socialsList = document.querySelector('[data-socials-list]');
+    if (socialsList) {
+      socialsList.addEventListener('click', e => {
+        if (e.target.matches('[data-edit-social]')) {
+          const index = parseInt(e.target.dataset.editSocial, 10);
+          this.editSocial(index);
+        } else if (e.target.matches('[data-delete-social]')) {
+          const index = parseInt(e.target.dataset.deleteSocial, 10);
+          this.deleteSocial(index);
+        }
+      });
+    }
   }
+
+  static socials = [];
 
   static async loadContacts() {
     try {
@@ -1493,23 +1513,203 @@ class Admin {
       if (result.success && result.settings) {
         const { settings } = result;
 
-        // Заполняем поля формы
-        const githubInput = document.querySelector('[data-contact-github]');
-        const telegramInput = document.querySelector('[data-contact-telegram]');
-        const vkInput = document.querySelector('[data-contact-vk]');
-        const linkedinInput = document.querySelector('[data-contact-linkedin]');
+        // Загружаем список соцсетей
+        if (settings.contact_socials) {
+          try {
+            this.socials = JSON.parse(settings.contact_socials);
+          } catch (e) {
+            console.error('Error parsing socials JSON:', e);
+            this.socials = [];
+          }
+        } else {
+          this.socials = [];
+        }
+
+        // Отображаем список соцсетей
+        this.renderSocials();
+
+        // Заполняем поля контактов
         const emailInput = document.querySelector('[data-contact-email]');
         const phoneInput = document.querySelector('[data-contact-phone]');
 
-        if (githubInput) githubInput.value = settings.contact_github || '';
-        if (telegramInput) telegramInput.value = settings.contact_telegram || '';
-        if (vkInput) vkInput.value = settings.contact_vk || '';
-        if (linkedinInput) linkedinInput.value = settings.contact_linkedin || '';
         if (emailInput) emailInput.value = settings.contact_email || '';
         if (phoneInput) phoneInput.value = settings.contact_phone || '';
       }
     } catch (error) {
       console.error('Error loading contacts:', error);
+    }
+  }
+
+  static renderSocials() {
+    const socialsList = document.querySelector('[data-socials-list]');
+    if (!socialsList) return;
+
+    if (this.socials.length === 0) {
+      socialsList.innerHTML =
+        '<p class="admin__empty-message">Нет добавленных социальных сетей</p>';
+      return;
+    }
+
+    socialsList.innerHTML = this.socials
+      .map(
+        (social, index) => `
+      <div class="admin__social-item" data-social-item="${index}">
+        <div class="admin__social-info">
+          <strong class="admin__social-name">${this.escapeHtml(social.name)}</strong>
+          <a href="${this.escapeHtml(social.url)}" target="_blank" rel="noopener noreferrer" class="admin__social-url">
+            ${this.escapeHtml(social.url)}
+          </a>
+        </div>
+        <div class="admin__social-actions">
+          <button type="button" class="admin__btn admin__btn--small" data-edit-social="${index}">
+            Редактировать
+          </button>
+          <button type="button" class="admin__btn admin__btn--small admin__btn--delete" data-delete-social="${index}">
+            Удалить
+          </button>
+        </div>
+      </div>
+    `
+      )
+      .join('');
+  }
+
+  static addSocial() {
+    const nameInput = document.querySelector('[data-new-social-name]');
+    const urlInput = document.querySelector('[data-new-social-url]');
+
+    if (!nameInput || !urlInput) return;
+
+    const name = nameInput.value.trim();
+    const url = urlInput.value.trim();
+
+    if (!name || !url) {
+      // eslint-disable-next-line no-alert
+      alert('Заполните все поля');
+      return;
+    }
+
+    // Проверка URL
+    let urlObj;
+    try {
+      urlObj = new URL(url);
+    } catch (e) {
+      // eslint-disable-next-line no-alert
+      alert('Введите корректный URL');
+      return;
+    }
+    // Используем urlObj, чтобы избежать ошибки линтера
+    if (!urlObj) return;
+
+    // Добавляем новую соцсеть
+    this.socials.push({ name, url });
+    this.renderSocials();
+    this.saveSocials();
+
+    // Очищаем поля
+    nameInput.value = '';
+    urlInput.value = '';
+  }
+
+  static editSocial(index) {
+    if (index < 0 || index >= this.socials.length) return;
+
+    const social = this.socials[index];
+    const nameInput = document.querySelector('[data-new-social-name]');
+    const urlInput = document.querySelector('[data-new-social-url]');
+    const addBtn = document.querySelector('[data-add-social-btn]');
+
+    if (!nameInput || !urlInput || !addBtn) return;
+
+    // Заполняем поля для редактирования
+    nameInput.value = social.name;
+    urlInput.value = social.url;
+
+    // Меняем кнопку на "Сохранить"
+    addBtn.textContent = 'Сохранить';
+    addBtn.dataset.editingIndex = index.toString();
+
+    // Прокручиваем к форме
+    nameInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    nameInput.focus();
+  }
+
+  static saveSocialEdit(index) {
+    if (index < 0 || index >= this.socials.length) return;
+
+    const nameInput = document.querySelector('[data-new-social-name]');
+    const urlInput = document.querySelector('[data-new-social-url]');
+    const addBtn = document.querySelector('[data-add-social-btn]');
+
+    if (!nameInput || !urlInput || !addBtn) return;
+
+    const name = nameInput.value.trim();
+    const url = urlInput.value.trim();
+
+    if (!name || !url) {
+      // eslint-disable-next-line no-alert
+      alert('Заполните все поля');
+      return;
+    }
+
+    // Проверка URL
+    let urlObj;
+    try {
+      urlObj = new URL(url);
+    } catch (e) {
+      // eslint-disable-next-line no-alert
+      alert('Введите корректный URL');
+      return;
+    }
+    // Используем urlObj, чтобы избежать ошибки линтера
+    if (!urlObj) return;
+
+    // Обновляем соцсеть
+    this.socials[index] = { name, url };
+    this.renderSocials();
+    this.saveSocials();
+
+    // Очищаем поля и возвращаем кнопку
+    nameInput.value = '';
+    urlInput.value = '';
+    addBtn.textContent = 'Добавить';
+    delete addBtn.dataset.editingIndex;
+  }
+
+  static deleteSocial(index) {
+    if (index < 0 || index >= this.socials.length) return;
+
+    // eslint-disable-next-line no-alert
+    if (!window.confirm('Вы уверены, что хотите удалить эту социальную сеть?')) {
+      return;
+    }
+
+    this.socials.splice(index, 1);
+    this.renderSocials();
+    this.saveSocials();
+  }
+
+  static async saveSocials() {
+    try {
+      const socialsJson = JSON.stringify(this.socials);
+      const response = await fetch('/api/admin/save-site-setting.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          setting_key: 'contact_socials',
+          value: socialsJson,
+        }),
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        console.error('Error saving socials:', result.error);
+        return Promise.reject(new Error(result.error));
+      }
+      return response;
+    } catch (error) {
+      console.error('Error saving socials:', error);
+      return Promise.reject(error);
     }
   }
 
@@ -1523,10 +1723,6 @@ class Admin {
 
     // Получаем значения из формы
     const contacts = {
-      contact_github: document.querySelector('[data-contact-github]')?.value.trim() || '',
-      contact_telegram: document.querySelector('[data-contact-telegram]')?.value.trim() || '',
-      contact_vk: document.querySelector('[data-contact-vk]')?.value.trim() || '',
-      contact_linkedin: document.querySelector('[data-contact-linkedin]')?.value.trim() || '',
       contact_email: document.querySelector('[data-contact-email]')?.value.trim() || '',
       contact_phone: document.querySelector('[data-contact-phone]')?.value.trim() || '',
     };
@@ -1542,7 +1738,7 @@ class Admin {
     }
 
     try {
-      // Сохраняем каждое поле отдельно
+      // Сохраняем контакты (email и phone)
       const savePromises = Object.entries(contacts).map(([key, value]) =>
         fetch('/api/admin/save-site-setting.php', {
           method: 'POST',
@@ -1554,8 +1750,18 @@ class Admin {
         })
       );
 
+      // Также сохраняем соцсети
+      savePromises.push(this.saveSocials());
+
       const responses = await Promise.all(savePromises);
-      const results = await Promise.all(responses.map(r => r.json()));
+      const results = await Promise.all(
+        responses.map(async r => {
+          if (r instanceof Response) {
+            return r.json();
+          }
+          return { success: true };
+        })
+      );
 
       // Проверяем результаты
       const allSuccess = results.every(r => r.success);

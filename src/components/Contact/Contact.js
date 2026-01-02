@@ -207,63 +207,32 @@ class Contact {
 
     if (!socialLinksContainer || !contactInfoContainer) return;
 
-    // Социальные сети
+    // Социальные сети (динамические)
     const socialLinks = [];
 
-    if (settings.contact_github) {
-      socialLinks.push(`
-        <a 
-          href="${this.escapeHtml(settings.contact_github)}" 
-          class="contact__social-link" 
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub"
-        >
-          GitHub
-        </a>
-      `);
-    }
-
-    if (settings.contact_telegram) {
-      socialLinks.push(`
-        <a 
-          href="${this.escapeHtml(settings.contact_telegram)}" 
-          class="contact__social-link" 
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Telegram"
-        >
-          Telegram
-        </a>
-      `);
-    }
-
-    if (settings.contact_vk) {
-      socialLinks.push(`
-        <a 
-          href="${this.escapeHtml(settings.contact_vk)}" 
-          class="contact__social-link" 
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="VKontakte"
-        >
-          VKontakte
-        </a>
-      `);
-    }
-
-    if (settings.contact_linkedin) {
-      socialLinks.push(`
-        <a 
-          href="${this.escapeHtml(settings.contact_linkedin)}" 
-          class="contact__social-link" 
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn"
-        >
-          LinkedIn
-        </a>
-      `);
+    if (settings.contact_socials) {
+      try {
+        const socials = JSON.parse(settings.contact_socials);
+        if (Array.isArray(socials)) {
+          socials.forEach(social => {
+            if (social.name && social.url) {
+              socialLinks.push(`
+                <a 
+                  href="${this.escapeHtml(social.url)}" 
+                  class="contact__social-link" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="${this.escapeHtml(social.name)}"
+                >
+                  ${this.escapeHtml(social.name)}
+                </a>
+              `);
+            }
+          });
+        }
+      } catch (e) {
+        console.error('Error parsing socials JSON:', e);
+      }
     }
 
     socialLinksContainer.innerHTML = socialLinks.length > 0 ? socialLinks.join('') : '';

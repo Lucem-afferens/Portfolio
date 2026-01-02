@@ -11,7 +11,8 @@ try {
         FROM site_settings
         WHERE setting_key IN (
             'hero_photo', 'about_photo', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
-            'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone'
+            'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone',
+            'contact_socials'
         )
     ");
     
@@ -34,6 +35,7 @@ try {
             'contact_linkedin' => $settings['contact_linkedin'] ?? null,
             'contact_email' => $settings['contact_email'] ?? null,
             'contact_phone' => $settings['contact_phone'] ?? null,
+            'contact_socials' => $settings['contact_socials'] ?? null,
         ],
     ]);
 } catch (PDOException $e) {
