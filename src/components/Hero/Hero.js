@@ -7,8 +7,6 @@ class Hero {
       <section id="home" class="hero" data-hero-section>
         <div class="container">
           <div class="hero__content">
-            <h1 class="hero__name">${i18n.t('hero.name')}</h1>
-            <p class="hero__specialization">${i18n.t('hero.specialization')}</p>
             <div class="hero__actions">
               <a href="#projects" class="hero__cta hero__cta--primary">
                 ${i18n.t('hero.cta')}
