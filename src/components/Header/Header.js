@@ -39,7 +39,7 @@ class Header {
       <header class="header">
         <div class="container">
           <div class="header__content">
-            <a href="#home" class="header__logo ${logoClass}" data-logo-link>
+            <a href="/" class="header__logo ${logoClass}" data-logo-link>
               <span class="header__logo-text" style="display: ${textDisplay};">${i18n.t('header.logo')}</span>
               <img class="header__logo-image" data-logo-image src="${logoSrc}" style="display: ${logoDisplay};" alt="${i18n.t('header.logo')}" />
             </a>
@@ -164,11 +164,18 @@ class Header {
     const handleHomeClick = e => {
       // Проверяем, что это действительно переход на главную
       const target = e.currentTarget;
-      if (target.getAttribute('href') === '#home') {
-        // Задержка для ожидания завершения smooth scroll
-        setTimeout(() => {
-          checkAndUpdateHeader();
-        }, 300);
+      const href = target.getAttribute('href');
+
+      // Обрабатываем как ссылку на главную (#home или /)
+      if (href === '#home' || href === '/') {
+        // Если это якорная ссылка на той же странице
+        if (href === '#home' && window.location.pathname === '/') {
+          // Задержка для ожидания завершения smooth scroll
+          setTimeout(() => {
+            checkAndUpdateHeader();
+          }, 300);
+        }
+        // Если это переход на другую страницу (/), ничего не делаем - страница перезагрузится
       }
     };
 
