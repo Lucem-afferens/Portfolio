@@ -239,6 +239,28 @@ class Admin {
                       Удалить фото
                     </button>
                   </div>
+                  
+                  <div class="admin__photo-subsection">
+                    <h4 class="admin__photo-subtitle">Мобильная версия (≤768px)</h4>
+                    <div class="admin__photo-preview" data-hero-photo-mobile-preview>
+                      <div class="admin__photo-placeholder">Нет фото (будет использоваться основное)</div>
+                    </div>
+                    <div class="admin__photo-actions">
+                      <input
+                        type="file"
+                        id="hero-photo-mobile-input"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        data-hero-photo-mobile-input
+                        style="display: none;"
+                      />
+                      <label for="hero-photo-mobile-input" class="admin__btn admin__btn--primary">
+                        Загрузить мобильное фото
+                      </label>
+                      <button class="admin__btn admin__btn--delete" data-delete-hero-photo-mobile style="display: none;">
+                        Удалить фото
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 
                 <div class="admin__photo-section">
@@ -260,6 +282,28 @@ class Admin {
                     <button class="admin__btn admin__btn--delete" data-delete-about-photo style="display: none;">
                       Удалить фото
                     </button>
+                  </div>
+                  
+                  <div class="admin__photo-subsection">
+                    <h4 class="admin__photo-subtitle">Мобильная версия (≤768px)</h4>
+                    <div class="admin__photo-preview" data-about-photo-mobile-preview>
+                      <div class="admin__photo-placeholder">Нет фото (будет использоваться основное)</div>
+                    </div>
+                    <div class="admin__photo-actions">
+                      <input
+                        type="file"
+                        id="about-photo-mobile-input"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        data-about-photo-mobile-input
+                        style="display: none;"
+                      />
+                      <label for="about-photo-mobile-input" class="admin__btn admin__btn--primary">
+                        Загрузить мобильное фото
+                      </label>
+                      <button class="admin__btn admin__btn--delete" data-delete-about-photo-mobile style="display: none;">
+                        Удалить фото
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1258,12 +1302,16 @@ class Admin {
     const logoLightInput = document.querySelector('[data-logo-light-input]');
     const logoDarkInput = document.querySelector('[data-logo-dark-input]');
     const heroInput = document.querySelector('[data-hero-photo-input]');
+    const heroMobileInput = document.querySelector('[data-hero-photo-mobile-input]');
     const aboutInput = document.querySelector('[data-about-photo-input]');
+    const aboutMobileInput = document.querySelector('[data-about-photo-mobile-input]');
     const deleteLogoBtn = document.querySelector('[data-delete-logo]');
     const deleteLogoLightBtn = document.querySelector('[data-delete-logo-light]');
     const deleteLogoDarkBtn = document.querySelector('[data-delete-logo-dark]');
     const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
+    const deleteHeroMobileBtn = document.querySelector('[data-delete-hero-photo-mobile]');
     const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
+    const deleteAboutMobileBtn = document.querySelector('[data-delete-about-photo-mobile]');
     const logoThemeSwitch = document.querySelector('[data-logo-theme-switch]');
 
     // Переключение режима логотипа (единый/по темам)
@@ -1303,9 +1351,21 @@ class Admin {
       }
     });
 
+    heroMobileInput?.addEventListener('change', e => {
+      if (e.target.files[0]) {
+        this.uploadPhoto('hero_photo_mobile', e.target.files[0]);
+      }
+    });
+
     aboutInput?.addEventListener('change', e => {
       if (e.target.files[0]) {
         this.uploadPhoto('about_photo', e.target.files[0]);
+      }
+    });
+
+    aboutMobileInput?.addEventListener('change', e => {
+      if (e.target.files[0]) {
+        this.uploadPhoto('about_photo_mobile', e.target.files[0]);
       }
     });
 
@@ -1325,8 +1385,16 @@ class Admin {
       this.deletePhoto('hero_photo');
     });
 
+    deleteHeroMobileBtn?.addEventListener('click', () => {
+      this.deletePhoto('hero_photo_mobile');
+    });
+
     deleteAboutBtn?.addEventListener('click', () => {
       this.deletePhoto('about_photo');
+    });
+
+    deleteAboutMobileBtn?.addEventListener('click', () => {
+      this.deletePhoto('about_photo_mobile');
     });
   }
 
@@ -1371,12 +1439,16 @@ class Admin {
     const logoLightPreview = document.querySelector('[data-logo-light-preview]');
     const logoDarkPreview = document.querySelector('[data-logo-dark-preview]');
     const heroPreview = document.querySelector('[data-hero-photo-preview]');
+    const heroMobilePreview = document.querySelector('[data-hero-photo-mobile-preview]');
     const aboutPreview = document.querySelector('[data-about-photo-preview]');
+    const aboutMobilePreview = document.querySelector('[data-about-photo-mobile-preview]');
     const deleteLogoBtn = document.querySelector('[data-delete-logo]');
     const deleteLogoLightBtn = document.querySelector('[data-delete-logo-light]');
     const deleteLogoDarkBtn = document.querySelector('[data-delete-logo-dark]');
     const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
+    const deleteHeroMobileBtn = document.querySelector('[data-delete-hero-photo-mobile]');
     const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
+    const deleteAboutMobileBtn = document.querySelector('[data-delete-about-photo-mobile]');
     const logoThemeSwitch = document.querySelector('[data-logo-theme-switch]');
     const logoSingle = document.querySelector('[data-logo-single]');
     const logoDual = document.querySelector('[data-logo-dual]');
@@ -1454,6 +1526,34 @@ class Admin {
         aboutPreview.innerHTML = '<div class="admin__photo-placeholder">Нет фото</div>';
       }
       if (deleteAboutBtn) deleteAboutBtn.style.display = 'none';
+    }
+
+    // Hero photo mobile
+    if (settings.hero_photo_mobile) {
+      if (heroMobilePreview) {
+        heroMobilePreview.innerHTML = `<img src="${this.escapeHtml(settings.hero_photo_mobile)}" alt="Hero photo mobile" />`;
+      }
+      if (deleteHeroMobileBtn) deleteHeroMobileBtn.style.display = 'inline-block';
+    } else {
+      if (heroMobilePreview) {
+        heroMobilePreview.innerHTML =
+          '<div class="admin__photo-placeholder">Нет фото (будет использоваться основное)</div>';
+      }
+      if (deleteHeroMobileBtn) deleteHeroMobileBtn.style.display = 'none';
+    }
+
+    // About photo mobile
+    if (settings.about_photo_mobile) {
+      if (aboutMobilePreview) {
+        aboutMobilePreview.innerHTML = `<img src="${this.escapeHtml(settings.about_photo_mobile)}" alt="About photo mobile" />`;
+      }
+      if (deleteAboutMobileBtn) deleteAboutMobileBtn.style.display = 'inline-block';
+    } else {
+      if (aboutMobilePreview) {
+        aboutMobilePreview.innerHTML =
+          '<div class="admin__photo-placeholder">Нет фото (будет использоваться основное)</div>';
+      }
+      if (deleteAboutMobileBtn) deleteAboutMobileBtn.style.display = 'none';
     }
   }
 

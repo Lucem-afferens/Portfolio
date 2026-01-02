@@ -29,13 +29,33 @@ class Hero {
       const response = await fetch('/api/get-site-settings.php');
       const result = await response.json();
 
-      if (result.success && result.settings.hero_photo) {
+      if (result.success && result.settings) {
         const heroSection = document.querySelector('[data-hero-section]');
         if (heroSection) {
-          heroSection.style.backgroundImage = `url(${result.settings.hero_photo})`;
-          heroSection.style.backgroundSize = 'cover';
-          heroSection.style.backgroundPosition = 'center';
-          heroSection.style.backgroundRepeat = 'no-repeat';
+          const { hero_photo: heroPhoto, hero_photo_mobile: heroPhotoMobile } = result.settings;
+
+          // Определяем, какое фото использовать
+          const updateBackground = () => {
+            const isMobile = window.innerWidth <= 768;
+            const photoToUse = isMobile ? heroPhotoMobile || heroPhoto : heroPhoto;
+
+            if (photoToUse) {
+              heroSection.style.backgroundImage = `url(${photoToUse})`;
+              heroSection.style.backgroundSize = 'cover';
+              heroSection.style.backgroundPosition = 'center';
+              heroSection.style.backgroundRepeat = 'no-repeat';
+            }
+          };
+
+          // Устанавливаем начальное фото
+          updateBackground();
+
+          // Обновляем при изменении размера окна
+          let resizeTimeout;
+          window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateBackground, 100);
+          });
         }
       }
     } catch (error) {

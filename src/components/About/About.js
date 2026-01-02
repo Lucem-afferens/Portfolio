@@ -71,10 +71,30 @@ class About {
       const response = await fetch('/api/get-site-settings.php');
       const result = await response.json();
 
-      if (result.success && result.settings.about_photo) {
+      if (result.success && result.settings) {
         const aboutImage = document.querySelector('[data-about-image]');
         if (aboutImage) {
-          aboutImage.src = result.settings.about_photo;
+          const { about_photo: aboutPhoto, about_photo_mobile: aboutPhotoMobile } = result.settings;
+
+          // Функция для обновления изображения
+          const updateImage = () => {
+            const isMobile = window.innerWidth <= 768;
+            const photoToUse = isMobile ? aboutPhotoMobile || aboutPhoto : aboutPhoto;
+
+            if (photoToUse) {
+              aboutImage.src = photoToUse;
+            }
+          };
+
+          // Устанавливаем начальное изображение
+          updateImage();
+
+          // Обновляем при изменении размера окна
+          let resizeTimeout;
+          window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateImage, 100);
+          });
         }
       }
     } catch (error) {
