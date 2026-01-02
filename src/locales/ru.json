@@ -76,7 +76,7 @@
       "telegram": "Telegram",
       "message": "Сообщение",
       "optional": "необязательно",
-      "consent": "Я согласен(а) с <a href=\"/privacy-policy.html\">политикой конфиденциальности</a> и даю <a href=\"/personal-data-consent.html\">согласие на обработку персональных данных</a>",
+      "consent": "Я согласен(а) с <a href=\"/pages/privacy-policy.html\">политикой конфиденциальности</a> и даю <a href=\"/pages/personal-data-consent.html\">согласие на обработку персональных данных</a>",
       "consentRequired": "Необходимо дать согласие на обработку персональных данных",
       "submit": "Отправить",
       "success": "Сообщение отправлено! Я свяжусь с вами в ближайшее время.",

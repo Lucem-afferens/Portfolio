@@ -76,7 +76,7 @@
       "telegram": "Telegram",
       "message": "Message",
       "optional": "optional",
-      "consent": "I agree to the <a href=\"/privacy-policy.html\">privacy policy</a> and give <a href=\"/personal-data-consent.html\">consent to the processing of personal data</a>",
+      "consent": "I agree to the <a href=\"/pages/privacy-policy.html\">privacy policy</a> and give <a href=\"/pages/personal-data-consent.html\">consent to the processing of personal data</a>",
       "consentRequired": "You must agree to the processing of personal data",
       "submit": "Send",
       "success": "Message sent! I'll get back to you soon.",
