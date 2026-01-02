@@ -188,6 +188,7 @@ body {
     font-size: 1rem;
     color: var(--text-primary);
     cursor: pointer;
+    min-height: 48px;
     @include transition(border-color, box-shadow, background-color);
 
     &:hover {
@@ -203,6 +204,7 @@ body {
     border-radius: 4px;
     font-weight: 500;
     white-space: nowrap;
+    flex-shrink: 0;
     @include transition(background-color);
 
     .testimonial-form__file-label:hover & {
@@ -212,10 +214,12 @@ body {
 
   &__file-name {
     flex: 1;
+    min-width: 0;
     color: var(--text-secondary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: left;
   }
 
   &__file-hint {

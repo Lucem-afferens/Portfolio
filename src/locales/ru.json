@@ -153,6 +153,8 @@
       "photo": "Ваша фотография (опционально)",
       "photoPreview": "Превью фото",
       "removePhoto": "Удалить фото",
+      "fileSelect": "Выбрать файл",
+      "fileNotSelected": "Файл не выбран",
       "fileHint": "Форматы: JPG, PNG, WebP. Максимальный размер: 5 МБ",
       "submit": "Отправить отзыв",
       "submitting": "Отправка...",
