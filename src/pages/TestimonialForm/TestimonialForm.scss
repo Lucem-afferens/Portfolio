@@ -21,7 +21,7 @@ body {
 
   &__controls-wrapper {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-end;
     align-items: center;
     gap: map-get($spacings, 2);
@@ -64,10 +64,6 @@ body {
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-primary);
-  }
-
-  &__theme-toggle-wrapper {
-    display: flex;
   }
 
   &__theme-toggle {
@@ -209,6 +205,7 @@ body {
   &__input,
   &__textarea {
     width: 100%;
+    max-width: 100%;
     padding: map-get($spacings, 3) map-get($spacings, 4);
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -283,7 +280,29 @@ body {
     }
   }
 
+  &__file-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
   &__file-input {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
+
+    &:focus + .testimonial-form__file-label {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  &__file-label {
+    display: flex;
+    align-items: center;
+    gap: map-get($spacings, 2);
     width: 100%;
     padding: map-get($spacings, 3) map-get($spacings, 4);
     background-color: var(--bg-surface);
@@ -293,29 +312,34 @@ body {
     font-size: 1rem;
     color: var(--text-primary);
     cursor: pointer;
-    @include transition(border-color, box-shadow);
+    @include transition(border-color, box-shadow, background-color);
 
-    &:focus {
-      outline: none;
+    &:hover {
+      background-color: var(--bg-muted);
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.15);
     }
+  }
 
-    &::file-selector-button {
-      padding: map-get($spacings, 2) map-get($spacings, 4);
-      margin-right: map-get($spacings, 3);
-      background-color: var(--color-primary);
-      color: var(--bg-surface);
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500;
-      @include transition(background-color);
+  &__file-button-text {
+    padding: map-get($spacings, 2) map-get($spacings, 4);
+    background-color: var(--color-primary);
+    color: var(--bg-surface);
+    border-radius: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+    @include transition(background-color);
 
-      &:hover {
-        background-color: rgba(31, 166, 160, 0.9);
-      }
+    .testimonial-form__file-label:hover & {
+      background-color: rgba(31, 166, 160, 0.9);
     }
+  }
+
+  &__file-name {
+    flex: 1;
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__file-hint {

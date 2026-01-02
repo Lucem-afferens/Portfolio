@@ -8,7 +8,7 @@ class TestimonialForm {
       <section class="testimonial-form">
         <div class="container">
           <div class="testimonial-form__controls-wrapper">
-            <div class="testimonial-form__lang-toggle-wrapper">
+            <div class="testimonial-form__controls">
               <button class="testimonial-form__lang-toggle" aria-label="Toggle language" data-lang-toggle>
                 <svg class="testimonial-form__lang-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
@@ -17,24 +17,23 @@ class TestimonialForm {
                 </svg>
                 <span class="testimonial-form__lang-text">${i18n.getCurrentLanguage().toUpperCase()}</span>
               </button>
-            </div>
-            <div class="testimonial-form__theme-toggle-wrapper">
               <button class="testimonial-form__theme-toggle" aria-label="${i18n.t('testimonialForm.toggleTheme')}" data-theme-toggle>
-              <svg class="testimonial-form__theme-icon testimonial-form__theme-icon--sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-              </svg>
-              <svg class="testimonial-form__theme-icon testimonial-form__theme-icon--moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-              </svg>
-            </button>
+                <svg class="testimonial-form__theme-icon testimonial-form__theme-icon--sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="testimonial-form__theme-icon testimonial-form__theme-icon--moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              </button>
+            </div>
           </div>
           <header class="testimonial-form__header">
             <h1 class="testimonial-form__title">${i18n.t('testimonialForm.title')}</h1>
@@ -111,14 +110,20 @@ class TestimonialForm {
               <label for="photo" class="testimonial-form__label">
                 ${i18n.t('testimonialForm.form.photo')}
               </label>
-              <input
-                type="file"
-                id="photo"
-                name="photo"
-                class="testimonial-form__file-input"
-                accept="image/jpeg,image/jpg,image/png,image/webp"
-                data-photo-input
-              />
+              <div class="testimonial-form__file-wrapper">
+                <input
+                  type="file"
+                  id="photo"
+                  name="photo"
+                  class="testimonial-form__file-input"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                  data-photo-input
+                />
+                <label for="photo" class="testimonial-form__file-label" data-file-label>
+                  <span class="testimonial-form__file-button-text">${i18n.t('testimonialForm.form.fileSelect')}</span>
+                  <span class="testimonial-form__file-name" data-file-name>${i18n.t('testimonialForm.form.fileNotSelected')}</span>
+                </label>
+              </div>
               <div class="testimonial-form__photo-preview" data-photo-preview style="display: none;">
                 <img src="" alt="${i18n.t('testimonialForm.form.photoPreview')}" data-preview-image />
                 <button type="button" class="testimonial-form__remove-photo" data-remove-photo>
@@ -169,6 +174,8 @@ class TestimonialForm {
     const photoPreview = document.querySelector('[data-photo-preview]');
     const previewImage = document.querySelector('[data-preview-image]');
     const removePhotoBtn = document.querySelector('[data-remove-photo]');
+    const fileName = document.querySelector('[data-file-name]');
+    const fileButtonText = document.querySelector('.testimonial-form__file-button-text');
 
     if (!form) return;
 
@@ -184,10 +191,16 @@ class TestimonialForm {
       photoInput.addEventListener('change', e => {
         const file = e.target.files[0];
         if (file) {
+          // Обновляем имя файла
+          if (fileName) {
+            fileName.textContent = file.name;
+          }
+
           // Валидация размера (5 МБ)
           if (file.size > 5 * 1024 * 1024) {
             this.showMessage(messageEl, i18n.t('testimonialForm.errors.fileSize'), 'error');
             photoInput.value = '';
+            if (fileName) fileName.textContent = i18n.t('testimonialForm.form.fileNotSelected');
             return;
           }
 
@@ -195,6 +208,7 @@ class TestimonialForm {
           if (!file.type.match(/^image\/(jpeg|jpg|png|webp)$/)) {
             this.showMessage(messageEl, i18n.t('testimonialForm.errors.fileType'), 'error');
             photoInput.value = '';
+            if (fileName) fileName.textContent = i18n.t('testimonialForm.form.fileNotSelected');
             return;
           }
 
@@ -205,7 +219,7 @@ class TestimonialForm {
             if (photoPreview) photoPreview.style.display = 'block';
           };
           reader.readAsDataURL(file);
-        }
+        } else if (fileName) fileName.textContent = i18n.t('testimonialForm.form.fileNotSelected');
       });
     }
 
@@ -215,8 +229,19 @@ class TestimonialForm {
         if (photoInput) photoInput.value = '';
         if (photoPreview) photoPreview.style.display = 'none';
         if (previewImage) previewImage.src = '';
+        if (fileName) fileName.textContent = i18n.t('testimonialForm.form.fileNotSelected');
       });
     }
+
+    // Обновление переводов при смене языка
+    document.addEventListener('languageChanged', () => {
+      if (fileButtonText) {
+        fileButtonText.textContent = i18n.t('testimonialForm.form.fileSelect');
+      }
+      if (fileName && !photoInput?.files[0]) {
+        fileName.textContent = i18n.t('testimonialForm.form.fileNotSelected');
+      }
+    });
 
     form.addEventListener('submit', async e => {
       e.preventDefault();

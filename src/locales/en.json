@@ -153,6 +153,8 @@
       "photo": "Your photo (optional)",
       "photoPreview": "Photo preview",
       "removePhoto": "Remove photo",
+      "fileSelect": "Choose file",
+      "fileNotSelected": "No file chosen",
       "fileHint": "Formats: JPG, PNG, WebP. Maximum size: 5 MB",
       "submit": "Submit Review",
       "submitting": "Submitting...",
