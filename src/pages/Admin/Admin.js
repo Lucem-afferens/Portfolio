@@ -61,6 +61,9 @@ class Admin {
             <button class="admin__main-tab" data-main-tab="photos">
               Фото
             </button>
+            <button class="admin__main-tab" data-main-tab="contacts">
+              Контакты
+            </button>
           </nav>
           
           <div class="admin__main-content">
@@ -258,6 +261,99 @@ class Admin {
                 </div>
               </div>
             </div>
+            
+            <!-- Вкладка Контакты -->
+            <div class="admin__main-tab-content" data-main-tab-content="contacts">
+              <div class="admin__contacts">
+                <h2 class="admin__section-title">Социальные сети и контакты</h2>
+                <p class="admin__section-description">
+                  Управляйте ссылками на социальные сети и контактной информацией, которая отображается на сайте
+                </p>
+                
+                <form class="admin__contacts-form" data-contacts-form>
+                  <div class="admin__contacts-section">
+                    <h3 class="admin__contacts-subtitle">Социальные сети</h3>
+                    
+                    <div class="admin__form-group">
+                      <label for="contact-github" class="admin__label">GitHub</label>
+                      <input
+                        type="url"
+                        id="contact-github"
+                        class="admin__input"
+                        placeholder="https://github.com/username"
+                        data-contact-github
+                      />
+                    </div>
+                    
+                    <div class="admin__form-group">
+                      <label for="contact-telegram" class="admin__label">Telegram</label>
+                      <input
+                        type="url"
+                        id="contact-telegram"
+                        class="admin__input"
+                        placeholder="https://t.me/username"
+                        data-contact-telegram
+                      />
+                    </div>
+                    
+                    <div class="admin__form-group">
+                      <label for="contact-vk" class="admin__label">VKontakte</label>
+                      <input
+                        type="url"
+                        id="contact-vk"
+                        class="admin__input"
+                        placeholder="https://vk.com/username"
+                        data-contact-vk
+                      />
+                    </div>
+                    
+                    <div class="admin__form-group">
+                      <label for="contact-linkedin" class="admin__label">LinkedIn</label>
+                      <input
+                        type="url"
+                        id="contact-linkedin"
+                        class="admin__input"
+                        placeholder="https://linkedin.com/in/username"
+                        data-contact-linkedin
+                      />
+                    </div>
+                  </div>
+                  
+                  <div class="admin__contacts-section">
+                    <h3 class="admin__contacts-subtitle">Контактная информация</h3>
+                    
+                    <div class="admin__form-group">
+                      <label for="contact-email" class="admin__label">Email</label>
+                      <input
+                        type="email"
+                        id="contact-email"
+                        class="admin__input"
+                        placeholder="example@email.com"
+                        data-contact-email
+                      />
+                    </div>
+                    
+                    <div class="admin__form-group">
+                      <label for="contact-phone" class="admin__label">Телефон</label>
+                      <input
+                        type="tel"
+                        id="contact-phone"
+                        class="admin__input"
+                        placeholder="+7 (999) 123-45-67"
+                        data-contact-phone
+                      />
+                    </div>
+                  </div>
+                  
+                  <div class="admin__contacts-actions">
+                    <button type="submit" class="admin__btn admin__btn--primary">
+                      Сохранить контакты
+                    </button>
+                    <div class="admin__message" data-contacts-message role="alert"></div>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -276,6 +372,7 @@ class Admin {
     this.setupArchiveSearch();
     this.setupProjects();
     this.setupPhotos();
+    this.setupContacts();
     this.loadTestimonials('pending');
   }
 
@@ -704,6 +801,8 @@ class Admin {
           this.loadProjects();
         } else if (tabName === 'photos') {
           this.loadPhotos();
+        } else if (tabName === 'contacts') {
+          this.loadContacts();
         }
       });
     });
@@ -1372,6 +1471,119 @@ class Admin {
     } catch (error) {
       // eslint-disable-next-line no-alert
       alert('Ошибка при удалении фото');
+    }
+  }
+
+  // ========== Управление контактами ==========
+  static setupContacts() {
+    const form = document.querySelector('[data-contacts-form]');
+    if (!form) return;
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      await this.saveContacts();
+    });
+  }
+
+  static async loadContacts() {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success && result.settings) {
+        const { settings } = result;
+
+        // Заполняем поля формы
+        const githubInput = document.querySelector('[data-contact-github]');
+        const telegramInput = document.querySelector('[data-contact-telegram]');
+        const vkInput = document.querySelector('[data-contact-vk]');
+        const linkedinInput = document.querySelector('[data-contact-linkedin]');
+        const emailInput = document.querySelector('[data-contact-email]');
+        const phoneInput = document.querySelector('[data-contact-phone]');
+
+        if (githubInput) githubInput.value = settings.contact_github || '';
+        if (telegramInput) telegramInput.value = settings.contact_telegram || '';
+        if (vkInput) vkInput.value = settings.contact_vk || '';
+        if (linkedinInput) linkedinInput.value = settings.contact_linkedin || '';
+        if (emailInput) emailInput.value = settings.contact_email || '';
+        if (phoneInput) phoneInput.value = settings.contact_phone || '';
+      }
+    } catch (error) {
+      console.error('Error loading contacts:', error);
+    }
+  }
+
+  static async saveContacts() {
+    const form = document.querySelector('[data-contacts-form]');
+    const messageEl = document.querySelector('[data-contacts-message]');
+    if (!form) return;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+
+    // Получаем значения из формы
+    const contacts = {
+      contact_github: document.querySelector('[data-contact-github]')?.value.trim() || '',
+      contact_telegram: document.querySelector('[data-contact-telegram]')?.value.trim() || '',
+      contact_vk: document.querySelector('[data-contact-vk]')?.value.trim() || '',
+      contact_linkedin: document.querySelector('[data-contact-linkedin]')?.value.trim() || '',
+      contact_email: document.querySelector('[data-contact-email]')?.value.trim() || '',
+      contact_phone: document.querySelector('[data-contact-phone]')?.value.trim() || '',
+    };
+
+    // Показываем состояние загрузки
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Сохранение...';
+
+    // Очищаем предыдущие сообщения
+    if (messageEl) {
+      messageEl.textContent = '';
+      messageEl.className = 'admin__message';
+    }
+
+    try {
+      // Сохраняем каждое поле отдельно
+      const savePromises = Object.entries(contacts).map(([key, value]) =>
+        fetch('/api/admin/save-site-setting.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            setting_key: key,
+            value: value || null,
+          }),
+        })
+      );
+
+      const responses = await Promise.all(savePromises);
+      const results = await Promise.all(responses.map(r => r.json()));
+
+      // Проверяем результаты
+      const allSuccess = results.every(r => r.success);
+
+      if (allSuccess) {
+        if (messageEl) {
+          messageEl.textContent = 'Контакты успешно сохранены';
+          messageEl.className = 'admin__message admin__message--success';
+        }
+      } else {
+        const errors = results
+          .filter(r => !r.success)
+          .map(r => r.error)
+          .join(', ');
+        if (messageEl) {
+          messageEl.textContent = `Ошибка при сохранении: ${errors}`;
+          messageEl.className = 'admin__message admin__message--error';
+        }
+      }
+    } catch (error) {
+      console.error('Error saving contacts:', error);
+      if (messageEl) {
+        messageEl.textContent = 'Ошибка при сохранении контактов';
+        messageEl.className = 'admin__message admin__message--error';
+      }
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
     }
   }
 }

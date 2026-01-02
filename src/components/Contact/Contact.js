@@ -72,47 +72,10 @@ class Contact {
               </button>
               <div class="contact__form-message" data-form-message role="alert" aria-live="polite"></div>
             </form>
-            <div class="contact__social">
+            <div class="contact__social" data-contact-social>
               <h3>${i18n.t('contact.social')}</h3>
-              <div class="contact__social-links">
-                <a 
-                  href="https://github.com/Lucem-afferens" 
-                  class="contact__social-link" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                >
-                  GitHub
-                </a>
-                <a 
-                  href="https://t.me/lucem_afferens" 
-                  class="contact__social-link" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Telegram"
-                >
-                  Telegram
-                </a>
-                <a 
-                  href="https://vk.com/lucem.afferens" 
-                  class="contact__social-link" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="VKontakte"
-                >
-                  VKontakte
-                </a>
-              </div>
-              <div class="contact__info">
-                <p class="contact__info-item">
-                  <strong>${i18n.t('contact.email')}:</strong>
-                  <a href="mailto:nikwebdev.2025@gmail.com">nikwebdev.2025@gmail.com</a>
-                </p>
-                <p class="contact__info-item">
-                  <strong>${i18n.t('contact.phone')}:</strong>
-                  <a href="tel:+79226447689">+7 (922) 644-76-89</a>
-                </p>
-              </div>
+              <div class="contact__social-links" data-social-links></div>
+              <div class="contact__info" data-contact-info></div>
             </div>
           </div>
         </div>
@@ -123,6 +86,9 @@ class Contact {
   static init() {
     const form = document.querySelector('[data-contact-form]');
     const messageEl = document.querySelector('[data-form-message]');
+
+    // Загружаем контакты из API
+    this.loadContacts();
 
     // Функция для обновления текста чекбокса
     const updateCheckboxText = () => {
@@ -214,6 +180,123 @@ class Contact {
         }
       });
     }
+  }
+
+  static async loadContacts() {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success && result.settings) {
+        const { settings } = result;
+        this.renderContacts(settings);
+      } else {
+        // Если не удалось загрузить, используем значения по умолчанию
+        this.renderContacts({});
+      }
+    } catch (error) {
+      console.error('Error loading contacts:', error);
+      // В случае ошибки используем значения по умолчанию
+      this.renderContacts({});
+    }
+  }
+
+  static renderContacts(settings) {
+    const socialLinksContainer = document.querySelector('[data-social-links]');
+    const contactInfoContainer = document.querySelector('[data-contact-info]');
+
+    if (!socialLinksContainer || !contactInfoContainer) return;
+
+    // Социальные сети
+    const socialLinks = [];
+
+    if (settings.contact_github) {
+      socialLinks.push(`
+        <a 
+          href="${this.escapeHtml(settings.contact_github)}" 
+          class="contact__social-link" 
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+        >
+          GitHub
+        </a>
+      `);
+    }
+
+    if (settings.contact_telegram) {
+      socialLinks.push(`
+        <a 
+          href="${this.escapeHtml(settings.contact_telegram)}" 
+          class="contact__social-link" 
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Telegram"
+        >
+          Telegram
+        </a>
+      `);
+    }
+
+    if (settings.contact_vk) {
+      socialLinks.push(`
+        <a 
+          href="${this.escapeHtml(settings.contact_vk)}" 
+          class="contact__social-link" 
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="VKontakte"
+        >
+          VKontakte
+        </a>
+      `);
+    }
+
+    if (settings.contact_linkedin) {
+      socialLinks.push(`
+        <a 
+          href="${this.escapeHtml(settings.contact_linkedin)}" 
+          class="contact__social-link" 
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
+        >
+          LinkedIn
+        </a>
+      `);
+    }
+
+    socialLinksContainer.innerHTML = socialLinks.length > 0 ? socialLinks.join('') : '';
+
+    // Контактная информация
+    const contactInfo = [];
+
+    if (settings.contact_email) {
+      contactInfo.push(`
+        <p class="contact__info-item">
+          <strong>${i18n.t('contact.email')}:</strong>
+          <a href="mailto:${this.escapeHtml(settings.contact_email)}">${this.escapeHtml(settings.contact_email)}</a>
+        </p>
+      `);
+    }
+
+    if (settings.contact_phone) {
+      const phoneHref = settings.contact_phone.replace(/\s/g, '').replace(/[()]/g, '');
+      contactInfo.push(`
+        <p class="contact__info-item">
+          <strong>${i18n.t('contact.phone')}:</strong>
+          <a href="tel:${this.escapeHtml(phoneHref)}">${this.escapeHtml(settings.contact_phone)}</a>
+        </p>
+      `);
+    }
+
+    contactInfoContainer.innerHTML = contactInfo.length > 0 ? contactInfo.join('') : '';
+  }
+
+  static escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 }
 

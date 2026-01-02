@@ -9,7 +9,10 @@ try {
     $stmt = $pdo->prepare("
         SELECT setting_key, setting_value
         FROM site_settings
-        WHERE setting_key IN ('hero_photo', 'about_photo', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch')
+        WHERE setting_key IN (
+            'hero_photo', 'about_photo', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
+            'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone'
+        )
     ");
     
     $stmt->execute();
@@ -25,6 +28,12 @@ try {
             'logo_light' => $settings['logo_light'] ?? null,
             'logo_dark' => $settings['logo_dark'] ?? null,
             'logo_theme_switch' => isset($settings['logo_theme_switch']) ? ($settings['logo_theme_switch'] === '1' || $settings['logo_theme_switch'] === 'true') : false,
+            'contact_github' => $settings['contact_github'] ?? null,
+            'contact_telegram' => $settings['contact_telegram'] ?? null,
+            'contact_vk' => $settings['contact_vk'] ?? null,
+            'contact_linkedin' => $settings['contact_linkedin'] ?? null,
+            'contact_email' => $settings['contact_email'] ?? null,
+            'contact_phone' => $settings['contact_phone'] ?? null,
         ],
     ]);
 } catch (PDOException $e) {

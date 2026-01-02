@@ -1149,4 +1149,46 @@
       padding: 0;
     }
   }
+
+  // ========== Контакты ==========
+  &__contacts {
+    padding: map-get($spacings, 4) 0;
+  }
+
+  &__section-description {
+    color: var(--text-secondary);
+    margin-bottom: map-get($spacings, 4);
+    font-size: 0.9rem;
+  }
+
+  &__contacts-form {
+    max-width: 600px;
+  }
+
+  &__contacts-section {
+    margin-bottom: map-get($spacings, 5);
+
+    &:last-of-type {
+      margin-bottom: map-get($spacings, 4);
+    }
+  }
+
+  &__contacts-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: map-get($spacings, 3);
+    color: var(--text-primary);
+  }
+
+  &__contacts-actions {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacings, 2);
+    margin-top: map-get($spacings, 4);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
 }

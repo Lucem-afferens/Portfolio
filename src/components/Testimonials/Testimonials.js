@@ -9,8 +9,16 @@ class Testimonials {
           <h2 class="testimonials__title">${i18n.t('testimonials.title')}</h2>
           <div class="testimonials__slider" data-testimonials-slider>
             <div class="testimonials__track" data-testimonials-track></div>
-            <button class="testimonials__prev" aria-label="${i18n.t('testimonials.prev')}" data-testimonials-prev>‹</button>
-            <button class="testimonials__next" aria-label="${i18n.t('testimonials.next')}" data-testimonials-next>›</button>
+            <button class="testimonials__prev" aria-label="${i18n.t('testimonials.prev')}" data-testimonials-prev>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="testimonials__next" aria-label="${i18n.t('testimonials.next')}" data-testimonials-next>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
           </div>
           <div class="testimonials__dots" data-testimonials-dots></div>
           <div class="testimonials__action">

@@ -70,7 +70,10 @@ if ($isFormData) {
 }
 
 // Валидация ключа настройки
-$allowedKeys = ['hero_photo', 'about_photo', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch'];
+$allowedKeys = [
+    'hero_photo', 'about_photo', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
+    'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone'
+];
 if (!$settingKey || !in_array($settingKey, $allowedKeys, true)) {
     sendError('Некорректный ключ настройки', 400);
 }
@@ -85,6 +88,19 @@ if ($settingKey === 'logo_theme_switch') {
         $rawInput = file_get_contents('php://input');
         $data = json_decode($rawInput, true);
         $settingValue = isset($data['value']) && ($data['value'] === true || $data['value'] === 'true' || $data['value'] === '1') ? '1' : '0';
+    }
+} elseif (in_array($settingKey, ['contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone'], true)) {
+    // Обработка контактов (строковые значения)
+    if ($isFormData) {
+        $settingValue = isset($_POST['value']) ? trim($_POST['value']) : null;
+    } else {
+        $rawInput = file_get_contents('php://input');
+        $data = json_decode($rawInput, true);
+        $settingValue = isset($data['value']) && $data['value'] !== null ? trim($data['value']) : null;
+    }
+    // Если значение пустое, сохраняем как null
+    if ($settingValue === '') {
+        $settingValue = null;
     }
 } elseif ($delete) {
     // Удаление фото
@@ -209,8 +225,8 @@ if ($settingKey === 'logo_theme_switch') {
     
     // Сохраняем относительный путь
     $settingValue = '/uploads/site/' . $fileName;
-} elseif ($settingKey !== 'logo_theme_switch') {
-    // Если это не удаление, не файл и не logo_theme_switch - ошибка
+} elseif (!in_array($settingKey, ['logo_theme_switch', 'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone'], true)) {
+    // Если это не удаление, не файл, не logo_theme_switch и не контакт - ошибка
     sendError('Не указан файл для загрузки', 400);
 }
 
@@ -246,9 +262,15 @@ try {
     }
     
     http_response_code(200);
+    $message = 'Настройка сохранена';
+    if (in_array($settingKey, ['hero_photo', 'about_photo', 'logo', 'logo_light', 'logo_dark'], true)) {
+        $message = $settingValue ? 'Фото сохранено' : 'Фото удалено';
+    } elseif (in_array($settingKey, ['contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone'], true)) {
+        $message = $settingValue ? 'Контакт сохранен' : 'Контакт удален';
+    }
     echo json_encode([
         'success' => true,
-        'message' => $settingValue ? 'Фото сохранено' : 'Фото удалено',
+        'message' => $message,
         'value' => $settingValue,
     ]);
 } catch (PDOException $e) {
