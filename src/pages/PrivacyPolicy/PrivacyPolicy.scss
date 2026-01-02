@@ -16,23 +16,39 @@ body {
   }
 
   &__theme-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
+    position: relative;
+    width: 48px;
+    height: 24px;
+    background-color: var(--bg-muted);
     border: 1px solid var(--border-color);
-    padding: map-get($spacings, 1) map-get($spacings, 2);
-    border-radius: 4px;
+    border-radius: 12px;
     cursor: pointer;
     @include transition(background-color, border-color);
+    padding: 0;
+    display: flex;
+    align-items: center;
 
     &:hover {
       background-color: var(--bg-muted);
     }
 
-    .theme-icon {
-      font-size: 1.25rem;
-      line-height: 1;
+    &::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background-color: var(--text-primary);
+      border-radius: 50%;
+      left: 2px;
+      @include transition(transform, background-color);
+    }
+
+    [data-theme='dark'] &::after {
+      transform: translateX(24px);
+    }
+
+    [data-theme='light'] &::after {
+      transform: translateX(0);
     }
   }
 

@@ -28,9 +28,7 @@ class Header {
                 </svg>
                 <span class="header__lang-text">${i18n.getCurrentLanguage().toUpperCase()}</span>
               </button>
-              <button class="header__theme-toggle" aria-label="Toggle theme">
-                <span class="theme-icon">🌓</span>
-              </button>
+              <button class="header__theme-toggle" aria-label="Toggle theme" data-theme-toggle></button>
             </div>
           </div>
         </div>

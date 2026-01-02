@@ -31,9 +31,7 @@ class Admin {
           <header class="admin__header">
             <h1 class="admin__panel-title">Админ-панель</h1>
             <div class="admin__header-controls">
-              <button class="admin__theme-toggle" aria-label="Переключить тему" data-theme-toggle>
-                <span class="theme-icon">🌓</span>
-              </button>
+              <button class="admin__theme-toggle" aria-label="Переключить тему" data-theme-toggle></button>
               <button class="admin__logout" data-logout-btn>Выйти</button>
             </div>
           </header>

@@ -7,9 +7,7 @@ class TestimonialForm {
       <section class="testimonial-form">
         <div class="container">
           <div class="testimonial-form__theme-toggle-wrapper">
-            <button class="testimonial-form__theme-toggle" aria-label="Переключить тему" data-theme-toggle>
-              <span class="theme-icon">🌓</span>
-            </button>
+            <button class="testimonial-form__theme-toggle" aria-label="Переключить тему" data-theme-toggle></button>
           </div>
           <header class="testimonial-form__header">
             <h1 class="testimonial-form__title">Оставить отзыв</h1>

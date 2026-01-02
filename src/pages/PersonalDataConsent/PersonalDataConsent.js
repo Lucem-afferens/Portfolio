@@ -8,9 +8,7 @@ class PersonalDataConsent {
       <section class="personal-data-consent">
         <div class="container">
           <div class="personal-data-consent__theme-toggle-wrapper">
-            <button class="personal-data-consent__theme-toggle" aria-label="Переключить тему" data-theme-toggle>
-              <span class="theme-icon">🌓</span>
-            </button>
+            <button class="personal-data-consent__theme-toggle" aria-label="Переключить тему" data-theme-toggle></button>
           </div>
           <header class="personal-data-consent__header">
             <h1 class="personal-data-consent__title">${i18n.t('personalDataConsent.title')}</h1>

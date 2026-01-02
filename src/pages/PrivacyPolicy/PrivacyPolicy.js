@@ -8,9 +8,7 @@ class PrivacyPolicy {
       <section class="privacy-policy">
         <div class="container">
           <div class="privacy-policy__theme-toggle-wrapper">
-            <button class="privacy-policy__theme-toggle" aria-label="Переключить тему" data-theme-toggle>
-              <span class="theme-icon">🌓</span>
-            </button>
+            <button class="privacy-policy__theme-toggle" aria-label="Переключить тему" data-theme-toggle></button>
           </div>
           <header class="privacy-policy__header">
             <h1 class="privacy-policy__title">${i18n.t('privacyPolicy.title')}</h1>
