@@ -21,8 +21,17 @@ body {
 
   &__controls-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: flex-end;
+    align-items: center;
+    gap: map-get($spacings, 2);
+    margin-bottom: map-get($spacings, 5);
+    width: 100%;
+  }
+  &__controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     gap: map-get($spacings, 2);
     margin-bottom: map-get($spacings, 5);
@@ -43,6 +52,7 @@ body {
     padding: map-get($spacings, 2) map-get($spacings, 3);
     border-radius: 6px;
     cursor: pointer;
+    max-height: 36px;
     @include transition(background-color, border-color, transform);
 
     &:hover {
@@ -69,7 +79,7 @@ body {
   &__theme-toggle {
     position: relative;
     width: 56px;
-    height: 28px;
+    height: 34px;
     background-color: var(--bg-muted);
     border: 1px solid var(--border-color);
     border-radius: 14px;
