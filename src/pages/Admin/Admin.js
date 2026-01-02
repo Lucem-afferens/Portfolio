@@ -241,7 +241,7 @@ class Admin {
                   </div>
                   
                   <div class="admin__photo-subsection">
-                    <h4 class="admin__photo-subtitle">Мобильная версия (≤768px)</h4>
+                    <h4 class="admin__photo-subtitle">Мобильная версия (≤425px)</h4>
                     <div class="admin__photo-preview" data-hero-photo-mobile-preview>
                       <div class="admin__photo-placeholder">Нет фото (будет использоваться основное)</div>
                     </div>
@@ -285,7 +285,7 @@ class Admin {
                   </div>
                   
                   <div class="admin__photo-subsection">
-                    <h4 class="admin__photo-subtitle">Мобильная версия (≤768px)</h4>
+                    <h4 class="admin__photo-subtitle">Мобильная версия (≤425px)</h4>
                     <div class="admin__photo-preview" data-about-photo-mobile-preview>
                       <div class="admin__photo-placeholder">Нет фото (будет использоваться основное)</div>
                     </div>

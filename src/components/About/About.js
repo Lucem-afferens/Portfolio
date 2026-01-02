@@ -78,7 +78,7 @@ class About {
 
           // Функция для обновления изображения
           const updateImage = () => {
-            const isMobile = window.innerWidth <= 768;
+            const isMobile = window.innerWidth <= 425;
             const photoToUse = isMobile ? aboutPhotoMobile || aboutPhoto : aboutPhoto;
 
             if (photoToUse) {

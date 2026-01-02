@@ -36,13 +36,13 @@ class Hero {
 
           // Определяем, какое фото использовать
           const updateBackground = () => {
-            const isMobile = window.innerWidth <= 768;
+            const isMobile = window.innerWidth <= 425;
             const photoToUse = isMobile ? heroPhotoMobile || heroPhoto : heroPhoto;
 
             if (photoToUse) {
               heroSection.style.backgroundImage = `url(${photoToUse})`;
               heroSection.style.backgroundSize = 'cover';
-              heroSection.style.backgroundPosition = 'center';
+              heroSection.style.backgroundPosition = 'center top';
               heroSection.style.backgroundRepeat = 'no-repeat';
             }
           };
