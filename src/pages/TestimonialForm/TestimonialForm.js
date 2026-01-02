@@ -19,7 +19,7 @@ class TestimonialForm {
               </button>
             </div>
             <div class="testimonial-form__theme-toggle-wrapper">
-              <button class="testimonial-form__theme-toggle" aria-label="Переключить тему" data-theme-toggle>
+              <button class="testimonial-form__theme-toggle" aria-label="${i18n.t('testimonialForm.toggleTheme')}" data-theme-toggle>
               <svg class="testimonial-form__theme-icon testimonial-form__theme-icon--sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="5"></circle>
                 <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -37,16 +37,16 @@ class TestimonialForm {
             </button>
           </div>
           <header class="testimonial-form__header">
-            <h1 class="testimonial-form__title">Оставить отзыв</h1>
+            <h1 class="testimonial-form__title">${i18n.t('testimonialForm.title')}</h1>
             <p class="testimonial-form__subtitle">
-              Ваше мнение очень важно для меня. Поделитесь своим опытом работы со мной.
+              ${i18n.t('testimonialForm.subtitle')}
             </p>
           </header>
           
           <form class="testimonial-form__form" data-testimonial-form enctype="multipart/form-data">
             <div class="testimonial-form__group">
               <label for="name" class="testimonial-form__label">
-                Ваше имя <span class="required">*</span>
+                ${i18n.t('testimonialForm.form.name')} <span class="required">*</span>
               </label>
               <input
                 type="text"
@@ -62,7 +62,7 @@ class TestimonialForm {
             
             <div class="testimonial-form__group">
               <label for="position" class="testimonial-form__label">
-                Должность
+                ${i18n.t('testimonialForm.form.position')}
               </label>
               <input
                 type="text"
@@ -76,7 +76,7 @@ class TestimonialForm {
             
             <div class="testimonial-form__group">
               <label for="company" class="testimonial-form__label">
-                Компания
+                ${i18n.t('testimonialForm.form.company')}
               </label>
               <input
                 type="text"
@@ -90,7 +90,7 @@ class TestimonialForm {
             
             <div class="testimonial-form__group">
               <label for="message" class="testimonial-form__label">
-                Ваш отзыв <span class="required">*</span>
+                ${i18n.t('testimonialForm.form.message')} <span class="required">*</span>
               </label>
               <textarea
                 id="message"
@@ -100,7 +100,7 @@ class TestimonialForm {
                 required
                 minlength="10"
                 maxlength="2000"
-                placeholder="Расскажите о вашем опыте работы..."
+                placeholder="${i18n.t('testimonialForm.form.messagePlaceholder')}"
               ></textarea>
               <span class="testimonial-form__counter">
                 <span data-char-count>0</span> / 2000
@@ -109,7 +109,7 @@ class TestimonialForm {
             
             <div class="testimonial-form__group">
               <label for="photo" class="testimonial-form__label">
-                Ваша фотография (опционально)
+                ${i18n.t('testimonialForm.form.photo')}
               </label>
               <input
                 type="file"
@@ -120,18 +120,18 @@ class TestimonialForm {
                 data-photo-input
               />
               <div class="testimonial-form__photo-preview" data-photo-preview style="display: none;">
-                <img src="" alt="Превью фото" data-preview-image />
+                <img src="" alt="${i18n.t('testimonialForm.form.photoPreview')}" data-preview-image />
                 <button type="button" class="testimonial-form__remove-photo" data-remove-photo>
-                  Удалить фото
+                  ${i18n.t('testimonialForm.form.removePhoto')}
                 </button>
               </div>
               <p class="testimonial-form__file-hint">
-                Форматы: JPG, PNG, WebP. Максимальный размер: 5 МБ
+                ${i18n.t('testimonialForm.form.fileHint')}
               </p>
             </div>
             
             <button type="submit" class="testimonial-form__submit">
-              Отправить отзыв
+              ${i18n.t('testimonialForm.form.submit')}
             </button>
             
             <div class="testimonial-form__message" data-form-message role="alert" aria-live="polite"></div>
@@ -186,14 +186,14 @@ class TestimonialForm {
         if (file) {
           // Валидация размера (5 МБ)
           if (file.size > 5 * 1024 * 1024) {
-            this.showMessage(messageEl, 'Размер файла не должен превышать 5 МБ', 'error');
+            this.showMessage(messageEl, i18n.t('testimonialForm.errors.fileSize'), 'error');
             photoInput.value = '';
             return;
           }
 
           // Валидация типа
           if (!file.type.match(/^image\/(jpeg|jpg|png|webp)$/)) {
-            this.showMessage(messageEl, 'Разрешены только изображения (JPG, PNG, WebP)', 'error');
+            this.showMessage(messageEl, i18n.t('testimonialForm.errors.fileType'), 'error');
             photoInput.value = '';
             return;
           }
@@ -232,12 +232,12 @@ class TestimonialForm {
       const messageValue = textarea.value.trim();
 
       if (nameInput.value.trim().length < 2) {
-        this.showMessage(messageEl, 'Имя должно содержать минимум 2 символа', 'error');
+        this.showMessage(messageEl, i18n.t('testimonialForm.errors.nameMin'), 'error');
         return;
       }
 
       if (messageValue.length < 10) {
-        this.showMessage(messageEl, 'Отзыв должен содержать минимум 10 символов', 'error');
+        this.showMessage(messageEl, i18n.t('testimonialForm.errors.messageMin'), 'error');
         return;
       }
 
@@ -245,7 +245,7 @@ class TestimonialForm {
       const submitBtn = form.querySelector('.testimonial-form__submit');
       const originalText = submitBtn.textContent;
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Отправка...';
+      submitBtn.textContent = i18n.t('testimonialForm.form.submitting');
 
       try {
         // Используем FormData для поддержки файлов
@@ -259,7 +259,7 @@ class TestimonialForm {
         const result = await response.json();
 
         if (result.success) {
-          this.showMessage(messageEl, 'Спасибо! Ваш отзыв отправлен на модерацию.', 'success');
+          this.showMessage(messageEl, i18n.t('testimonialForm.form.success'), 'success');
           form.reset();
           if (charCountEl) charCountEl.textContent = '0';
           if (photoPreview) photoPreview.style.display = 'none';
@@ -267,16 +267,12 @@ class TestimonialForm {
         } else {
           const errorMsg = result.errors
             ? result.errors.join(', ')
-            : result.error || 'Произошла ошибка при отправке отзыва';
+            : result.error || i18n.t('testimonialForm.errors.submitError');
           this.showMessage(messageEl, errorMsg, 'error');
         }
       } catch (error) {
         console.error('Form submission error:', error);
-        this.showMessage(
-          messageEl,
-          'Произошла ошибка при отправке отзыва. Пожалуйста, попробуйте позже.',
-          'error'
-        );
+        this.showMessage(messageEl, i18n.t('testimonialForm.errors.submitError'), 'error');
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;

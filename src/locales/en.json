@@ -139,5 +139,31 @@
       "title": "5. Rights of Personal Data Subject",
       "content": "I am aware that I have the right to withdraw consent to the processing of personal data, as well as the right to access, correct, delete, and restrict the processing of my personal data."
     }
+  },
+  "testimonialForm": {
+    "title": "Leave a Review",
+    "subtitle": "Your opinion is very important to me. Share your experience working with me.",
+    "toggleTheme": "Toggle theme",
+    "form": {
+      "name": "Your name",
+      "position": "Position",
+      "company": "Company",
+      "message": "Your review",
+      "messagePlaceholder": "Tell us about your experience...",
+      "photo": "Your photo (optional)",
+      "photoPreview": "Photo preview",
+      "removePhoto": "Remove photo",
+      "fileHint": "Formats: JPG, PNG, WebP. Maximum size: 5 MB",
+      "submit": "Submit Review",
+      "submitting": "Submitting...",
+      "success": "Thank you! Your review has been submitted for moderation."
+    },
+    "errors": {
+      "nameMin": "Name must contain at least 2 characters",
+      "messageMin": "Review must contain at least 10 characters",
+      "fileSize": "File size must not exceed 5 MB",
+      "fileType": "Only images are allowed (JPG, PNG, WebP)",
+      "submitError": "An error occurred while submitting the review. Please try again later."
+    }
   }
 }
