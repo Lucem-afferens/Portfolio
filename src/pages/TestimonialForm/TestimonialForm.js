@@ -1,13 +1,25 @@
 import './TestimonialForm.scss';
 import { ThemeManager } from '../../utils/themeManager.js';
+import { i18n } from '../../utils/i18n.js';
 
 class TestimonialForm {
   static render() {
     return `
       <section class="testimonial-form">
         <div class="container">
-          <div class="testimonial-form__theme-toggle-wrapper">
-            <button class="testimonial-form__theme-toggle" aria-label="Переключить тему" data-theme-toggle>
+          <div class="testimonial-form__controls-wrapper">
+            <div class="testimonial-form__lang-toggle-wrapper">
+              <button class="testimonial-form__lang-toggle" aria-label="Toggle language" data-lang-toggle>
+                <svg class="testimonial-form__lang-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span class="testimonial-form__lang-text">${i18n.getCurrentLanguage().toUpperCase()}</span>
+              </button>
+            </div>
+            <div class="testimonial-form__theme-toggle-wrapper">
+              <button class="testimonial-form__theme-toggle" aria-label="Переключить тему" data-theme-toggle>
               <svg class="testimonial-form__theme-icon testimonial-form__theme-icon--sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="5"></circle>
                 <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -135,6 +147,17 @@ class TestimonialForm {
     if (themeToggle) {
       themeToggle.addEventListener('click', () => {
         ThemeManager.toggleTheme();
+      });
+    }
+
+    // Инициализация переключателя языка
+    const langToggle = document.querySelector('[data-lang-toggle]');
+    if (langToggle) {
+      langToggle.addEventListener('click', () => {
+        const currentLang = i18n.getCurrentLanguage();
+        i18n.setLanguage(currentLang === 'ru' ? 'en' : 'ru');
+        // Перезагрузка страницы для обновления контента
+        window.location.reload();
       });
     }
 

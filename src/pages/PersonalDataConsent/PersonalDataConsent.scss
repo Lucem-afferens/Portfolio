@@ -13,6 +13,10 @@ body {
     display: flex;
     justify-content: flex-end;
     margin-bottom: map-get($spacings, 4);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 map-get($spacings, 2);
   }
 
   &__theme-toggle {
@@ -78,6 +82,7 @@ body {
         opacity: 1;
         color: var(--text-primary);
       }
+      margin-left: 3.5px;
     }
 
     &--moon {

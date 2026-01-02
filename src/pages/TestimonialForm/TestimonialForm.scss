@@ -9,10 +9,52 @@ body {
   padding: map-get($spacings, 6) 0;
   min-height: 80vh;
 
-  &__theme-toggle-wrapper {
+  &__controls-wrapper {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    gap: map-get($spacings, 2);
     margin-bottom: map-get($spacings, 4);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 map-get($spacings, 2);
+  }
+
+  &__lang-toggle-wrapper {
+    display: flex;
+  }
+
+  &__lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: map-get($spacings, 1);
+    background: none;
+    border: 1px solid var(--border-color);
+    padding: map-get($spacings, 1) map-get($spacings, 2);
+    border-radius: 4px;
+    cursor: pointer;
+    @include transition(background-color, border-color);
+
+    &:hover {
+      background-color: var(--bg-muted);
+    }
+  }
+
+  &__lang-icon {
+    flex-shrink: 0;
+    color: var(--text-primary);
+  }
+
+  &__lang-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  &__theme-toggle-wrapper {
+    display: flex;
   }
 
   &__theme-toggle {
@@ -78,6 +120,7 @@ body {
         opacity: 1;
         color: var(--text-primary);
       }
+      margin-left: 3.5px;
     }
 
     &--moon {
