@@ -72,10 +72,11 @@
 
     // На больших экранах (>425px) - справа с отступом
     @media (min-width: 426px) {
-      right: map-get($spacings, 4);
-      bottom: map-get($spacings, 6);
+      right: 10vw;
+      bottom: 50vh;
       display: flex;
       justify-content: flex-end;
+      max-width: 30vw;
     }
   }
 
@@ -93,7 +94,22 @@
     transition:
       color 0.2s ease,
       border-color 0.2s ease,
-      background-color 0.2s ease;
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    // Улучшенная видимость для темной темы
+    [data-theme='dark'] & {
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.3);
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        border-color: var(--color-primary);
+        background-color: rgba(31, 166, 160, 0.15);
+        box-shadow: 0 4px 12px rgba(31, 166, 160, 0.3);
+      }
+    }
 
     &:hover {
       color: var(--text-primary);

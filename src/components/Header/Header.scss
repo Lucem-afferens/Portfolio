@@ -5,11 +5,15 @@
   right: 0;
   width: 100%;
   z-index: map-get($z-index, sticky);
-  background-color: transparent;
+  background: transparent;
   border-bottom: 1px solid transparent;
   backdrop-filter: blur(0px);
   -webkit-backdrop-filter: blur(0px);
-  @include transition(background-color, border-color, backdrop-filter, box-shadow, 0.3s ease);
+  transition:
+    background 0.5s ease,
+    border-color 0.5s ease,
+    backdrop-filter 0.5s ease,
+    box-shadow 0.5s ease;
 
   // Эффект жидкого стекла при скролле (в стиле Apple)
   &--scrolled {
