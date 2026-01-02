@@ -119,11 +119,22 @@ class Header {
 
     let ticking = false;
 
+    const getHomeSectionBottom = () => {
+      const homeSection = document.querySelector('#home');
+      if (!homeSection) return 0;
+      const rect = homeSection.getBoundingClientRect();
+      return rect.bottom + window.scrollY;
+    };
+
     const updateHeader = () => {
       const { scrollY } = window;
-      const scrollThreshold = 50; // Порог скролла для появления фона
+      const scrollThreshold = 200; // Увеличенный порог скролла для появления фона
+      const homeSectionBottom = getHomeSectionBottom();
 
-      if (scrollY > scrollThreshold) {
+      // Не показываем фон, если мы все еще в пределах секции #home
+      const isInHomeSection = scrollY < homeSectionBottom;
+
+      if (scrollY > scrollThreshold && !isInHomeSection) {
         header.classList.add('header--scrolled');
       } else {
         header.classList.remove('header--scrolled');
@@ -151,17 +162,33 @@ class Header {
     const homeLink = document.querySelector('.header__nav-link[href="#home"]');
     const header = document.querySelector('.header');
 
+    const getHomeSectionBottom = () => {
+      const homeSection = document.querySelector('#home');
+      if (!homeSection) return 0;
+      const rect = homeSection.getBoundingClientRect();
+      return rect.bottom + window.scrollY;
+    };
+
+    const checkAndUpdateHeader = () => {
+      const { scrollY } = window;
+      const homeSectionBottom = getHomeSectionBottom();
+      const isInHomeSection = scrollY < homeSectionBottom;
+      const scrollThreshold = 200;
+
+      // Убираем фон, если мы в секции #home или близко к верху
+      if (isInHomeSection || scrollY < scrollThreshold) {
+        header?.classList.remove('header--scrolled');
+      }
+    };
+
     const handleHomeClick = e => {
       // Проверяем, что это действительно переход на главную
       const target = e.currentTarget;
       if (target.getAttribute('href') === '#home') {
-        // Небольшая задержка для плавного перехода
+        // Задержка для ожидания завершения smooth scroll
         setTimeout(() => {
-          const { scrollY } = window;
-          if (scrollY < 50) {
-            header?.classList.remove('header--scrolled');
-          }
-        }, 100);
+          checkAndUpdateHeader();
+        }, 300);
       }
     };
 
@@ -177,11 +204,8 @@ class Header {
     window.addEventListener('hashchange', () => {
       if (window.location.hash === '#home' || window.location.hash === '') {
         setTimeout(() => {
-          const { scrollY } = window;
-          if (scrollY < 50) {
-            header?.classList.remove('header--scrolled');
-          }
-        }, 100);
+          checkAndUpdateHeader();
+        }, 300);
       }
     });
   }
