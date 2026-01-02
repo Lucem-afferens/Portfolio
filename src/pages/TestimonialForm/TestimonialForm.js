@@ -5,7 +5,7 @@ import Header from '../../components/Header/Header.js';
 class TestimonialForm {
   static render() {
     return `
-      ${Header.render()}
+      ${Header.render({ hideNav: true })}
       <section class="testimonial-form">
         <div class="container">
           <header class="testimonial-form__header">

@@ -5,7 +5,7 @@ import Header from '../../components/Header/Header.js';
 class PersonalDataConsent {
   static render() {
     return `
-      ${Header.render()}
+      ${Header.render({ hideNav: true })}
       <section class="personal-data-consent">
         <div class="container">
           <header class="personal-data-consent__header">

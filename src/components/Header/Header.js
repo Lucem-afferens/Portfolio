@@ -3,7 +3,9 @@ import { ThemeManager } from '../../utils/themeManager.js';
 import './Header.scss';
 
 class Header {
-  static render() {
+  static render(options = {}) {
+    const { hideNav = false } = options;
+
     // Получаем сохраненные настройки логотипа из localStorage
     const savedLogoSettings = this.getSavedLogoSettings();
     const hasLogo =
@@ -43,13 +45,17 @@ class Header {
               <span class="header__logo-text" style="display: ${textDisplay};">${i18n.t('header.logo')}</span>
               <img class="header__logo-image" data-logo-image src="${logoSrc}" style="display: ${logoDisplay};" alt="${i18n.t('header.logo')}" />
             </a>
-            <nav class="header__nav">
+            ${
+              hideNav
+                ? ''
+                : `<nav class="header__nav">
               <a href="#home" class="header__nav-link">${i18n.t('header.nav.home')}</a>
               <a href="#about" class="header__nav-link">${i18n.t('header.nav.about')}</a>
               <a href="#projects" class="header__nav-link">${i18n.t('header.nav.projects')}</a>
               <a href="#testimonials" class="header__nav-link">${i18n.t('header.nav.testimonials')}</a>
               <a href="#contact" class="header__nav-link">${i18n.t('header.nav.contact')}</a>
-            </nav>
+            </nav>`
+            }
             <div class="header__controls">
               <button class="header__lang-toggle" aria-label="Toggle language">
                 <svg class="header__lang-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

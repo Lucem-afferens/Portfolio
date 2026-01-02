@@ -5,7 +5,7 @@ import Header from '../../components/Header/Header.js';
 class PrivacyPolicy {
   static render() {
     return `
-      ${Header.render()}
+      ${Header.render({ hideNav: true })}
       <section class="privacy-policy">
         <div class="container">
           <header class="privacy-policy__header">
