@@ -2,182 +2,85 @@
   position: relative;
   min-height: 100vh;
   @include flex-center;
-  padding: map-get($spacings, 4) 0;
+  padding: map-get($spacings, 6) 0;
   text-align: center;
 
   &__content {
-    max-width: 900px;
+    max-width: 700px;
     width: 100%;
     margin: 0 auto;
     padding: 0 map-get($spacings, 2);
   }
 
   &__name {
-    margin-bottom: map-get($spacings, 3);
-    font-size: 1.5rem;
+    margin-bottom: map-get($spacings, 2);
+    font-size: 1.125rem;
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 1.5;
     color: var(--text-secondary);
-    animation: fadeInUp 0.8s ease 0.2s both;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 0.2s forwards;
 
     @include respond-to(md) {
-      font-size: 1.75rem;
-    }
-
-    @include respond-to(lg) {
-      font-size: 2rem;
+      font-size: 1.25rem;
     }
   }
 
   &__specialization {
-    margin: 0 0 map-get($spacings, 5);
-    font-size: 2.5rem;
-    font-weight: 800;
-    line-height: 1.2;
-    color: var(--color-primary);
-    animation: fadeInUp 0.8s ease 0.4s both;
+    margin: 0 0 map-get($spacings, 4);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-primary);
+    opacity: 0;
+    animation: fadeIn 0.6s ease 0.4s forwards;
 
     @include respond-to(md) {
-      font-size: 3.5rem;
+      font-size: 2.5rem;
     }
 
     @include respond-to(lg) {
-      font-size: 4.5rem;
+      font-size: 3rem;
     }
   }
 
   &__actions {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: map-get($spacings, 3);
-    margin-bottom: map-get($spacings, 6);
-    animation: fadeInUp 0.8s ease 0.6s both;
-
-    @include respond-to(sm) {
-      flex-direction: row;
-      justify-content: center;
-    }
+    justify-content: center;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 0.6s forwards;
   }
 
   &__cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: map-get($spacings, 2);
-    padding: map-get($spacings, 3) map-get($spacings, 5);
-    font-size: 1rem;
-    font-weight: 600;
+    display: inline-block;
+    padding: map-get($spacings, 2) map-get($spacings, 4);
+    font-size: 0.9375rem;
+    font-weight: 500;
     text-decoration: none;
-    border-radius: 50px;
+    border-radius: 4px;
     cursor: pointer;
-    @include transition(all);
-    position: relative;
-    overflow: hidden;
+    @include transition(background-color, color);
 
     &--primary {
-      background: var(--color-primary);
-      color: var(--bg-surface);
-      @include box-shadow(2);
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(31, 166, 160, 0.3);
-        text-decoration: none;
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
-    }
-
-    &--secondary {
       background: transparent;
       color: var(--text-primary);
-      border: 2px solid var(--border-color);
+      border: 1px solid var(--border-color);
 
       &:hover {
         background: var(--bg-muted);
-        border-color: var(--color-primary);
-        color: var(--color-primary);
+        border-color: var(--text-primary);
         text-decoration: none;
-        transform: translateY(-2px);
       }
     }
-
-    &-icon {
-      @include transition(transform);
-    }
-
-    &--primary:hover &-icon {
-      transform: translateX(4px);
-    }
-  }
-
-  &__scroll-indicator {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: map-get($spacings, 2);
-    animation: fadeIn 1s ease 1s both;
-  }
-
-  &__scroll-mouse {
-    width: 30px;
-    height: 50px;
-    border: 2px solid var(--text-muted);
-    border-radius: 15px;
-    position: relative;
-  }
-
-  &__scroll-wheel {
-    width: 4px;
-    height: 8px;
-    background: var(--text-muted);
-    border-radius: 2px;
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: scroll 2s infinite;
-  }
-
-  &__scroll-text {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
   }
 }
 
 // Animations
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes scroll {
-  0% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-20px);
   }
 }
