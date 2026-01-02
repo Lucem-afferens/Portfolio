@@ -18,6 +18,8 @@ export default defineConfig({
         main: resolve(__dirname, 'src/index.html'),
         'testimonial-form': resolve(__dirname, 'src/pages/testimonial-form.html'),
         admin: resolve(__dirname, 'src/pages/admin.html'),
+        'privacy-policy': resolve(__dirname, 'src/pages/privacy-policy.html'),
+        'personal-data-consent': resolve(__dirname, 'src/pages/personal-data-consent.html'),
       },
       output: {
         // Сохраняем структуру папок для страниц
@@ -27,6 +29,12 @@ export default defineConfig({
           }
           if (chunk.name === 'admin') {
             return 'pages/admin.js';
+          }
+          if (chunk.name === 'privacy-policy') {
+            return 'pages/privacy-policy.js';
+          }
+          if (chunk.name === 'personal-data-consent') {
+            return 'pages/personal-data-consent.js';
           }
           return 'assets/[name]-[hash].js';
         },
@@ -113,7 +121,12 @@ export default defineConfig({
             ];
 
             // Check for page-specific patterns
-            const pageIndicators = ['.testimonial-form', '.admin'];
+            const pageIndicators = [
+              '.testimonial-form',
+              '.admin',
+              '.privacy-policy',
+              '.personal-data-consent',
+            ];
 
             const hasComponentIndicators = componentIndicators.some(indicator =>
               fileContent.includes(indicator)
