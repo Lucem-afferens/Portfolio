@@ -110,16 +110,18 @@
 
   &__theme-toggle {
     position: relative;
-    width: 48px;
-    height: 24px;
+    width: 56px;
+    height: 28px;
     background-color: var(--bg-muted);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 14px;
     cursor: pointer;
     @include transition(background-color, border-color);
     padding: 0;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
 
     &:hover {
       background-color: var(--bg-muted);
@@ -128,22 +130,52 @@
     &::after {
       content: '';
       position: absolute;
-      width: 18px;
-      height: 18px;
-      background-color: var(--text-primary);
+      width: 20px;
+      height: 20px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
       border-radius: 50%;
-      left: 2px;
+      left: 4px;
       @include transition(transform, background-color);
+      z-index: 1;
     }
 
     // Dark theme - переключатель справа
     [data-theme='dark'] &::after {
-      transform: translateX(24px);
+      transform: translateX(28px);
     }
 
     // Light theme - переключатель слева
     [data-theme='light'] &::after {
       transform: translateX(0);
+    }
+  }
+
+  &__theme-icon {
+    position: relative;
+    z-index: 2;
+    color: var(--text-secondary);
+    @include transition(color, opacity);
+    flex-shrink: 0;
+
+    &--sun {
+      [data-theme='dark'] & {
+        opacity: 0.3;
+      }
+      [data-theme='light'] & {
+        opacity: 1;
+        color: var(--text-primary);
+      }
+    }
+
+    &--moon {
+      [data-theme='light'] & {
+        opacity: 0.3;
+      }
+      [data-theme='dark'] & {
+        opacity: 1;
+        color: var(--text-primary);
+      }
     }
   }
 }
