@@ -55,6 +55,18 @@ class Contact {
                   rows="5"
                 ></textarea>
               </div>
+              <div class="contact__form-group">
+                <label class="contact__checkbox-label">
+                  <input 
+                    type="checkbox" 
+                    name="consent" 
+                    id="consent"
+                    class="contact__checkbox" 
+                    required
+                  />
+                  <span class="contact__checkbox-text">${i18n.t('contact.form.consent')}</span>
+                </label>
+              </div>
               <button type="submit" class="contact__submit">
                 ${i18n.t('contact.form.submit')}
               </button>
@@ -119,6 +131,19 @@ class Contact {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
 
+        // Получаем элементы формы
+        const submitBtn = form.querySelector('.contact__submit');
+        const originalText = submitBtn.textContent;
+
+        // Проверяем согласие на обработку персональных данных
+        if (!data.consent || data.consent !== 'on') {
+          if (messageEl) {
+            messageEl.textContent = i18n.t('contact.form.consentRequired');
+            messageEl.className = 'contact__form-message contact__form-message--error';
+          }
+          return;
+        }
+
         // Очищаем пустые поля
         if (!data.message || !data.message.trim()) {
           delete data.message;
@@ -126,10 +151,9 @@ class Contact {
         if (!data.telegram || !data.telegram.trim()) {
           delete data.telegram;
         }
+        // consent остается в данных для проверки на сервере
 
         // Показываем состояние загрузки
-        const submitBtn = form.querySelector('.contact__submit');
-        const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = 'Отправка...';
 

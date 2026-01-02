@@ -76,6 +76,8 @@
       "telegram": "Telegram",
       "message": "Message",
       "optional": "optional",
+      "consent": "I agree to the processing of personal data and confirm that I can be contacted via the specified communication channels",
+      "consentRequired": "You must agree to the processing of personal data",
       "submit": "Send",
       "success": "Message sent! I'll get back to you soon.",
       "error": "An error occurred. Please try again later or contact me directly."

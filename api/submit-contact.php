@@ -56,6 +56,11 @@ if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
     $errors[] = 'Некорректный email адрес';
 }
 
+// Проверка согласия на обработку персональных данных
+if (empty($data['consent']) || $data['consent'] !== 'on') {
+    $errors[] = 'Необходимо дать согласие на обработку персональных данных';
+}
+
 // Сообщение необязательно, но если указано - проверяем длину
 $message = isset($data['message']) ? trim($data['message']) : '';
 if (!empty($message) && strlen($message) > 2000) {
