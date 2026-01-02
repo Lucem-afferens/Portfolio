@@ -121,7 +121,7 @@ class Header {
 
     const updateHeader = () => {
       const { scrollY } = window;
-      const scrollThreshold = 50; // Порог скролла для появления фона (50px от начала страницы)
+      const scrollThreshold = 70; // Порог скролла для появления фона (70px от начала страницы)
 
       if (scrollY > scrollThreshold) {
         header.classList.add('header--scrolled');
@@ -153,7 +153,7 @@ class Header {
 
     const checkAndUpdateHeader = () => {
       const { scrollY } = window;
-      const scrollThreshold = 50;
+      const scrollThreshold = 70;
 
       // Убираем фон, если мы близко к верху страницы
       if (scrollY <= scrollThreshold) {
