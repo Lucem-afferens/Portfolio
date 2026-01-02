@@ -9,12 +9,24 @@ body {
   padding: map-get($spacings, 6) 0;
   min-height: 80vh;
 
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 map-get($spacings, 4);
+
+    @include respond-to(md) {
+      padding: 0 map-get($spacings, 5);
+    }
+  }
+
   &__controls-wrapper {
     display: flex;
+    flex-direction: row;
     justify-content: flex-end;
     align-items: center;
     gap: map-get($spacings, 2);
-    margin-bottom: map-get($spacings, 4);
+    margin-bottom: map-get($spacings, 5);
+    width: 100%;
   }
 
   &__lang-toggle-wrapper {
@@ -26,15 +38,20 @@ body {
     align-items: center;
     justify-content: center;
     gap: map-get($spacings, 1);
-    background: none;
+    background: var(--bg-surface);
     border: 1px solid var(--border-color);
-    padding: map-get($spacings, 1) map-get($spacings, 2);
-    border-radius: 4px;
+    padding: map-get($spacings, 2) map-get($spacings, 3);
+    border-radius: 6px;
     cursor: pointer;
-    @include transition(background-color, border-color);
+    @include transition(background-color, border-color, transform);
 
     &:hover {
       background-color: var(--bg-muted);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 
@@ -144,6 +161,10 @@ body {
     @include respond-to(md) {
       font-size: 2rem;
     }
+
+    @include respond-to(sm) {
+      font-size: 1.75rem;
+    }
   }
 
   &__subtitle {
@@ -151,22 +172,34 @@ body {
     color: var(--text-secondary);
     max-width: 600px;
     margin: 0 auto;
+    line-height: 1.6;
+
+    @include respond-to(sm) {
+      font-size: 1rem;
+    }
   }
 
   &__form {
-    max-width: 600px;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
   }
 
   &__group {
     margin-bottom: map-get($spacings, 4);
+    display: flex;
+    flex-direction: column;
   }
 
   &__label {
     display: block;
-    margin-bottom: map-get($spacings, 1);
+    margin-bottom: map-get($spacings, 2);
     font-weight: 500;
+    font-size: 1rem;
     color: var(--text-primary);
+    line-height: 1.5;
 
     .required {
       color: #dc3545;
@@ -176,14 +209,15 @@ body {
   &__input,
   &__textarea {
     width: 100%;
-    padding: map-get($spacings, 2) map-get($spacings, 3);
+    padding: map-get($spacings, 3) map-get($spacings, 4);
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: 6px;
     font-family: $font-family-base;
-    font-size: $font-size-base;
+    font-size: 1rem;
     color: var(--text-primary);
-    @include transition(border-color);
+    line-height: 1.5;
+    @include transition(border-color, box-shadow);
 
     &:focus {
       outline: none;
@@ -194,11 +228,17 @@ body {
     &:invalid {
       border-color: #dc3545;
     }
+
+    &::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
   }
 
   &__textarea {
     resize: vertical;
-    min-height: 120px;
+    min-height: 140px;
+    line-height: 1.6;
   }
 
   &__counter {
@@ -217,28 +257,43 @@ body {
     padding: map-get($spacings, 3) map-get($spacings, 5);
     font-size: 1.125rem;
     font-weight: 600;
+    margin-top: map-get($spacings, 2);
+    border-radius: 6px;
+    @include transition(background-color, box-shadow, transform);
 
-    &:hover {
+    &:hover:not(:disabled) {
+      background-color: rgba(31, 166, 160, 0.9);
       box-shadow: 0 4px 12px rgba(31, 166, 160, 0.4);
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
     }
 
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+      transform: none;
+    }
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 2) map-get($spacings, 4);
+      font-size: 1rem;
     }
   }
 
   &__file-input {
     width: 100%;
-    padding: map-get($spacings, 2);
+    padding: map-get($spacings, 3) map-get($spacings, 4);
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: 6px;
     font-family: $font-family-base;
-    font-size: $font-size-base;
+    font-size: 1rem;
     color: var(--text-primary);
     cursor: pointer;
-    @include transition(border-color);
+    @include transition(border-color, box-shadow);
 
     &:focus {
       outline: none;
@@ -247,13 +302,14 @@ body {
     }
 
     &::file-selector-button {
-      padding: map-get($spacings, 1) map-get($spacings, 3);
-      margin-right: map-get($spacings, 2);
+      padding: map-get($spacings, 2) map-get($spacings, 4);
+      margin-right: map-get($spacings, 3);
       background-color: var(--color-primary);
       color: var(--bg-surface);
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-weight: 500;
       @include transition(background-color);
 
       &:hover {
@@ -270,7 +326,7 @@ body {
 
   &__photo-preview {
     margin-top: map-get($spacings, 3);
-    padding: map-get($spacings, 3);
+    padding: map-get($spacings, 4);
     background-color: var(--bg-muted);
     border: 1px solid var(--border-color);
     border-radius: 8px;
@@ -284,7 +340,7 @@ body {
     height: auto;
     border-radius: 8px;
     object-fit: cover;
-    margin-bottom: map-get($spacings, 2);
+    margin-bottom: map-get($spacings, 3);
   }
 
   &__remove-photo {
@@ -292,8 +348,9 @@ body {
     background-color: transparent;
     border: 1px solid #dc3545;
     color: #dc3545;
-    padding: map-get($spacings, 1) map-get($spacings, 3);
+    padding: map-get($spacings, 2) map-get($spacings, 4);
     font-size: 0.875rem;
+    border-radius: 6px;
 
     &:hover {
       background-color: rgba(220, 53, 69, 0.15);
@@ -301,10 +358,12 @@ body {
   }
 
   &__message {
-    margin-top: map-get($spacings, 3);
-    padding: map-get($spacings, 3);
-    border-radius: 4px;
+    margin-top: map-get($spacings, 4);
+    padding: map-get($spacings, 3) map-get($spacings, 4);
+    border-radius: 6px;
     display: none;
+    font-size: 0.9375rem;
+    line-height: 1.6;
 
     &--success {
       display: block;
@@ -318,6 +377,35 @@ body {
       background-color: rgba(220, 53, 69, 0.15);
       color: #dc3545;
       border: 1px solid #dc3545;
+    }
+  }
+
+  // Адаптивные стили
+  @include respond-to(sm) {
+    padding: map-get($spacings, 4) 0;
+
+    &__controls-wrapper {
+      margin-bottom: map-get($spacings, 4);
+      gap: map-get($spacings, 1);
+    }
+
+    &__header {
+      margin-bottom: map-get($spacings, 4);
+    }
+
+    &__group {
+      margin-bottom: map-get($spacings, 3);
+    }
+
+    &__input,
+    &__textarea,
+    &__file-input {
+      padding: map-get($spacings, 2) map-get($spacings, 3);
+      font-size: 0.9375rem;
+    }
+
+    &__textarea {
+      min-height: 120px;
     }
   }
 }
