@@ -1,17 +1,10 @@
 class ThemeManager {
   static init() {
     const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+    // По умолчанию используем темную тему
+    const theme = savedTheme || 'dark';
 
     this.setTheme(theme);
-
-    // Слушаем изменения системной темы
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      if (!localStorage.getItem('theme')) {
-        this.setTheme(e.matches ? 'dark' : 'light');
-      }
-    });
   }
 
   static setTheme(theme) {
