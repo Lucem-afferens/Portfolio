@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   width: 100%;
-  z-index: map-get($z-index, sticky);
+  z-index: 1000; // High z-index to ensure header is always on top
   background: transparent;
   border-bottom: 1px solid transparent;
   backdrop-filter: blur(0px);

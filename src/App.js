@@ -41,8 +41,8 @@ class App {
 
   render() {
     this.container.innerHTML = `
+      ${Header.render()}
       <main>
-        ${Header.render()}
         ${Hero.render()}
         ${About.render()}
         ${Projects.render()}
@@ -69,33 +69,24 @@ class App {
       return;
     }
 
-    // Wait for all critical resources to load
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        this.startFadeIn();
-      });
-    } else {
-      // Use requestAnimationFrame for smooth animation
+    // Use requestAnimationFrame for smooth animation
+    // Double requestAnimationFrame ensures DOM is fully ready
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        // Small delay to ensure all content is rendered
+        // Small delay to ensure all content is rendered and images start loading
         setTimeout(() => {
           this.startFadeIn();
-        }, 100);
+        }, 150);
       });
-    }
+    });
   }
 
   startFadeIn() {
     const { body } = document;
-    if (body.classList.contains('page-loading')) {
-      // Use double requestAnimationFrame for smoother animation start
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          body.classList.remove('page-loading');
-          body.classList.add('page-loaded');
-          this.isInitialLoad = false;
-        });
-      });
+    if (body && body.classList.contains('page-loading')) {
+      body.classList.remove('page-loading');
+      body.classList.add('page-loaded');
+      this.isInitialLoad = false;
     }
   }
 
