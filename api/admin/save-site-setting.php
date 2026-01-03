@@ -71,7 +71,7 @@ if ($isFormData) {
 
 // Валидация ключа настройки
 $allowedKeys = [
-    'hero_photo', 'hero_photo_mobile', 'about_photo', 'about_photo_mobile', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
+    'hero_photo', 'hero_photo_mobile', 'hero_photo_tablet', 'about_photo', 'about_photo_mobile', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
     'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone',
     'contact_socials', 'about_text_ru', 'about_text_en'
 ];

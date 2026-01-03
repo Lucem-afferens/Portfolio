@@ -10,7 +10,7 @@ try {
         SELECT setting_key, setting_value
         FROM site_settings
         WHERE setting_key IN (
-            'hero_photo', 'hero_photo_mobile', 'about_photo', 'about_photo_mobile', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
+            'hero_photo', 'hero_photo_mobile', 'hero_photo_tablet', 'about_photo', 'about_photo_mobile', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
             'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone',
             'contact_socials', 'about_text_ru', 'about_text_en'
         )
@@ -25,6 +25,7 @@ try {
         'settings' => [
             'hero_photo' => $settings['hero_photo'] ?? null,
             'hero_photo_mobile' => $settings['hero_photo_mobile'] ?? null,
+            'hero_photo_tablet' => $settings['hero_photo_tablet'] ?? null,
             'about_photo' => $settings['about_photo'] ?? null,
             'about_photo_mobile' => $settings['about_photo_mobile'] ?? null,
             'logo' => $settings['logo'] ?? null,

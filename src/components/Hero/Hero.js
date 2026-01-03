@@ -30,12 +30,27 @@ class Hero {
       if (result.success && result.settings) {
         const heroSection = document.querySelector('[data-hero-section]');
         if (heroSection) {
-          const { hero_photo: heroPhoto, hero_photo_mobile: heroPhotoMobile } = result.settings;
+          const {
+            hero_photo: heroPhoto,
+            hero_photo_mobile: heroPhotoMobile,
+            hero_photo_tablet: heroPhotoTablet,
+          } = result.settings;
 
           // Определяем, какое фото использовать
           const updateBackground = () => {
-            const isMobile = window.innerWidth <= 425;
-            const photoToUse = isMobile ? heroPhotoMobile || heroPhoto : heroPhoto;
+            const width = window.innerWidth;
+            let photoToUse;
+
+            if (width <= 425) {
+              // Мобильные устройства (≤425px)
+              photoToUse = heroPhotoMobile || heroPhoto;
+            } else if (width <= 768) {
+              // Планшеты (426-768px)
+              photoToUse = heroPhotoTablet || heroPhoto;
+            } else {
+              // Десктоп (>768px)
+              photoToUse = heroPhoto;
+            }
 
             if (photoToUse) {
               heroSection.style.backgroundImage = `url(${photoToUse})`;

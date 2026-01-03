@@ -261,6 +261,28 @@ class Admin {
                       </button>
                     </div>
                   </div>
+                  
+                  <div class="admin__photo-subsection">
+                    <h4 class="admin__photo-subtitle">Планшетная версия (426-768px)</h4>
+                    <div class="admin__photo-preview" data-hero-photo-tablet-preview>
+                      <div class="admin__photo-placeholder">Нет фото (будет использоваться основное)</div>
+                    </div>
+                    <div class="admin__photo-actions">
+                      <input
+                        type="file"
+                        id="hero-photo-tablet-input"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        data-hero-photo-tablet-input
+                        style="display: none;"
+                      />
+                      <label for="hero-photo-tablet-input" class="admin__btn admin__btn--primary">
+                        Загрузить планшетное фото
+                      </label>
+                      <button class="admin__btn admin__btn--delete" data-delete-hero-photo-tablet style="display: none;">
+                        Удалить фото
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 
                 <div class="admin__photo-section">
@@ -1303,6 +1325,7 @@ class Admin {
     const logoDarkInput = document.querySelector('[data-logo-dark-input]');
     const heroInput = document.querySelector('[data-hero-photo-input]');
     const heroMobileInput = document.querySelector('[data-hero-photo-mobile-input]');
+    const heroTabletInput = document.querySelector('[data-hero-photo-tablet-input]');
     const aboutInput = document.querySelector('[data-about-photo-input]');
     const aboutMobileInput = document.querySelector('[data-about-photo-mobile-input]');
     const deleteLogoBtn = document.querySelector('[data-delete-logo]');
@@ -1310,6 +1333,7 @@ class Admin {
     const deleteLogoDarkBtn = document.querySelector('[data-delete-logo-dark]');
     const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
     const deleteHeroMobileBtn = document.querySelector('[data-delete-hero-photo-mobile]');
+    const deleteHeroTabletBtn = document.querySelector('[data-delete-hero-photo-tablet]');
     const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
     const deleteAboutMobileBtn = document.querySelector('[data-delete-about-photo-mobile]');
     const logoThemeSwitch = document.querySelector('[data-logo-theme-switch]');
@@ -1357,6 +1381,12 @@ class Admin {
       }
     });
 
+    heroTabletInput?.addEventListener('change', e => {
+      if (e.target.files[0]) {
+        this.uploadPhoto('hero_photo_tablet', e.target.files[0]);
+      }
+    });
+
     aboutInput?.addEventListener('change', e => {
       if (e.target.files[0]) {
         this.uploadPhoto('about_photo', e.target.files[0]);
@@ -1387,6 +1417,10 @@ class Admin {
 
     deleteHeroMobileBtn?.addEventListener('click', () => {
       this.deletePhoto('hero_photo_mobile');
+    });
+
+    deleteHeroTabletBtn?.addEventListener('click', () => {
+      this.deletePhoto('hero_photo_tablet');
     });
 
     deleteAboutBtn?.addEventListener('click', () => {
@@ -1440,6 +1474,7 @@ class Admin {
     const logoDarkPreview = document.querySelector('[data-logo-dark-preview]');
     const heroPreview = document.querySelector('[data-hero-photo-preview]');
     const heroMobilePreview = document.querySelector('[data-hero-photo-mobile-preview]');
+    const heroTabletPreview = document.querySelector('[data-hero-photo-tablet-preview]');
     const aboutPreview = document.querySelector('[data-about-photo-preview]');
     const aboutMobilePreview = document.querySelector('[data-about-photo-mobile-preview]');
     const deleteLogoBtn = document.querySelector('[data-delete-logo]');
@@ -1447,6 +1482,7 @@ class Admin {
     const deleteLogoDarkBtn = document.querySelector('[data-delete-logo-dark]');
     const deleteHeroBtn = document.querySelector('[data-delete-hero-photo]');
     const deleteHeroMobileBtn = document.querySelector('[data-delete-hero-photo-mobile]');
+    const deleteHeroTabletBtn = document.querySelector('[data-delete-hero-photo-tablet]');
     const deleteAboutBtn = document.querySelector('[data-delete-about-photo]');
     const deleteAboutMobileBtn = document.querySelector('[data-delete-about-photo-mobile]');
     const logoThemeSwitch = document.querySelector('[data-logo-theme-switch]');
@@ -1540,6 +1576,20 @@ class Admin {
           '<div class="admin__photo-placeholder">Нет фото (будет использоваться основное)</div>';
       }
       if (deleteHeroMobileBtn) deleteHeroMobileBtn.style.display = 'none';
+    }
+
+    // Hero photo tablet
+    if (settings.hero_photo_tablet) {
+      if (heroTabletPreview) {
+        heroTabletPreview.innerHTML = `<img src="${this.escapeHtml(settings.hero_photo_tablet)}" alt="Hero photo tablet" />`;
+      }
+      if (deleteHeroTabletBtn) deleteHeroTabletBtn.style.display = 'inline-block';
+    } else {
+      if (heroTabletPreview) {
+        heroTabletPreview.innerHTML =
+          '<div class="admin__photo-placeholder">Нет фото (будет использоваться основное)</div>';
+      }
+      if (deleteHeroTabletBtn) deleteHeroTabletBtn.style.display = 'none';
     }
 
     // About photo mobile
