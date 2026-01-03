@@ -1747,7 +1747,10 @@ class Admin {
         // Загружаем список соцсетей
         if (settings.contact_socials) {
           try {
-            this.socials = JSON.parse(settings.contact_socials);
+            // contact_socials уже декодирован из JSON в get-site-settings.php
+            this.socials = Array.isArray(settings.contact_socials)
+              ? settings.contact_socials
+              : JSON.parse(settings.contact_socials);
           } catch (e) {
             console.error('Error parsing socials JSON:', e);
             this.socials = [];
