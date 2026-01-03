@@ -212,7 +212,10 @@ class Contact {
 
     if (settings.contact_socials) {
       try {
-        const socials = JSON.parse(settings.contact_socials);
+        // contact_socials уже декодирован из JSON в get-site-settings.php
+        const socials = Array.isArray(settings.contact_socials)
+          ? settings.contact_socials
+          : JSON.parse(settings.contact_socials);
         if (Array.isArray(socials)) {
           socials.forEach(social => {
             if (social.name && social.url) {
