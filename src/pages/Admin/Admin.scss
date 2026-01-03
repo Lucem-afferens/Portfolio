@@ -1397,7 +1397,28 @@
 
     @include respond-to(sm) {
       flex-direction: row;
-      align-items: flex-end;
+      align-items: flex-start;
+      gap: map-get($spacings, 3);
+    }
+
+    .admin__form-group {
+      flex: 1;
+      margin-bottom: 0;
+      width: 100%;
+
+      @include respond-to(sm) {
+        width: auto;
+      }
+    }
+
+    .admin__btn {
+      width: 100%;
+      flex-shrink: 0;
+
+      @include respond-to(sm) {
+        width: auto;
+        min-width: 150px;
+      }
     }
   }
 }
