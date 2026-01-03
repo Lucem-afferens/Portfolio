@@ -3,21 +3,6 @@ import './About.scss';
 
 class About {
   static render() {
-    const skills = [
-      'HTML5',
-      'CSS3 / SCSS',
-      'JavaScript',
-      'TypeScript',
-      'React',
-      'Vite',
-      'PHP',
-      'WordPress',
-      'Git',
-      'Figma',
-      'Docker',
-      'CI/CD',
-    ];
-
     return `
       <section id="about" class="about">
         <div class="container">
@@ -35,8 +20,8 @@ class About {
             <div class="about__text">
               <p data-about-description>${i18n.t('about.description')}</p>
               <h3>${i18n.t('about.skills')}</h3>
-              <ul class="about__skills">
-                ${skills.map(skill => `<li>${skill}</li>`).join('')}
+              <ul class="about__skills" data-about-skills>
+                <!-- Навыки будут загружены динамически -->
               </ul>
             </div>
           </div>
@@ -48,6 +33,7 @@ class About {
   static init() {
     this.loadAboutPhoto();
     this.loadAboutText();
+    this.loadAboutSkills();
 
     const images = document.querySelectorAll('.about img[loading="lazy"]');
     images.forEach(img => {
@@ -124,6 +110,61 @@ class About {
       const descriptionEl = document.querySelector('[data-about-description]');
       if (descriptionEl) {
         descriptionEl.textContent = i18n.t('about.description');
+      }
+    }
+  }
+
+  static async loadAboutSkills() {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success && result.settings) {
+        const skillsEl = document.querySelector('[data-about-skills]');
+        if (skillsEl) {
+          const skills = result.settings.about_skills || [];
+
+          // Если навыков нет, используем дефолтные
+          const defaultSkills = [
+            'HTML5',
+            'CSS3 / SCSS',
+            'JavaScript',
+            'TypeScript',
+            'React',
+            'Vite',
+            'PHP',
+            'WordPress',
+            'Git',
+            'Figma',
+            'Docker',
+            'CI/CD',
+          ];
+
+          const skillsToDisplay =
+            Array.isArray(skills) && skills.length > 0 ? skills : defaultSkills;
+          skillsEl.innerHTML = skillsToDisplay.map(skill => `<li>${skill}</li>`).join('');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading about skills:', error);
+      // В случае ошибки используем дефолтные навыки
+      const skillsEl = document.querySelector('[data-about-skills]');
+      if (skillsEl) {
+        const defaultSkills = [
+          'HTML5',
+          'CSS3 / SCSS',
+          'JavaScript',
+          'TypeScript',
+          'React',
+          'Vite',
+          'PHP',
+          'WordPress',
+          'Git',
+          'Figma',
+          'Docker',
+          'CI/CD',
+        ];
+        skillsEl.innerHTML = defaultSkills.map(skill => `<li>${skill}</li>`).join('');
       }
     }
   }

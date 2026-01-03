@@ -450,6 +450,36 @@ class Admin {
                     </div>
                   </div>
                   
+                  <div class="admin__content-section">
+                    <h3 class="admin__content-subtitle">Навыки</h3>
+                    <p class="admin__section-description" style="margin-bottom: map-get($spacings, 3);">
+                      Управляйте списком навыков, отображаемых в секции "О себе"
+                    </p>
+                    
+                    <div class="admin__skills-list" data-skills-list>
+                      <!-- Список навыков будет добавлен динамически -->
+                    </div>
+                    
+                    <div class="admin__add-skill">
+                      <h4 class="admin__add-skill-title">Добавить навык</h4>
+                      <div class="admin__add-skill-form">
+                        <div class="admin__form-group">
+                          <input
+                            type="text"
+                            id="new-skill-name"
+                            class="admin__input"
+                            placeholder="Например: React, TypeScript, Node.js"
+                            data-new-skill-name
+                            required
+                          />
+                        </div>
+                        <button type="button" class="admin__btn admin__btn--primary" data-add-skill-btn>
+                          Добавить навык
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
                   <div class="admin__content-actions">
                     <button type="submit" class="admin__btn admin__btn--primary">
                       Сохранить контент
@@ -2003,6 +2033,26 @@ class Admin {
       e.preventDefault();
       await this.saveContent();
     });
+
+    // Обработка добавления навыка
+    const addSkillBtn = document.querySelector('[data-add-skill-btn]');
+    const newSkillInput = document.querySelector('[data-new-skill-name]');
+
+    addSkillBtn?.addEventListener('click', () => {
+      const skillName = newSkillInput?.value.trim();
+      if (skillName) {
+        this.addSkill(skillName);
+        if (newSkillInput) newSkillInput.value = '';
+      }
+    });
+
+    // Добавление по Enter
+    newSkillInput?.addEventListener('keypress', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addSkillBtn?.click();
+      }
+    });
   }
 
   static async loadContent() {
@@ -2022,9 +2072,151 @@ class Admin {
         if (aboutTextEnInput) {
           aboutTextEnInput.value = settings.about_text_en || '';
         }
+
+        // Загружаем навыки
+        this.renderSkills(settings.about_skills);
       }
     } catch (error) {
       console.error('Error loading content:', error);
+    }
+  }
+
+  static renderSkills(skills) {
+    const skillsList = document.querySelector('[data-skills-list]');
+    if (!skillsList) return;
+
+    // Если навыков нет, инициализируем текущие
+    let skillsToRender = skills;
+    if (!skills || !Array.isArray(skills) || skills.length === 0) {
+      const defaultSkills = [
+        'HTML5',
+        'CSS3 / SCSS',
+        'JavaScript',
+        'TypeScript',
+        'React',
+        'Vite',
+        'PHP',
+        'WordPress',
+        'Git',
+        'Figma',
+        'Docker',
+        'CI/CD',
+      ];
+      this.saveSkills(defaultSkills);
+      skillsToRender = defaultSkills;
+    }
+
+    skillsList.innerHTML = skillsToRender
+      .map(
+        (skill, index) => `
+      <div class="admin__skill-item" data-skill-index="${index}">
+        <span class="admin__skill-name">${this.escapeHtml(skill)}</span>
+        <button type="button" class="admin__btn admin__btn--delete admin__btn--small" data-delete-skill="${index}">
+          Удалить
+        </button>
+      </div>
+    `
+      )
+      .join('');
+
+    // Добавляем обработчики удаления
+    skillsList.querySelectorAll('[data-delete-skill]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.getAttribute('data-delete-skill'), 10);
+        this.deleteSkill(index);
+      });
+    });
+  }
+
+  static async addSkill(skillName) {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success && result.settings) {
+        let currentSkills = result.settings.about_skills || [];
+        if (!Array.isArray(currentSkills)) {
+          // Если навыков нет, инициализируем текущие
+          const defaultSkills = [
+            'HTML5',
+            'CSS3 / SCSS',
+            'JavaScript',
+            'TypeScript',
+            'React',
+            'Vite',
+            'PHP',
+            'WordPress',
+            'Git',
+            'Figma',
+            'Docker',
+            'CI/CD',
+          ];
+          currentSkills = defaultSkills;
+        }
+
+        // Проверяем, нет ли уже такого навыка
+        if (currentSkills.includes(skillName)) {
+          // eslint-disable-next-line no-alert
+          alert('Такой навык уже существует');
+          return;
+        }
+
+        currentSkills.push(skillName);
+        await this.saveSkills(currentSkills);
+        this.renderSkills(currentSkills);
+      }
+    } catch (error) {
+      console.error('Error adding skill:', error);
+      // eslint-disable-next-line no-alert
+      alert('Ошибка при добавлении навыка');
+    }
+  }
+
+  static async deleteSkill(index) {
+    try {
+      const response = await fetch('/api/get-site-settings.php');
+      const result = await response.json();
+
+      if (result.success && result.settings) {
+        const currentSkills = result.settings.about_skills || [];
+        if (!Array.isArray(currentSkills) || index < 0 || index >= currentSkills.length) {
+          return;
+        }
+
+        // eslint-disable-next-line no-alert
+        if (!window.confirm(`Удалить навык "${currentSkills[index]}"?`)) {
+          return;
+        }
+
+        currentSkills.splice(index, 1);
+        await this.saveSkills(currentSkills);
+        this.renderSkills(currentSkills);
+      }
+    } catch (error) {
+      console.error('Error deleting skill:', error);
+      // eslint-disable-next-line no-alert
+      alert('Ошибка при удалении навыка');
+    }
+  }
+
+  static async saveSkills(skills) {
+    try {
+      const response = await fetch('/api/admin/save-site-setting.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          setting_key: 'about_skills',
+          value: JSON.stringify(skills),
+        }),
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.error || 'Ошибка сохранения');
+      }
+    } catch (error) {
+      console.error('Error saving skills:', error);
+      throw error;
     }
   }
 

@@ -73,7 +73,7 @@ if ($isFormData) {
 $allowedKeys = [
     'hero_photo', 'hero_photo_mobile', 'hero_photo_tablet', 'about_photo', 'about_photo_mobile', 'logo', 'logo_light', 'logo_dark', 'logo_theme_switch',
     'contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone',
-    'contact_socials', 'about_text_ru', 'about_text_en'
+    'contact_socials', 'about_text_ru', 'about_text_en', 'about_skills'
 ];
 if (!$settingKey || !in_array($settingKey, $allowedKeys, true)) {
     sendError('Некорректный ключ настройки', 400);
@@ -90,7 +90,7 @@ if ($settingKey === 'logo_theme_switch') {
         $data = json_decode($rawInput, true);
         $settingValue = isset($data['value']) && ($data['value'] === true || $data['value'] === 'true' || $data['value'] === '1') ? '1' : '0';
     }
-} elseif (in_array($settingKey, ['contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone', 'contact_socials', 'about_text_ru', 'about_text_en'], true)) {
+} elseif (in_array($settingKey, ['contact_github', 'contact_telegram', 'contact_vk', 'contact_linkedin', 'contact_email', 'contact_phone', 'contact_socials', 'about_text_ru', 'about_text_en', 'about_skills'], true)) {
     // Обработка контактов (строковые значения или JSON для contact_socials)
     if ($isFormData) {
         $settingValue = isset($_POST['value']) ? trim($_POST['value']) : null;
@@ -103,14 +103,20 @@ if ($settingKey === 'logo_theme_switch') {
     if ($settingValue === '') {
         $settingValue = null;
     }
-    // Для contact_socials проверяем валидность JSON
-    if ($settingKey === 'contact_socials' && $settingValue !== null) {
+    // Для contact_socials и about_skills проверяем валидность JSON
+    if (in_array($settingKey, ['contact_socials', 'about_skills'], true) && $settingValue !== null) {
         $decoded = json_decode($settingValue, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            sendError('Некорректный JSON для списка соцсетей: ' . json_last_error_msg(), 400);
+            $errorMsg = $settingKey === 'contact_socials' 
+                ? 'Некорректный JSON для списка соцсетей: ' 
+                : 'Некорректный JSON для списка навыков: ';
+            sendError($errorMsg . json_last_error_msg(), 400);
         }
         if (!is_array($decoded)) {
-            sendError('Список соцсетей должен быть массивом', 400);
+            $errorMsg = $settingKey === 'contact_socials' 
+                ? 'Список соцсетей должен быть массивом' 
+                : 'Список навыков должен быть массивом';
+            sendError($errorMsg, 400);
         }
     }
 } elseif ($delete) {

@@ -1346,4 +1346,58 @@
       align-items: center;
     }
   }
+
+  &__skills-list {
+    margin-bottom: map-get($spacings, 4);
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacings, 2);
+  }
+
+  &__skill-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: map-get($spacings, 2);
+    padding: map-get($spacings, 2) map-get($spacings, 3);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    @include transition(border-color, box-shadow);
+
+    &:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 8px rgba(31, 166, 160, 0.1);
+    }
+  }
+
+  &__skill-name {
+    color: var(--text-primary);
+    font-size: 1rem;
+    flex: 1;
+  }
+
+  &__add-skill {
+    margin-top: map-get($spacings, 4);
+    padding-top: map-get($spacings, 4);
+    border-top: 1px solid var(--border-color);
+  }
+
+  &__add-skill-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: map-get($spacings, 3);
+    color: var(--text-primary);
+  }
+
+  &__add-skill-form {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacings, 2);
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+  }
 }
