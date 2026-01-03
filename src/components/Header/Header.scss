@@ -10,10 +10,10 @@
   backdrop-filter: blur(0px);
   -webkit-backdrop-filter: blur(0px);
   transition:
-    background 0.5s ease,
-    border-color 0.5s ease,
-    backdrop-filter 0.5s ease,
-    box-shadow 0.5s ease;
+    background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    backdrop-filter 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 
   // Эффект жидкого стекла при скролле (в стиле Apple)
   &--scrolled {
