@@ -20,6 +20,32 @@ body {
   @include transition(background-color, color);
 }
 
+// Page fade-in effect (smooth appearance on load)
+body.page-loading {
+  overflow: hidden;
+  background-color: #000 !important; // Dark screen initially
+
+  #app {
+    opacity: 0;
+    filter: blur(10px);
+    will-change: opacity, filter;
+    transition:
+      opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1),
+      filter 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+body.page-loaded {
+  background-color: var(--bg-main);
+  transition: background-color 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  #app {
+    opacity: 1;
+    filter: blur(0);
+    will-change: auto; // Remove will-change after animation for performance
+  }
+}
+
 // Семантические элементы
 h1,
 h2,

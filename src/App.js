@@ -10,6 +10,7 @@ import { ThemeManager } from './utils/themeManager.js';
 class App {
   constructor(container) {
     this.container = container;
+    this.isInitialLoad = true;
     this.init();
   }
 
@@ -57,11 +58,51 @@ class App {
     Projects.init();
     Testimonials.init();
     Contact.init();
+
+    // Trigger fade-in effect after render
+    this.triggerFadeIn();
+  }
+
+  triggerFadeIn() {
+    // Only trigger fade-in on initial page load, not on language changes
+    if (!this.isInitialLoad) {
+      return;
+    }
+
+    // Wait for all critical resources to load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        this.startFadeIn();
+      });
+    } else {
+      // Use requestAnimationFrame for smooth animation
+      requestAnimationFrame(() => {
+        // Small delay to ensure all content is rendered
+        setTimeout(() => {
+          this.startFadeIn();
+        }, 100);
+      });
+    }
+  }
+
+  startFadeIn() {
+    const { body } = document;
+    if (body.classList.contains('page-loading')) {
+      // Use double requestAnimationFrame for smoother animation start
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          body.classList.remove('page-loading');
+          body.classList.add('page-loaded');
+          this.isInitialLoad = false;
+        });
+      });
+    }
   }
 
   setupEventListeners() {
     // Глобальные обработчики событий
     document.addEventListener('languageChanged', () => {
+      this.isInitialLoad = false; // Prevent fade-in on language change
       this.render();
     });
   }
