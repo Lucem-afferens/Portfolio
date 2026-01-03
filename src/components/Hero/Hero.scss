@@ -14,18 +14,18 @@
   &__actions {
     position: absolute;
 
-    // На мобильных (≤425px) - по центру, на 3/4 высоты
-    @media (max-width: 425px) {
+    // На мобильных и планшетах (≤768px) - по центру снизу
+    @media (max-width: 768px) {
       left: 50%;
       transform: translateX(-50%);
-      top: 75%;
+      bottom: map-get($spacings, 6);
       width: calc(100% - #{map-get($spacings, 4)});
       display: flex;
       justify-content: center;
     }
 
-    // На больших экранах (>425px) - справа с отступом
-    @media (min-width: 426px) {
+    // На больших экранах (≥769px) - справа с отступом
+    @media (min-width: 769px) {
       right: 10vw;
       bottom: 50vh;
       display: flex;
