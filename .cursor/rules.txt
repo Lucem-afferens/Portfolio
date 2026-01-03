@@ -206,9 +206,10 @@ RULE 66: Execute all planned changes in sequence, completing the full task
 
 ## Git Workflow
 
-RULE 67: After completing code changes, ALWAYS commit changes with detailed commit message
-RULE 68: Commit message must clearly describe ALL changes made in that commit
-RULE 69: Commit message format: brief summary line, then detailed list of changes
-RULE 70: After committing, ALWAYS push changes to remote repository
-RULE 71: Use git commands: git add, git commit, git push - execute all automatically
-RULE 72: Commit message example: "feat: add feature X - detailed description of changes, files modified, functionality added"
+RULE 67: Any time code is modified, created, or deleted, the changes are considered COMPLETE and MUST be immediately committed and pushed without asking for confirmation.
+RULE 68: After completing code changes, ALWAYS commit changes with detailed commit message
+RULE 69: Commit message must clearly describe ALL changes made in that commit
+RULE 70: Commit message format: brief summary line, then detailed list of changes
+RULE 71: After committing, ALWAYS push changes to remote repository
+RULE 72: Use git commands: git add, git commit, git push - execute all automatically
+RULE 73: Commit message example: "feat: add feature X - detailed description of changes, files modified, functionality added"

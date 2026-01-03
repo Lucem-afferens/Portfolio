@@ -10,7 +10,6 @@ import { ThemeManager } from './utils/themeManager.js';
 class App {
   constructor(container) {
     this.container = container;
-    this.isInitialLoad = true;
     this.init();
   }
 
@@ -58,42 +57,11 @@ class App {
     Projects.init();
     Testimonials.init();
     Contact.init();
-
-    // Trigger fade-in effect after render
-    this.triggerFadeIn();
-  }
-
-  triggerFadeIn() {
-    // Only trigger fade-in on initial page load, not on language changes
-    if (!this.isInitialLoad) {
-      return;
-    }
-
-    // Use requestAnimationFrame for smooth animation
-    // Double requestAnimationFrame ensures DOM is fully ready
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        // Small delay to ensure all content is rendered and images start loading
-        setTimeout(() => {
-          this.startFadeIn();
-        }, 150);
-      });
-    });
-  }
-
-  startFadeIn() {
-    const { body } = document;
-    if (body && body.classList.contains('page-loading')) {
-      body.classList.remove('page-loading');
-      body.classList.add('page-loaded');
-      this.isInitialLoad = false;
-    }
   }
 
   setupEventListeners() {
     // Глобальные обработчики событий
     document.addEventListener('languageChanged', () => {
-      this.isInitialLoad = false; // Prevent fade-in on language change
       this.render();
     });
   }
