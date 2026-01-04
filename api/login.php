@@ -32,7 +32,31 @@ try {
     $stmt->execute([$username]);
     $admin = $stmt->fetch();
 
-    if ($admin && password_verify($password, $admin['password_hash'])) {
+    if (!$admin) {
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Неверный логин или пароль',
+        ]);
+        exit;
+    }
+
+    // Логируем для отладки (только в dev режиме)
+    if (defined('DEBUG') && DEBUG) {
+        error_log('Login attempt - Username: ' . $username);
+        error_log('Hash from DB length: ' . strlen($admin['password_hash']));
+        error_log('Hash format: ' . substr($admin['password_hash'], 0, 4));
+    }
+
+    // Проверяем, что хеш не обрезан
+    if (strlen($admin['password_hash']) < 60) {
+        error_log('WARNING: Password hash seems truncated. Length: ' . strlen($admin['password_hash']));
+    }
+
+    // Проверяем пароль
+    $isValid = password_verify($password, $admin['password_hash']);
+
+    if ($isValid) {
         $_SESSION['admin_logged_in'] = true;
         $_SESSION['admin_id'] = $admin['id'];
         $_SESSION['admin_username'] = $admin['username'];
@@ -44,6 +68,11 @@ try {
             'message' => 'Авторизация успешна',
         ]);
     } else {
+        // Логируем для отладки
+        error_log('Failed login attempt for username: ' . $username);
+        error_log('Hash format: ' . substr($admin['password_hash'], 0, 4));
+        error_log('Hash length: ' . strlen($admin['password_hash']));
+        
         http_response_code(401);
         echo json_encode([
             'success' => false,
