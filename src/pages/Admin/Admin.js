@@ -7,11 +7,43 @@ class Admin {
       <div class="admin" id="admin-app">
         <div class="admin__login" data-admin-login>
           <div class="admin__login-container">
-            <h1 class="admin__title">Админ-панель</h1>
-            <p class="admin__subtitle">Введите пароль для входа</p>
+            <div class="admin__login-header">
+              <div class="admin__login-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <h1 class="admin__title">Админ-панель</h1>
+              <p class="admin__subtitle">Введите логин и пароль для входа</p>
+            </div>
             <form class="admin__login-form" data-login-form>
               <div class="admin__form-group">
-                <label for="password" class="admin__label">Пароль</label>
+                <label for="username" class="admin__label">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  Логин
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  class="admin__input"
+                  required
+                  autocomplete="username"
+                  placeholder="Введите логин"
+                />
+              </div>
+              <div class="admin__form-group">
+                <label for="password" class="admin__label">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                  Пароль
+                </label>
                 <input
                   type="password"
                   id="password"
@@ -19,9 +51,16 @@ class Admin {
                   class="admin__input"
                   required
                   autocomplete="current-password"
+                  placeholder="Введите пароль"
                 />
               </div>
-              <button type="submit" class="admin__submit">Войти</button>
+              <button type="submit" class="admin__submit">
+                <span>Войти</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
               <div class="admin__message" data-login-message role="alert"></div>
             </form>
           </div>
@@ -66,6 +105,9 @@ class Admin {
             </button>
             <button class="admin__main-tab" data-main-tab="content">
               Контент
+            </button>
+            <button class="admin__main-tab" data-main-tab="settings">
+              Настройки
             </button>
           </nav>
           
@@ -489,6 +531,85 @@ class Admin {
                 </form>
               </div>
             </div>
+            
+            <!-- Вкладка Настройки -->
+            <div class="admin__main-tab-content" data-main-tab-content="settings">
+              <div class="admin__settings">
+                <h2 class="admin__section-title">Настройки безопасности</h2>
+                <p class="admin__section-description">
+                  Измените логин и пароль для входа в админ-панель
+                </p>
+                
+                <form class="admin__settings-form" data-settings-form>
+                  <div class="admin__settings-section">
+                    <h3 class="admin__settings-subtitle">Изменение логина</h3>
+                    <div class="admin__form-group">
+                      <label for="new-username" class="admin__label">Новый логин</label>
+                      <input
+                        type="text"
+                        id="new-username"
+                        class="admin__input"
+                        placeholder="Введите новый логин"
+                        data-new-username
+                        required
+                        minlength="3"
+                        autocomplete="username"
+                      />
+                      <small class="admin__input-hint">Минимум 3 символа</small>
+                    </div>
+                  </div>
+                  
+                  <div class="admin__settings-section">
+                    <h3 class="admin__settings-subtitle">Изменение пароля</h3>
+                    <div class="admin__form-group">
+                      <label for="current-password" class="admin__label">Текущий пароль</label>
+                      <input
+                        type="password"
+                        id="current-password"
+                        class="admin__input"
+                        placeholder="Введите текущий пароль"
+                        data-current-password
+                        required
+                        autocomplete="current-password"
+                      />
+                    </div>
+                    <div class="admin__form-group">
+                      <label for="new-password" class="admin__label">Новый пароль</label>
+                      <input
+                        type="password"
+                        id="new-password"
+                        class="admin__input"
+                        placeholder="Введите новый пароль"
+                        data-new-password
+                        required
+                        minlength="8"
+                        autocomplete="new-password"
+                      />
+                      <small class="admin__input-hint">Минимум 8 символов</small>
+                    </div>
+                    <div class="admin__form-group">
+                      <label for="confirm-password" class="admin__label">Подтвердите новый пароль</label>
+                      <input
+                        type="password"
+                        id="confirm-password"
+                        class="admin__input"
+                        placeholder="Повторите новый пароль"
+                        data-confirm-password
+                        required
+                        autocomplete="new-password"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div class="admin__settings-actions">
+                    <button type="submit" class="admin__btn admin__btn--primary">
+                      Сохранить изменения
+                    </button>
+                    <div class="admin__message" data-settings-message role="alert"></div>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -509,6 +630,7 @@ class Admin {
     this.setupPhotos();
     this.setupContacts();
     this.setupContent();
+    this.setupSettings();
     this.loadTestimonials('pending');
   }
 
@@ -553,17 +675,26 @@ class Admin {
     form?.addEventListener('submit', async e => {
       e.preventDefault();
       const formData = new FormData(form);
+      const username = formData.get('username')?.trim();
       const password = formData.get('password');
 
+      if (!username || !password) {
+        this.showMessage(messageEl, 'Заполните все поля', 'error');
+        return;
+      }
+
       const submitBtn = form.querySelector('button[type="submit"]');
+      const submitBtnText = submitBtn.querySelector('span');
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Вход...';
+      if (submitBtnText) {
+        submitBtnText.textContent = 'Вход...';
+      }
 
       try {
         const response = await fetch('/api/login.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password }),
+          body: JSON.stringify({ username, password }),
         });
 
         const result = await response.json();
@@ -572,13 +703,15 @@ class Admin {
           this.showPanel();
           this.loadTestimonials('pending');
         } else {
-          this.showMessage(messageEl, result.error || 'Неверный пароль', 'error');
+          this.showMessage(messageEl, result.error || 'Неверный логин или пароль', 'error');
         }
       } catch (error) {
         this.showMessage(messageEl, 'Ошибка при входе', 'error');
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Войти';
+        if (submitBtnText) {
+          submitBtnText.textContent = 'Войти';
+        }
       }
     });
   }
@@ -2293,6 +2426,76 @@ class Admin {
       submitBtn.disabled = false;
       submitBtn.textContent = originalText;
     }
+  }
+
+  static setupSettings() {
+    const form = document.querySelector('[data-settings-form]');
+    const messageEl = document.querySelector('[data-settings-message]');
+
+    form?.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const newUsername = document.querySelector('[data-new-username]')?.value.trim();
+      const currentPassword = document.querySelector('[data-current-password]')?.value;
+      const newPassword = document.querySelector('[data-new-password]')?.value;
+      const confirmPassword = document.querySelector('[data-confirm-password]')?.value;
+
+      // Валидация
+      if (newPassword && newPassword !== confirmPassword) {
+        this.showMessage(messageEl, 'Новые пароли не совпадают', 'error');
+        return;
+      }
+
+      if (newPassword && newPassword.length < 8) {
+        this.showMessage(messageEl, 'Пароль должен содержать минимум 8 символов', 'error');
+        return;
+      }
+
+      if (newUsername && newUsername.length < 3) {
+        this.showMessage(messageEl, 'Логин должен содержать минимум 3 символа', 'error');
+        return;
+      }
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Сохранение...';
+
+      try {
+        const response = await fetch('/api/admin/update-credentials.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: newUsername || null,
+            current_password: currentPassword,
+            new_password: newPassword || null,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          this.showMessage(messageEl, result.message || 'Настройки успешно сохранены', 'success');
+          form.reset();
+
+          // Если изменили логин, обновляем сессию
+          if (newUsername) {
+            setTimeout(() => {
+              // eslint-disable-next-line no-alert
+              alert('Логин изменен. Пожалуйста, войдите заново.');
+              window.location.reload();
+            }, 1500);
+          }
+        } else {
+          this.showMessage(messageEl, result.error || 'Ошибка при сохранении', 'error');
+        }
+      } catch (error) {
+        console.error('Error updating credentials:', error);
+        this.showMessage(messageEl, 'Ошибка при сохранении настроек', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Сохранить изменения';
+      }
+    });
   }
 }
 

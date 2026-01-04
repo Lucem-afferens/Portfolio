@@ -7,16 +7,63 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 80vh;
+    min-height: 100vh;
+    padding: map-get($spacings, 3);
+    background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-muted) 100%);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(31, 166, 160, 0.1) 0%, transparent 70%);
+      animation: pulse 20s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.5;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
   }
 
   &__login-container {
-    max-width: 400px;
+    max-width: 440px;
     width: 100%;
-    padding: map-get($spacings, 5);
+    padding: map-get($spacings, 6) map-get($spacings, 5);
     background-color: var(--bg-surface);
-    border-radius: 8px;
-    @include box-shadow(2);
+    border-radius: 16px;
+    @include box-shadow(4);
+    position: relative;
+    z-index: 1;
+    border: 1px solid var(--border-color);
+
+    @include respond-to(sm) {
+      padding: map-get($spacings, 7) map-get($spacings, 6);
+    }
+  }
+
+  &__login-header {
+    text-align: center;
+    margin-bottom: map-get($spacings, 5);
+  }
+
+  &__login-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: map-get($spacings, 3);
+    color: var(--color-primary);
+    opacity: 0.9;
   }
 
   &__title,
@@ -25,6 +72,7 @@
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: map-get($spacings, 2);
+    text-align: center;
 
     @include respond-to(sm) {
       font-size: 2rem;
@@ -34,6 +82,9 @@
   &__subtitle {
     color: var(--text-secondary);
     margin-bottom: map-get($spacings, 4);
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
 
   &__form-group {
@@ -41,50 +92,113 @@
   }
 
   &__label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: map-get($spacings, 1);
     margin-bottom: map-get($spacings, 1);
     font-weight: 500;
     color: var(--text-primary);
+    font-size: 0.9rem;
+
+    svg {
+      flex-shrink: 0;
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
   }
 
   &__input {
-    max-width: 100%;
-    padding: map-get($spacings, 2) map-get($spacings, 3);
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+    width: 100%;
+    padding: map-get($spacings, 2.5) map-get($spacings, 3);
+    background-color: var(--bg-main);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
     font-family: $font-family-base;
     font-size: $font-size-base;
     color: var(--text-primary);
-    @include transition(border-color);
+    @include transition(border-color, box-shadow, background-color);
+
+    &::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.6;
+    }
+
+    &:hover {
+      border-color: var(--color-primary);
+      opacity: 0.8;
+    }
 
     &:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(31, 166, 160, 0.15);
+      background-color: var(--bg-surface);
+      box-shadow: 0 0 0 4px rgba(31, 166, 160, 0.1);
     }
+  }
+
+  &__input-hint {
+    display: block;
+    margin-top: map-get($spacings, 0.5);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
   }
 
   &__submit {
     @include button-base;
     width: 100%;
-    background-color: var(--color-primary);
+    background: linear-gradient(135deg, var(--color-primary) 0%, rgba(31, 166, 160, 0.9) 100%);
     color: var(--bg-surface);
-    padding: map-get($spacings, 2) map-get($spacings, 4);
+    padding: map-get($spacings, 3) map-get($spacings, 4);
     font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: map-get($spacings, 1.5);
+    @include transition(transform, box-shadow);
+    @include box-shadow(2);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      @include box-shadow(3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
   }
 
   &__message {
     margin-top: map-get($spacings, 2);
-    padding: map-get($spacings, 2);
-    border-radius: 4px;
+    padding: map-get($spacings, 2.5);
+    border-radius: 8px;
     display: none;
+    font-size: 0.9rem;
+    line-height: 1.5;
 
     &--error {
       display: block;
-      background-color: rgba(220, 53, 69, 0.15);
+      background-color: rgba(220, 53, 69, 0.1);
       color: #dc3545;
-      border: 1px solid #dc3545;
+      border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+
+    &--success {
+      display: block;
+      background-color: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+      border: 1px solid rgba(40, 167, 69, 0.3);
     }
   }
 
@@ -1312,6 +1426,52 @@
     font-weight: 600;
     margin-bottom: map-get($spacings, 3);
     color: var(--text-primary);
+  }
+
+  // ========== Настройки ==========
+  &__settings {
+    padding: map-get($spacings, 4) 0;
+  }
+
+  &__settings-form {
+    max-width: 600px;
+  }
+
+  &__settings-section {
+    margin-bottom: map-get($spacings, 5);
+    padding: map-get($spacings, 4);
+    background-color: var(--bg-surface);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    @include box-shadow(1);
+
+    &:last-of-type {
+      margin-bottom: map-get($spacings, 4);
+    }
+  }
+
+  &__settings-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: map-get($spacings, 3);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: map-get($spacings, 1.5);
+
+    &::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, rgba(31, 166, 160, 0.85) 100%);
+      border-radius: 2px;
+    }
+  }
+
+  &__settings-actions {
+    margin-top: map-get($spacings, 5);
+    padding-top: map-get($spacings, 4);
+    border-top: 1px solid var(--border-color);
   }
 
   &__textarea {
