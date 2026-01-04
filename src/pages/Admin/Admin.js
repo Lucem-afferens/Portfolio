@@ -631,7 +631,7 @@ class Admin {
     this.setupContacts();
     this.setupContent();
     this.setupSettings();
-    this.loadTestimonials('pending');
+    // loadTestimonials вызывается в checkAuth, если пользователь авторизован
   }
 
   static setupThemeToggle() {
@@ -643,19 +643,22 @@ class Admin {
     }
   }
 
-  static checkAuth() {
-    // Проверка авторизации через API
-    fetch('/api/get-pending-testimonials.php')
-      .then(response => {
-        if (response.ok) {
-          this.showPanel();
-        } else {
-          this.showLogin();
-        }
-      })
-      .catch(() => {
+  static async checkAuth() {
+    try {
+      const response = await fetch('/api/check-auth.php');
+      const result = await response.json();
+
+      if (result.success && result.authenticated) {
+        this.showPanel();
+        // Загружаем данные только если авторизованы
+        this.loadTestimonials('pending');
+      } else {
         this.showLogin();
-      });
+      }
+    } catch (error) {
+      console.error('Error checking auth:', error);
+      this.showLogin();
+    }
   }
 
   static showLogin() {
